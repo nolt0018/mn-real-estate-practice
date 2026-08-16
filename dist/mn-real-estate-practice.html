@@ -1,0 +1,3256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MN Real Estate Salesperson — Exam Practice</title>
+<style>
+/* MN Real Estate Salesperson practice — styles */
+:root {
+  --bg: #f4f6f8;
+  --panel: #ffffff;
+  --ink: #16202a;
+  --ink-soft: #5b6b7a;
+  --line: #dbe3ea;
+  --brand: #14532d;
+  --brand-2: #1d6b3c;
+  --accent: #0b5cad;
+  --good: #17683a;
+  --good-bg: #e6f4ea;
+  --bad: #9b1c1c;
+  --bad-bg: #fdeaea;
+  --warn: #a15c00;
+  --radius: 12px;
+  --shadow: 0 1px 2px rgba(16, 32, 48, .06), 0 4px 14px rgba(16, 32, 48, .06);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1519;
+    --panel: #161f26;
+    --ink: #e6edf3;
+    --ink-soft: #9bb0c0;
+    --line: #2a3742;
+    --brand: #3f9c64;
+    --brand-2: #4cb377;
+    --accent: #6aa9e9;
+    --good: #6ee7a0;
+    --good-bg: #12301f;
+    --bad: #ff9b9b;
+    --bad-bg: #341717;
+    --warn: #e0a458;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 4px 14px rgba(0, 0, 0, .3);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  -webkit-text-size-adjust: 100%;
+}
+
+header {
+  background: linear-gradient(135deg, var(--brand), var(--brand-2));
+  color: #fff;
+  padding: 18px 16px 14px;
+}
+header h1 { margin: 0; font-size: 20px; letter-spacing: -.01em; }
+header p { margin: 4px 0 0; font-size: 13px; opacity: .9; }
+
+nav.tabs {
+  display: flex;
+  gap: 2px;
+  background: var(--panel);
+  border-bottom: 1px solid var(--line);
+  overflow-x: auto;
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  -webkit-overflow-scrolling: touch;
+}
+.tab {
+  flex: 0 0 auto;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: var(--ink-soft);
+  font: inherit;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 12px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tab.active { color: var(--brand-2); border-bottom-color: var(--brand-2); }
+.tab:hover { color: var(--ink); }
+
+main { max-width: 780px; margin: 0 auto; padding: 16px 14px 60px; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 18px;
+  margin-bottom: 14px;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+select, input[type="number"], input[type="text"] {
+  font: inherit;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 9px 10px;
+  max-width: 100%;
+}
+select { cursor: pointer; }
+label.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 14px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+
+button.btn {
+  font: inherit;
+  font-weight: 650;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  padding: 11px 18px;
+  cursor: pointer;
+  background: var(--brand);
+  color: #fff;
+}
+button.btn:hover { background: var(--brand-2); }
+button.btn.ghost { background: transparent; color: var(--ink-soft); border-color: var(--line); }
+button.btn.ghost:hover { color: var(--ink); border-color: var(--ink-soft); }
+button.btn:disabled { opacity: .4; cursor: default; }
+
+.tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+.qtext { font-size: 17px; line-height: 1.6; margin: 0 0 16px; }
+.qtext b { font-weight: 700; }
+
+/* ---- answer entry ---- */
+.answerrow { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.answerrow input {
+  flex: 1 1 180px;
+  font-size: 19px;
+  padding: 12px;
+  font-variant-numeric: tabular-nums;
+}
+.hintunit { font-size: 12.5px; color: var(--ink-soft); margin-top: 7px; }
+
+.feedback {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border-radius: 9px;
+  border: 1px solid var(--line);
+  font-size: 15px;
+}
+.feedback.ok { background: var(--good-bg); border-color: var(--good); color: var(--good); }
+.feedback.bad { background: var(--bad-bg); border-color: var(--bad); color: var(--bad); }
+.feedback .why { margin-top: 8px; color: var(--ink); font-weight: 400; }
+
+.work { margin-top: 16px; border-top: 1px solid var(--line); padding-top: 14px; }
+.work h4 { margin: 0 0 8px; font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-soft); }
+.formula {
+  background: var(--bg);
+  border-left: 3px solid var(--accent);
+  padding: 9px 12px;
+  border-radius: 0 8px 8px 0;
+  font-size: 14.5px;
+  margin-bottom: 12px;
+}
+ol.steps { list-style: none; margin: 0; padding: 0; }
+ol.steps li {
+  display: flex;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+ol.steps li:last-child { border-bottom: none; }
+.stepn {
+  flex: 0 0 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+.tip {
+  margin-top: 12px;
+  padding: 11px 13px;
+  background: var(--bad-bg);
+  border-radius: 8px;
+  font-size: 14.5px;
+  border-left: 3px solid var(--bad);
+}
+@media (prefers-color-scheme: dark) { .tip { color: #ffd9d9; } }
+
+/* ---- multiple choice ---- */
+#quiz-choices, #exam-choices { display: grid; gap: 9px; }
+.choice {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  text-align: left;
+  font: inherit;
+  font-size: 15.5px;
+  background: var(--panel);
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+  border-radius: 10px;
+  padding: 13px 14px;
+  cursor: pointer;
+  width: 100%;
+}
+.choice:hover:not(:disabled) { border-color: var(--accent); }
+.choice .letter {
+  flex: 0 0 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+}
+.choice.selected { border-color: var(--accent); background: rgba(11, 92, 173, .07); }
+.choice.right { border-color: var(--good); background: var(--good-bg); }
+.choice.right .letter { background: var(--good); color: #fff; border-color: var(--good); }
+.choice.wrong { border-color: var(--bad); background: var(--bad-bg); }
+.choice.wrong .letter { background: var(--bad); color: #fff; border-color: var(--bad); }
+.choice:disabled { cursor: default; }
+
+.rowbetween { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.muted { color: var(--ink-soft); font-size: 13.5px; }
+.score { font-size: 13.5px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+/* ---- exam ---- */
+.clock {
+  font-size: 22px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--brand-2);
+}
+.clock.warn { color: var(--bad); }
+#exam-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(34px, 1fr));
+  gap: 5px;
+  margin-top: 12px;
+}
+.gridbtn {
+  font: inherit;
+  font-size: 11.5px;
+  padding: 6px 0;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  background: var(--panel);
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.gridbtn.done { background: var(--accent); color: #fff; border-color: var(--accent); }
+.gridbtn.cur { outline: 2px solid var(--brand-2); outline-offset: 1px; }
+
+.verdict { font-size: 19px; padding: 16px; border-radius: 10px; text-align: center; margin-bottom: 14px; }
+.verdict.ok { background: var(--good-bg); color: var(--good); }
+.verdict.bad { background: var(--bad-bg); color: var(--bad); }
+.scorerow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.scorebig { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; text-align: right; }
+.scorebig span { display: block; font-size: 13px; font-weight: 500; }
+.good { color: var(--good); }
+.poor { color: var(--bad); }
+
+.bar { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 14px; }
+.barlabel { flex: 0 0 42%; }
+.bartrack { flex: 1; height: 9px; background: var(--bg); border-radius: 5px; overflow: hidden; border: 1px solid var(--line); }
+.barfill { display: block; height: 100%; border-radius: 5px; }
+.barfill.good { background: var(--good); }
+.barfill.poor { background: var(--bad); }
+.barval { flex: 0 0 54px; text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-soft); font-size: 13px; }
+
+details.rev { border: 1px solid var(--line); border-radius: 9px; margin-bottom: 8px; }
+details.rev summary { padding: 11px 13px; cursor: pointer; font-size: 14.5px; }
+.revbody { padding: 0 13px 13px; border-top: 1px solid var(--line); }
+ol.mini { font-size: 14px; padding-left: 20px; }
+ol.mini li { padding: 3px 0; }
+
+/* ---- progress ---- */
+#prog-summary { display: flex; gap: 12px; flex-wrap: wrap; }
+.statcard {
+  flex: 1 1 150px;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 14px;
+  text-align: center;
+}
+.statnum { font-size: 30px; font-weight: 700; }
+.statlabel { font-size: 14px; font-weight: 600; }
+.tbl { width: 100%; border-collapse: collapse; font-size: 14px; }
+.tbl th, .tbl td { text-align: left; padding: 8px 6px; border-bottom: 1px solid var(--line); }
+.tbl th { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-soft); }
+
+/* ---- reference sheet ---- */
+.ref h3 {
+  margin: 22px 0 8px;
+  font-size: 15px;
+  color: var(--brand-2);
+  border-bottom: 2px solid var(--line);
+  padding-bottom: 5px;
+}
+.ref h3:first-child { margin-top: 0; }
+.ref dl { margin: 0; }
+.ref dt { font-weight: 700; margin-top: 11px; font-size: 14.5px; }
+.ref dd {
+  margin: 3px 0 0;
+  font-size: 14.5px;
+  color: var(--ink-soft);
+  font-variant-numeric: tabular-nums;
+}
+.ref .eq {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  background: var(--bg);
+  padding: 2px 6px;
+  border-radius: 5px;
+  color: var(--ink);
+  font-size: 13.5px;
+}
+.callout {
+  background: var(--good-bg);
+  border-left: 3px solid var(--good);
+  padding: 12px 14px;
+  border-radius: 0 8px 8px 0;
+  font-size: 14.5px;
+  margin: 14px 0;
+}
+@media (prefers-color-scheme: dark) { .callout { color: #cdf5dd; } }
+
+footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: var(--ink-soft); }
+
+@media (max-width: 560px) {
+  .barlabel { flex: 0 0 38%; font-size: 13px; }
+  .qtext { font-size: 16px; }
+  main { padding: 12px 10px 50px; }
+  .card { padding: 15px; }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Minnesota Real Estate Salesperson — Exam Practice</h1>
+  <p>120 questions on the real exam: 80 national + 40 Minnesota. You need 75% on <b>each</b> section, scored separately.</p>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab active" data-view="drill" role="tab" aria-selected="true">Math Drill</button>
+  <button class="tab" data-view="quiz" role="tab" aria-selected="false">Quiz</button>
+  <button class="tab" data-view="exam" role="tab" aria-selected="false">Practice Exam</button>
+  <button class="tab" data-view="formulas" role="tab" aria-selected="false">Formula Sheet</button>
+  <button class="tab" data-view="progress" role="tab" aria-selected="false">Progress</button>
+</nav>
+
+<main>
+
+  <!-- =============================================== MATH DRILL -->
+  <section class="view" id="view-drill">
+    <div class="card">
+      <div class="controls">
+        <select id="drill-cat" aria-label="Math category"></select>
+        <select id="drill-type" aria-label="Specific problem type"></select>
+        <label class="check"><input type="checkbox" id="drill-weak"> Focus on my weak spots</label>
+      </div>
+      <p class="muted">Numbers are randomly regenerated every time, so you can run the same problem
+        type over and over without memorizing answers. Type your answer and press Enter.</p>
+    </div>
+
+    <div class="card">
+      <div class="rowbetween">
+        <span class="tag" id="drill-tag"></span>
+        <span class="score" id="drill-score"></span>
+      </div>
+      <p class="qtext" id="drill-q"></p>
+
+      <div class="answerrow">
+        <input type="text" id="drill-input" inputmode="decimal" autocomplete="off"
+               placeholder="Your answer" aria-label="Your answer">
+        <button class="btn" id="drill-check">Check</button>
+        <button class="btn" id="drill-next" hidden>Next problem &rarr;</button>
+      </div>
+      <div class="hintunit" id="drill-hint-unit"></div>
+
+      <div class="feedback" id="drill-feedback" hidden></div>
+
+      <div class="work" id="drill-work" hidden>
+        <h4>How to work it</h4>
+        <div class="formula" id="drill-formula"></div>
+        <ol class="steps" id="drill-steps"></ol>
+        <div class="tip" id="drill-tip"></div>
+      </div>
+
+      <div class="controls" style="margin-top:16px;margin-bottom:0">
+        <button class="btn ghost" id="drill-reveal">Show me the answer</button>
+        <button class="btn ghost" id="drill-again">Another like this one</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== QUIZ -->
+  <section class="view" id="view-quiz" hidden>
+    <div class="card">
+      <div class="controls">
+        <select id="quiz-cat" aria-label="Quiz category"></select>
+        <label class="check"><input type="checkbox" id="quiz-missed"> Only ones I've missed before</label>
+        <button class="btn ghost" id="quiz-restart">Reshuffle</button>
+      </div>
+      <p class="muted"><span class="qcount"></span> questions covering contracts, agency, ethics,
+        fair housing, finance, property law, appraisal, and Minnesota statute.</p>
+    </div>
+
+    <div class="card">
+      <div class="rowbetween">
+        <span class="tag" id="quiz-tag"></span>
+        <span class="score"><span id="quiz-count"></span> &nbsp; <span id="quiz-score"></span></span>
+      </div>
+      <p class="qtext" id="quiz-q"></p>
+      <div id="quiz-choices"></div>
+      <div class="feedback" id="quiz-feedback" hidden></div>
+      <div class="controls" style="margin-top:14px;margin-bottom:0">
+        <button class="btn" id="quiz-next" hidden>Next question &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== EXAM -->
+  <section class="view" id="view-exam" hidden>
+    <div class="card" id="exam-setup">
+      <h2 style="margin-top:0">Full practice exam</h2>
+      <p>80 national questions + 40 Minnesota questions, just like the real thing. Each section is
+        scored on its own and each needs <b>75%</b> — 60 of 80 national, 30 of 40 state.</p>
+      <div class="controls">
+        <label class="check">Time limit
+          <select id="exam-mins">
+            <option value="240">240 minutes (full)</option>
+            <option value="180">180 minutes</option>
+            <option value="120">120 minutes</option>
+            <option value="600">No real limit</option>
+          </select>
+        </label>
+        <label class="check">Math questions
+          <select id="exam-math">
+            <option value="14">14 (realistic)</option>
+            <option value="20">20 (math heavy)</option>
+            <option value="28">28 (math brutal)</option>
+            <option value="8">8 (light)</option>
+          </select>
+        </label>
+      </div>
+      <button class="btn" id="exam-start">Start the exam</button>
+      <p class="muted" style="margin-top:14px">You can jump around with the number grid and change
+        answers before you submit, same as the real exam.</p>
+    </div>
+
+    <div id="exam-run" hidden>
+      <div class="card">
+        <div class="rowbetween">
+          <div>
+            <span class="tag" id="exam-tag"></span>
+            <div class="muted" id="exam-count"></div>
+          </div>
+          <div style="text-align:right">
+            <div class="clock" id="exam-clock">--:--</div>
+            <div class="muted" id="exam-progress"></div>
+          </div>
+        </div>
+        <p class="qtext" id="exam-q"></p>
+        <div id="exam-choices"></div>
+        <div class="controls" style="margin-top:16px;margin-bottom:0">
+          <button class="btn ghost" id="exam-prev">&larr; Back</button>
+          <button class="btn" id="exam-nextq">Next &rarr;</button>
+          <button class="btn ghost" id="exam-submit" style="margin-left:auto">Submit exam</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="muted">Jump to a question</div>
+        <div id="exam-grid"></div>
+      </div>
+    </div>
+
+    <div id="exam-results" hidden>
+      <div class="card">
+        <div class="verdict" id="exam-verdict"></div>
+        <div id="exam-breakdown"></div>
+      </div>
+      <div class="card" id="exam-cats"></div>
+      <div class="card" id="exam-review"></div>
+      <div class="card">
+        <button class="btn" id="exam-again">Take another exam</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== FORMULAS -->
+  <section class="view" id="view-formulas" hidden>
+    <div class="card ref">
+
+      <div class="callout"><b>The three that decide most math questions:</b>
+        (1) Are you multiplying or dividing? Going <i>backwards</i> always means divide.
+        (2) Is the base the <b>price</b> or the <b>loan</b>? (3) Does the seller own the closing day?</div>
+
+      <h3>Minnesota transfer taxes — memorize cold</h3>
+      <dl>
+        <dt>State deed tax — <span class="eq">price &times; 0.0033</span></dt>
+        <dd>Paid by the <b>seller</b>, based on the <b>sale price</b> (net consideration).
+          Hennepin &amp; Ramsey add a 0.0001 ERF tax &rarr; 0.0034. Consideration of $3,000 or less = $1.65 flat.</dd>
+        <dt>Mortgage registry tax — <span class="eq">loan &times; 0.0023</span></dt>
+        <dd>Paid by the <b>buyer</b>, based on the <b>principal debt</b>. Hennepin &amp; Ramsey add 0.0001 &rarr; 0.0024.</dd>
+      </dl>
+
+      <h3>Commission</h3>
+      <dl>
+        <dt><span class="eq">Total commission = sale price &times; rate</span></dt>
+        <dd>Then apply the brokerage split, <i>then</i> the agent's split. One step at a time, outside in.</dd>
+        <dt>Net to seller — <span class="eq">price = (net wanted + costs) &divide; (1 &minus; rate)</span></dt>
+        <dd><b>Divide</b>, never add the percentage to the net. This is the single most-missed math question.</dd>
+        <dt>Working backwards from a commission check</dt>
+        <dd>Divide by the agent split, divide by the brokerage split, divide by the rate.</dd>
+      </dl>
+
+      <h3>Prorations</h3>
+      <dl>
+        <dt><span class="eq">daily rate = annual amount &divide; 360 or 365</span></dt>
+        <dd>Read which year the question wants. 360-day years use 30-day months.</dd>
+        <dt>Direction of the entry</dt>
+        <dd><b>Paid in arrears</b> (Minnesota property taxes): seller owes the buyer &rarr; <b>debit seller, credit buyer</b>.<br>
+          <b>Prepaid</b> (insurance, HOA dues, rent already collected): &rarr; <b>credit seller, debit buyer</b>
+          — except <b>rent</b>, where the seller collected money for days the buyer will own, so the <b>buyer</b> gets the credit.</dd>
+        <dt>Who owns the closing day?</dt>
+        <dd>The question always tells you. It moves the answer by exactly one day, and the off-by-one answer is always offered.</dd>
+      </dl>
+
+      <h3>Financing</h3>
+      <dl>
+        <dt><span class="eq">loan = value &times; LTV</span> &nbsp; <span class="eq">down = price &minus; loan</span></dt>
+        <dd>Lenders always use the <b>lesser</b> of sale price or appraised value.</dd>
+        <dt>Discount points — <span class="eq">1 point = 1% of the LOAN</span></dt>
+        <dd>Never a percentage of the sale price.</dd>
+        <dt>Interest — <span class="eq">I = P &times; R &times; T</span></dt>
+        <dd>Per diem = annual interest &divide; 365 (or 360). Mortgage interest is paid in <b>arrears</b>.</dd>
+        <dt>Amortization, one month at a time</dt>
+        <dd><span class="eq">interest = balance &times; rate &divide; 12</span>, then
+          <span class="eq">principal = payment &minus; interest</span>, then subtract from the balance and repeat.</dd>
+        <dt>Payment from a factor — <span class="eq">(loan &divide; 1,000) &times; factor</span></dt>
+        <dd>Divide by 1,000 first.</dd>
+        <dt>Qualifying ratios 28 / 36</dt>
+        <dd>Front-end = income &times; 28%. Back-end = (income &times; 36%) &minus; other monthly debts.
+          The buyer qualifies for the <b>lower</b> of the two.</dd>
+        <dt><span class="eq">PITI = P&amp;I + taxes/12 + insurance/12 + PMI/12</span></dt>
+        <dd>Convert every annual figure to monthly before adding.</dd>
+        <dt><span class="eq">equity = current market value &minus; all liens</span></dt>
+        <dd>Current value, not the purchase price. Subtract every lien, not just the first mortgage.</dd>
+      </dl>
+
+      <h3>Valuation &amp; investment</h3>
+      <dl>
+        <dt>IRV — <span class="eq">Income = Rate &times; Value</span></dt>
+        <dd>So <span class="eq">Value = NOI &divide; cap rate</span> and <span class="eq">cap rate = NOI &divide; value</span>.
+          NOI is calculated <b>before</b> debt service — never subtract the mortgage payment.</dd>
+        <dt>Getting to NOI</dt>
+        <dd>Potential gross &minus; vacancy = effective gross; effective gross &minus; operating expenses = NOI.</dd>
+        <dt>GRM — <span class="eq">price &divide; monthly gross rent</span></dt>
+        <dd>Monthly GRM runs roughly 100&ndash;200; an annual multiplier (GIM) runs roughly 6&ndash;12. Check which one is given.</dd>
+        <dt>Cost approach — <span class="eq">cost new &minus; depreciation + land</span></dt>
+        <dd>Straight-line depreciation = effective age &divide; economic life. <b>Land never depreciates.</b></dd>
+        <dt>Percent change — <span class="eq">(new &minus; old) &divide; OLD</span></dt>
+        <dd>To find the original price from a price that includes a gain, <b>divide</b> by (1 + gain).</dd>
+        <dt>Capital gain</dt>
+        <dd>Adjusted basis = purchase + improvements. Gain = (sale price &minus; selling costs) &minus; adjusted basis.</dd>
+        <dt>Property tax — <span class="eq">(assessed value &divide; 1,000) &times; mills</span></dt>
+        <dd>1 mill = $1 per $1,000 = 0.001. (Minnesota really uses a tax-capacity system, but the national portion tests mills.)</dd>
+      </dl>
+
+      <h3>Area &amp; land</h3>
+      <dl>
+        <dt><span class="eq">1 acre = 43,560 sq ft</span></dt>
+        <dd>Square feet &rarr; acres: divide. Acres &rarr; square feet: multiply.</dd>
+        <dt><span class="eq">1 section = 640 acres = 1 square mile</span></dt>
+        <dd>36 sections = 1 township. Quarter section = 160 acres. Quarter-quarter = 40 acres.
+          For a legal description, multiply all the fractions together and apply to 640.</dd>
+        <dt>Other conversions</dt>
+        <dd>1 mile = 5,280 ft &nbsp;•&nbsp; 1 sq yard = 9 sq ft &nbsp;•&nbsp; triangle = &frac12; &times; base &times; height</dd>
+        <dt>Front foot</dt>
+        <dd>Priced per foot of street frontage. The depth given in the problem is a deliberate distractor.</dd>
+      </dl>
+
+      <h3>Closing statement direction</h3>
+      <dl>
+        <dt>Debit = you owe it. Credit = you already have it or it's given to you.</dt>
+        <dd>Sale price: <b>debit buyer, credit seller</b>. New loan and earnest money: <b>credit buyer</b>.
+          Seller's loan payoff and the deed tax: <b>debit seller</b>.</dd>
+        <dt>Buyer's cash to close</dt>
+        <dd>(price + closing costs + prepaids) &minus; (loan + earnest money + credits owed by seller).</dd>
+      </dl>
+
+      <h3>Minnesota facts that show up as numbers</h3>
+      <dl>
+        <dt>Contract for deed cancellation (Minn. Stat. 559.21)</dt>
+        <dd>Under 10% paid &rarr; <b>30 days</b> to cure &nbsp;•&nbsp; 10% to under 25% &rarr; <b>60 days</b>
+          &nbsp;•&nbsp; 25% or more &rarr; <b>90 days</b>.</dd>
+        <dt>Foreclosure</dt>
+        <dd>Minnesota is a <b>lien theory</b> state. Standard redemption period after a sheriff's sale is <b>6 months</b>.</dd>
+        <dt>Trust account</dt>
+        <dd>If the agreement is silent, earnest money goes in within <b>3 business days</b> of receipt or final
+          acceptance, whichever is later. A rejected offer's earnest money returns by the <b>next business day</b>.</dd>
+        <dt>Licensing</dt>
+        <dd>Pre-license: <b>90 hours</b> (three 30-hour courses; Course I before the exam).
+          CE: <b>30 hours per 2-year cycle, at least 15 each year</b> by June 30, including the required module.</dd>
+        <dt>New-home statutory warranty (Ch. 327A)</dt>
+        <dd><b>1 year</b> workmanship &amp; materials &nbsp;•&nbsp; <b>2 years</b> plumbing / electrical / heating / cooling
+          &nbsp;•&nbsp; <b>10 years</b> major structural.</dd>
+        <dt>Other deadlines</dt>
+        <dd>Security deposit returned within <b>21 days</b> &nbsp;•&nbsp; MCIOA resale cancellation within
+          <b>10 days</b> of the disclosure certificate &nbsp;•&nbsp; lead-based paint (pre-<b>1978</b>) inspection
+          opportunity <b>10 days</b>.</dd>
+      </dl>
+
+      <h3>Fair housing classes</h3>
+      <dl>
+        <dt>Federal — 7 classes</dt>
+        <dd>Race, color, religion, sex, national origin, familial status, disability.</dd>
+        <dt>Minnesota Human Rights Act adds</dt>
+        <dd>Creed, marital status, status with regard to public assistance, sexual orientation and gender identity,
+          and age in some contexts. <b>Minnesota protects more than the federal law does</b> — the state portion tests this.</dd>
+      </dl>
+
+      <h3>Minnesota vs. North Dakota — quick contrast</h3>
+      <p class="muted">Parker's exam is the Minnesota one. This is only so the two do not blur together later
+        when he sits for the ND license.</p>
+      <dl>
+        <dt>Regulator</dt>
+        <dd>MN: Commissioner of <b>Commerce</b> (Dept. of Commerce), Minn. Stat. Ch. 82.<br>
+          ND: <b>North Dakota Real Estate Commission</b>, N.D.C.C. Ch. 43-23.</dd>
+        <dt>Non-agent status</dt>
+        <dd>MN formally recognizes the <b>facilitator</b>. Do not assume the same label or duties apply in ND.</dd>
+        <dt>Transfer tax</dt>
+        <dd>MN charges deed tax and mortgage registry tax. <b>North Dakota has no real estate transfer tax</b> —
+          a classic mix-up for border agents.</dd>
+        <dt>Practice note</dt>
+        <dd>A license is state-specific. Property in Moorhead is a Minnesota transaction under Minnesota law
+          even if the buyer, the brokerage, and the lender are all in Fargo.</dd>
+      </dl>
+
+    </div>
+  </section>
+
+  <!-- =============================================== PROGRESS -->
+  <section class="view" id="view-progress" hidden>
+    <div class="card">
+      <h2 style="margin-top:0">Overall</h2>
+      <div id="prog-summary"></div>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">Math by problem type — weakest first</h2>
+      <div id="prog-math"></div>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">Quiz by topic — weakest first</h2>
+      <div id="prog-quiz"></div>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">Practice exam history</h2>
+      <div id="prog-exams"></div>
+    </div>
+    <div class="card">
+      <button class="btn ghost" id="prog-reset">Erase all progress</button>
+      <p class="muted" style="margin-bottom:0">Progress is saved in this browser only. Nothing is uploaded anywhere.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="gcount"></span> randomized math generators &nbsp;•&nbsp; <span class="qcount"></span> quiz questions.<br>
+  Study aid only — always defer to your UND course materials and current Minnesota statutes.
+</footer>
+
+<script>
+/* ==========================================================================
+   mathgen.js — randomized real estate math problem generators
+   Every generator returns a fresh problem with new numbers each call, so the
+   same drill can be run forever without memorizing answers.
+
+   Each generator: { id, name, cat, gen() -> problem }
+   A problem: {
+     q       : question text (may contain simple HTML)
+     answer  : correct numeric value
+     unit    : 'money' | 'money2' | 'percent' | 'number' | 'acres' | 'sqft' | 'years'
+     tol     : accepted +/- tolerance
+     formula : the rule being tested
+     steps   : array of worked-solution lines
+     tip     : the trap most people fall into
+     traps   : (optional) plausible wrong answers, used to build multiple choice
+   }
+   ========================================================================== */
+(function (global) {
+  'use strict';
+
+  /* ---------------------------------------------------------------- helpers */
+  function rnd(min, max, step) {
+    step = step || 1;
+    var n = Math.floor((max - min) / step) + 1;
+    return min + step * Math.floor(Math.random() * n);
+  }
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+  function r2(n) { return Math.round(n * 100) / 100; }
+
+  function money(n) {
+    var neg = n < 0;
+    var s = '$' + Math.abs(r2(n)).toLocaleString('en-US', {
+      minimumFractionDigits: 2, maximumFractionDigits: 2
+    });
+    return neg ? '-' + s : s;
+  }
+  function money0(n) {
+    var neg = n < 0;
+    var s = '$' + Math.abs(Math.round(n)).toLocaleString('en-US');
+    return neg ? '-' + s : s;
+  }
+  function num(n) { return n.toLocaleString('en-US'); }
+  function pctStr(n) { return (Math.round(n * 1000) / 1000) + '%'; }
+
+  var MONTHS = ['January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'];
+  var MDAYS = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  /* Days elapsed from Jan 1 through month m (1-12), day d, inclusive. */
+  function daysElapsed(m, d, basis) {
+    if (basis === 360) return (m - 1) * 30 + d;
+    var t = 0;
+    for (var i = 0; i < m - 1; i++) t += MDAYS[i];
+    return t + d;
+  }
+
+  var MN_METRO = ['Hennepin', 'Ramsey'];
+  var MN_OTHER = ['Stearns', 'Olmsted', 'St. Louis', 'Clay', 'Polk', 'Otter Tail',
+    'Blue Earth', 'Crow Wing', 'Wright', 'Sherburne'];
+  var CITIES = ['Moorhead', 'Fargo-adjacent Dilworth', 'East Grand Forks',
+    'St. Cloud', 'Rochester', 'Duluth', 'Mankato', 'Bemidji', 'Alexandria',
+    'Brainerd', 'Willmar', 'Winona'];
+
+  var GEN = [];
+  function add(id, name, cat, gen) { GEN.push({ id: id, name: name, cat: cat, gen: gen }); }
+
+  /* ====================================================================
+     COMMISSION
+     ==================================================================== */
+
+  add('comm-split', 'Commission — agent\'s share', 'Commission', function () {
+    var price = rnd(180000, 625000, 5000);
+    var rate = pick([5, 5.5, 6, 6.5, 7]);
+    var coop = pick([50, 50, 50, 60, 40]);          // listing side keeps this %
+    var agentSplit = pick([50, 60, 65, 70, 75, 80]);
+    var total = price * rate / 100;
+    var side = total * coop / 100;
+    var agent = side * agentSplit / 100;
+
+    return {
+      q: 'A home in ' + pick(CITIES) + ' sells for ' + money0(price) + '. The total commission is ' +
+        rate + '%, split ' + coop + '/' + (100 - coop) + ' between the listing brokerage and the ' +
+        'cooperating brokerage. The listing agent\'s split with her broker is ' + agentSplit + '/' +
+        (100 - agentSplit) + ' in the agent\'s favor. <b>How much does the listing agent receive?</b>',
+      answer: agent, unit: 'money', tol: 1,
+      formula: 'Sale price x total rate = total commission -> x brokerage side % -> x agent split %',
+      steps: [
+        'Total commission: ' + money0(price) + ' x ' + rate + '% = ' + money(total),
+        'Listing brokerage side: ' + money(total) + ' x ' + coop + '% = ' + money(side),
+        'Agent\'s share: ' + money(side) + ' x ' + agentSplit + '% = ' + money(agent)
+      ],
+      tip: 'Work outside-in, one split at a time. Never multiply the two splits together first ' +
+        'and never apply the agent split to the full commission.',
+      traps: [total, side, total * agentSplit / 100]
+    };
+  });
+
+  add('comm-price', 'Commission — find the sale price', 'Commission', function () {
+    var rate = pick([5, 6, 7]);
+    var agentSplit = pick([50, 60, 70]);
+    var price = rnd(200000, 500000, 5000);
+    var agent = price * rate / 100 * 0.5 * agentSplit / 100;
+
+    return {
+      q: 'An agent received ' + money(agent) + ' on a sale. The total commission was ' + rate +
+        '%, the two brokerages split it 50/50, and the agent\'s split with his broker is ' +
+        agentSplit + '/' + (100 - agentSplit) + '. <b>What was the sale price?</b>',
+      answer: price, unit: 'money', tol: 2,
+      formula: 'Work backwards: divide by each split, then divide by the commission rate',
+      steps: [
+        'Undo the agent split: ' + money(agent) + ' / ' + (agentSplit / 100) + ' = ' +
+          money(agent / (agentSplit / 100)) + ' (the brokerage side)',
+        'Undo the 50/50 co-op split: ' + money(agent / (agentSplit / 100)) + ' / 0.50 = ' +
+          money(price * rate / 100) + ' (total commission)',
+        'Undo the rate: ' + money(price * rate / 100) + ' / ' + (rate / 100) + ' = ' + money0(price)
+      ],
+      tip: 'Going backwards means DIVIDE at every step. If your answer is smaller than the ' +
+        'commission you multiplied somewhere.',
+      traps: [price / 2, price * 2, agent / (rate / 100)]
+    };
+  });
+
+  add('net-to-seller', 'Net to seller (the classic trap)', 'Commission', function () {
+    var netWanted = rnd(180000, 400000, 1000);
+    var rate = pick([5, 6, 7]);
+    var costs = rnd(2200, 6800, 100);
+    var price = (netWanted + costs) / (1 - rate / 100);
+
+    return {
+      q: 'A seller in ' + pick(CITIES) + ' wants to <b>net ' + money0(netWanted) + '</b> after paying a ' +
+        rate + '% commission and ' + money0(costs) + ' in closing costs (there is no mortgage payoff). ' +
+        '<b>What must the property sell for?</b> Round to the nearest dollar.',
+      answer: price, unit: 'money', tol: 2,
+      formula: 'Price = (net wanted + costs) / (100% - commission rate)',
+      steps: [
+        'Add what the seller must cover: ' + money0(netWanted) + ' + ' + money0(costs) + ' = ' +
+          money0(netWanted + costs),
+        'The seller keeps 100% - ' + rate + '% = ' + (100 - rate) + '% of the price',
+        'Price = ' + money0(netWanted + costs) + ' / ' + (1 - rate / 100) + ' = ' + money(price),
+        'Check: ' + money(price) + ' x ' + rate + '% = ' + money(price * rate / 100) +
+          ' commission; ' + money(price) + ' - ' + money(price * rate / 100) + ' - ' + money0(costs) +
+          ' = ' + money(netWanted)
+      ],
+      tip: 'DIVIDE by (1 - rate). Do NOT add ' + rate + '% to the net — that is the #1 wrong ' +
+        'answer on this question type and it is always one of the choices.',
+      traps: [(netWanted + costs) * (1 + rate / 100), netWanted / (1 - rate / 100), netWanted + costs]
+    };
+  });
+
+  add('seller-proceeds', 'Seller\'s net proceeds at closing', 'Commission', function () {
+    var price = rnd(220000, 520000, 5000);
+    var rate = pick([5, 6, 6.5]);
+    var payoff = Math.round(price * rnd(45, 75) / 100 / 1000) * 1000;
+    var taxes = rnd(2400, 6000, 60);
+    var closeM = rnd(3, 10), closeD = rnd(2, 27);
+    var sellerDays = daysElapsed(closeM, closeD, 365);
+    var taxShare = taxes / 365 * sellerDays;
+    var deed = price * 0.0033;
+    var misc = rnd(600, 2400, 50);
+    var net = price - price * rate / 100 - payoff - taxShare - deed - misc;
+
+    return {
+      q: 'Closing is ' + MONTHS[closeM - 1] + ' ' + closeD + '. Sale price ' + money0(price) +
+        '. Commission ' + rate + '%. Loan payoff ' + money0(payoff) + '. Annual real estate taxes ' +
+        'of ' + money0(taxes) + ' are paid in arrears and the seller is charged through the day of ' +
+        'closing (365-day year). MN state deed tax is 0.0033. Other seller costs ' + money0(misc) +
+        '. <b>What are the seller\'s net proceeds?</b>',
+      answer: net, unit: 'money', tol: 3,
+      formula: 'Net = price - commission - payoff - prorated taxes - deed tax - other costs',
+      steps: [
+        'Commission: ' + money0(price) + ' x ' + rate + '% = ' + money(price * rate / 100),
+        'Tax proration: ' + money0(taxes) + ' / 365 = ' + money(taxes / 365) + '/day x ' +
+          sellerDays + ' days (Jan 1 - ' + MONTHS[closeM - 1] + ' ' + closeD + ') = ' + money(taxShare),
+        'Deed tax: ' + money0(price) + ' x 0.0033 = ' + money(deed),
+        'Net: ' + money0(price) + ' - ' + money(price * rate / 100) + ' - ' + money0(payoff) +
+          ' - ' + money(taxShare) + ' - ' + money(deed) + ' - ' + money0(misc) + ' = ' + money(net)
+      ],
+      tip: 'Taxes paid in arrears means the seller OWES the buyer for the time the seller owned ' +
+        'the property — it comes out of the seller\'s proceeds.',
+      traps: [net + taxShare, net + deed, price - payoff - price * rate / 100]
+    };
+  });
+
+  /* ====================================================================
+     MINNESOTA TRANSFER TAXES
+     ==================================================================== */
+
+  add('mn-deed-tax', 'MN state deed tax', 'MN Taxes', function () {
+    var metro = Math.random() < 0.4;
+    var county = metro ? pick(MN_METRO) : pick(MN_OTHER);
+    var price = rnd(155000, 780000, 1000);
+    var rate = metro ? 0.0034 : 0.0033;
+    var tax = price * rate;
+
+    return {
+      q: 'A property in <b>' + county + ' County, Minnesota</b> sells for ' + money0(price) +
+        '. <b>What is the deed tax due?</b> (State deed tax is 0.0033; Hennepin and Ramsey ' +
+        'counties add a 0.0001 Environmental Response Fund tax.)',
+      answer: tax, unit: 'money', tol: 0.5,
+      formula: 'Deed tax = net consideration x 0.0033 (x 0.0034 in Hennepin & Ramsey)',
+      steps: [
+        county + ' County rate: ' + rate + (metro ? ' (0.0033 state + 0.0001 ERF)' : ' (no ERF tax)'),
+        money0(price) + ' x ' + rate + ' = ' + money(tax)
+      ],
+      tip: 'Deed tax is on the SALE PRICE and is customarily paid by the SELLER. Only Hennepin ' +
+        'and Ramsey add the 0.0001 ERF tax. If consideration is $3,000 or less, the tax is $1.65.',
+      traps: [price * 0.0023, price * (metro ? 0.0033 : 0.0034), price * 0.033]
+    };
+  });
+
+  add('mn-mortgage-tax', 'MN mortgage registry tax', 'MN Taxes', function () {
+    var metro = Math.random() < 0.4;
+    var county = metro ? pick(MN_METRO) : pick(MN_OTHER);
+    var price = rnd(200000, 600000, 5000);
+    var ltv = pick([80, 85, 90, 95]);
+    var loan = price * ltv / 100;
+    var rate = metro ? 0.0024 : 0.0023;
+    var tax = loan * rate;
+
+    return {
+      q: 'A buyer in <b>' + county + ' County, Minnesota</b> purchases for ' + money0(price) +
+        ' with an ' + ltv + '% loan-to-value mortgage. <b>What is the mortgage registry tax?</b> ' +
+        '(State rate 0.0023; Hennepin and Ramsey add 0.0001 ERF.)',
+      answer: tax, unit: 'money', tol: 0.5,
+      formula: 'Mortgage registry tax = principal debt secured x 0.0023 (0.0024 in Hennepin & Ramsey)',
+      steps: [
+        'Loan amount: ' + money0(price) + ' x ' + ltv + '% = ' + money0(loan),
+        county + ' County rate: ' + rate,
+        money0(loan) + ' x ' + rate + ' = ' + money(tax)
+      ],
+      tip: 'Registry tax is on the LOAN, not the price, and is customarily paid by the BUYER. ' +
+        'Deed tax = seller/price/0.0033. Registry tax = buyer/loan/0.0023. Do not swap them.',
+      traps: [price * rate, loan * 0.0033, loan * 0.023]
+    };
+  });
+
+  add('mn-both-taxes', 'MN deed + registry tax together', 'MN Taxes', function () {
+    var county = pick(MN_OTHER);
+    var price = rnd(210000, 545000, 5000);
+    var down = pick([5, 10, 15, 20]);
+    var loan = price * (100 - down) / 100;
+    var deed = price * 0.0033;
+    var reg = loan * 0.0023;
+
+    return {
+      q: 'In ' + county + ' County, Minnesota a buyer purchases a home for ' + money0(price) +
+        ' with ' + down + '% down. <b>What is the combined total of the state deed tax and the ' +
+        'mortgage registry tax?</b>',
+      answer: deed + reg, unit: 'money', tol: 0.5,
+      formula: 'Deed tax (price x 0.0033) + registry tax (loan x 0.0023)',
+      steps: [
+        'Loan: ' + money0(price) + ' x ' + (100 - down) + '% = ' + money0(loan),
+        'Deed tax: ' + money0(price) + ' x 0.0033 = ' + money(deed),
+        'Registry tax: ' + money0(loan) + ' x 0.0023 = ' + money(reg),
+        'Total: ' + money(deed) + ' + ' + money(reg) + ' = ' + money(deed + reg)
+      ],
+      tip: 'Two different bases. Deed tax uses the price; registry tax uses the loan amount.',
+      traps: [price * 0.0033 + price * 0.0023, deed, reg]
+    };
+  });
+
+  /* ====================================================================
+     PRORATIONS
+     ==================================================================== */
+
+  add('tax-proration', 'Property tax proration', 'Proration', function () {
+    var basis = pick([365, 360]);
+    var taxes = basis === 360 ? rnd(2160, 7200, 360) : rnd(2190, 7300, 365);
+    var m = rnd(2, 11), d = rnd(3, 27);
+    var sellerDays = daysElapsed(m, d, basis);
+    var daily = taxes / basis;
+    var sellerShare = daily * sellerDays;
+
+    return {
+      q: 'Annual real estate taxes are ' + money0(taxes) + ', <b>paid in arrears</b>. Closing is ' +
+        MONTHS[m - 1] + ' ' + d + '. The seller is responsible <b>through the day of closing</b>. ' +
+        'Using a <b>' + basis + '-day year</b>' + (basis === 360 ? ' (30-day months)' : '') +
+        ', <b>what is the seller\'s share of the taxes?</b>',
+      answer: sellerShare, unit: 'money', tol: 1,
+      formula: 'Daily rate = annual / ' + basis + '; seller\'s days = Jan 1 through closing day',
+      steps: [
+        'Daily rate: ' + money0(taxes) + ' / ' + basis + ' = ' + money(daily),
+        'Seller\'s days: Jan 1 through ' + MONTHS[m - 1] + ' ' + d +
+          (basis === 360
+            ? ' = (' + (m - 1) + ' months x 30) + ' + d + ' = ' + sellerDays + ' days'
+            : ' = ' + sellerDays + ' days'),
+        'Seller\'s share: ' + money(daily) + ' x ' + sellerDays + ' = ' + money(sellerShare),
+        'Because taxes are paid in arrears this is a <b>debit to the seller / credit to the buyer</b>.'
+      ],
+      tip: 'Two questions to answer first: (1) how many days in the year — 360 or 365? ' +
+        '(2) does the seller own the closing day? Here yes, so count it.',
+      traps: [taxes - sellerShare, daily * (sellerDays - 1), taxes / 12 * m]
+    };
+  });
+
+  add('tax-proration-buyer', 'Tax proration — buyer\'s share', 'Proration', function () {
+    var basis = 365;
+    var taxes = rnd(2190, 7300, 365);
+    var m = rnd(2, 11), d = rnd(3, 27);
+    var sellerDays = daysElapsed(m, d, basis) - 1; // buyer owns closing day
+    var buyerDays = 365 - sellerDays;
+    var daily = taxes / 365;
+
+    return {
+      q: 'Annual taxes are ' + money0(taxes) + '. Closing is ' + MONTHS[m - 1] + ' ' + d +
+        ' and <b>the buyer is responsible for the day of closing</b>. Using a 365-day year, ' +
+        '<b>what is the buyer\'s share of the annual taxes?</b>',
+      answer: daily * buyerDays, unit: 'money', tol: 1,
+      formula: 'Buyer days = 365 - seller days; seller stops the day BEFORE closing here',
+      steps: [
+        'Daily rate: ' + money0(taxes) + ' / 365 = ' + money(daily),
+        'Seller owns Jan 1 through ' + MONTHS[m - 1] + ' ' + (d - 1) + ' = ' + sellerDays + ' days',
+        'Buyer owns 365 - ' + sellerDays + ' = ' + buyerDays + ' days',
+        'Buyer\'s share: ' + money(daily) + ' x ' + buyerDays + ' = ' + money(daily * buyerDays)
+      ],
+      tip: 'Read who owns the closing day. It moves the answer by exactly one day\'s worth — ' +
+        'and the exam always offers that off-by-one-day answer as a choice.',
+      traps: [daily * (buyerDays - 1), daily * sellerDays, taxes - daily * buyerDays]
+    };
+  });
+
+  add('rent-proration', 'Rent proration', 'Proration', function () {
+    var m = rnd(1, 12), d = rnd(4, 25);
+    var dim = MDAYS[m - 1];
+    var rent = rnd(950, 2400, 25);
+    var units = pick([1, 1, 2, 3, 4]);
+    var total = rent * units;
+    var buyerDays = dim - d;
+    var credit = total / dim * buyerDays;
+
+    return {
+      q: 'A ' + (units === 1 ? 'rental home' : units + '-unit building') + ' rents for ' +
+        money0(rent) + ' per unit per month, <b>collected in advance on the 1st</b>. The seller ' +
+        'collected ' + MONTHS[m - 1] + '\'s rent. Closing is ' + MONTHS[m - 1] + ' ' + d +
+        ' and the <b>seller owns the day of closing</b>. Using the actual ' + dim + ' days in ' +
+        MONTHS[m - 1] + ', <b>how much rent is credited to the buyer?</b>',
+      answer: credit, unit: 'money', tol: 1,
+      formula: 'Buyer credit = total rent collected / days in month x days buyer owns',
+      steps: [
+        'Rent collected: ' + money0(rent) + (units > 1 ? ' x ' + units + ' units = ' + money0(total) : ''),
+        'Daily rent: ' + money0(total) + ' / ' + dim + ' = ' + money(total / dim),
+        'Buyer\'s days: ' + dim + ' - ' + d + ' = ' + buyerDays + ' days (the ' + (d + 1) +
+          'th through the end of the month)',
+        'Credit to buyer: ' + money(total / dim) + ' x ' + buyerDays + ' = ' + money(credit)
+      ],
+      tip: 'Rent is collected IN ADVANCE, so the seller is holding money for days the buyer will ' +
+        'own — the buyer gets a credit and the seller gets a debit. Opposite direction from taxes.',
+      traps: [total - credit, total / dim * d, credit / units]
+    };
+  });
+
+  add('insurance-proration', 'Insurance / HOA proration', 'Proration', function () {
+    var annual = rnd(900, 2600, 12);
+    var m = rnd(2, 11), d = rnd(5, 25);
+    var used = daysElapsed(m, d, 360);
+    var remaining = 360 - used;
+    var refund = annual / 360 * remaining;
+
+    return {
+      q: 'A seller prepaid a full year of hazard insurance on January 1 costing ' + money0(annual) +
+        '. The buyer assumes the policy at closing on ' + MONTHS[m - 1] + ' ' + d +
+        ' (seller owns the closing day). Using a <b>360-day year with 30-day months</b>, ' +
+        '<b>how much is the seller reimbursed?</b>',
+      answer: refund, unit: 'money', tol: 1,
+      formula: 'Prepaid item: seller is credited for the unused portion remaining after closing',
+      steps: [
+        'Daily: ' + money0(annual) + ' / 360 = ' + money(annual / 360),
+        'Seller used: (' + (m - 1) + ' x 30) + ' + d + ' = ' + used + ' days',
+        'Unused: 360 - ' + used + ' = ' + remaining + ' days',
+        'Credit to seller: ' + money(annual / 360) + ' x ' + remaining + ' = ' + money(refund)
+      ],
+      tip: 'PREPAID (insurance, HOA dues) -> credit seller. ARREARS (taxes) -> credit buyer. ' +
+        'Ask "has this already been paid?" before you pick a direction.',
+      traps: [annual - refund, annual / 12 * (12 - m), refund / 2]
+    };
+  });
+
+  /* ====================================================================
+     FINANCE
+     ==================================================================== */
+
+  add('ltv', 'Loan-to-value & down payment', 'Finance', function () {
+    var price = rnd(165000, 585000, 5000);
+    var ltv = pick([75, 80, 85, 90, 95, 97]);
+    var loan = price * ltv / 100;
+
+    return {
+      q: 'A buyer purchases a home for ' + money0(price) + ' with an <b>' + ltv +
+        '% LTV</b> loan. <b>How much cash is the down payment?</b>',
+      answer: price - loan, unit: 'money', tol: 1,
+      formula: 'Loan = value x LTV; Down payment = price - loan',
+      steps: [
+        'Loan: ' + money0(price) + ' x ' + ltv + '% = ' + money0(loan),
+        'Down payment: ' + money0(price) + ' - ' + money0(loan) + ' = ' + money0(price - loan),
+        'Shortcut: the down payment is simply ' + (100 - ltv) + '% of ' + money0(price)
+      ],
+      tip: 'LTV is the LOAN percentage. The down payment is what is left over: 100% - LTV.',
+      traps: [loan, price * ltv / 100 / 2, price * (100 - ltv) / 100 / 2]
+    };
+  });
+
+  add('ltv-appraisal', 'Low appraisal — loan amount', 'Finance', function () {
+    var price = rnd(250000, 500000, 5000);
+    var appraisal = price - rnd(5000, 25000, 1000);
+    var ltv = pick([80, 90, 95]);
+    var loan = appraisal * ltv / 100;
+    var cash = price - loan;
+
+    return {
+      q: 'A buyer agrees to pay ' + money0(price) + '. The appraisal comes in at ' +
+        money0(appraisal) + '. The lender will loan ' + ltv + '% LTV and the buyer proceeds at ' +
+        'the contract price. <b>How much cash must the buyer bring?</b>',
+      answer: cash, unit: 'money', tol: 1,
+      formula: 'Lenders lend on the LESSER of sale price or appraised value',
+      steps: [
+        'Lender uses the lesser figure: ' + money0(appraisal) + ' (the appraisal)',
+        'Loan: ' + money0(appraisal) + ' x ' + ltv + '% = ' + money0(loan),
+        'Cash needed: ' + money0(price) + ' - ' + money0(loan) + ' = ' + money0(cash),
+        'The buyer covers the ' + money0(price - appraisal) + ' appraisal gap plus the normal down payment.'
+      ],
+      tip: 'LESSER OF price or appraised value — always. A low appraisal does not lower the price, ' +
+        'it raises the buyer\'s cash.',
+      traps: [price - price * ltv / 100, price * (100 - ltv) / 100, price - appraisal]
+    };
+  });
+
+  add('points', 'Discount points', 'Finance', function () {
+    var price = rnd(200000, 520000, 5000);
+    var ltv = pick([80, 90, 95]);
+    var loan = price * ltv / 100;
+    var pts = pick([1, 1.5, 2, 2.5, 3]);
+    var cost = loan * pts / 100;
+
+    return {
+      q: 'A buyer purchases at ' + money0(price) + ' with a ' + ltv + '% LTV loan and pays <b>' +
+        pts + ' discount points</b>. <b>What do the points cost?</b>',
+      answer: cost, unit: 'money', tol: 1,
+      formula: 'One point = 1% of the LOAN amount',
+      steps: [
+        'Loan: ' + money0(price) + ' x ' + ltv + '% = ' + money0(loan),
+        'Points: ' + money0(loan) + ' x ' + pts + '% = ' + money(cost)
+      ],
+      tip: 'Points are a percentage of the LOAN, never the sale price. Each point paid up front ' +
+        'buys down the interest rate (roughly 1/8% per point, but the exam tests the cost).',
+      traps: [price * pts / 100, loan * pts / 1000, loan * pts]
+    };
+  });
+
+  add('per-diem', 'Prepaid (per diem) interest', 'Finance', function () {
+    var loan = rnd(160000, 480000, 1000);
+    var rate = pick([5.25, 5.5, 5.75, 6, 6.25, 6.5, 7]);
+    var m = rnd(1, 12), d = rnd(8, 24);
+    var dim = MDAYS[m - 1];
+    var days = dim - d + 1; // closing day through end of month
+    var daily = loan * rate / 100 / 365;
+
+    return {
+      q: 'A loan of ' + money0(loan) + ' at ' + rate + '% closes on ' + MONTHS[m - 1] + ' ' + d +
+        '. The lender collects interest <b>from the day of closing through the end of the month</b>. ' +
+        'Using a 365-day year, <b>how much prepaid interest is collected?</b>',
+      answer: daily * days, unit: 'money', tol: 1,
+      formula: 'Per diem = loan x rate / 365; multiply by days of interest',
+      steps: [
+        'Annual interest: ' + money0(loan) + ' x ' + rate + '% = ' + money(loan * rate / 100),
+        'Per diem: ' + money(loan * rate / 100) + ' / 365 = ' + money(daily),
+        'Days: ' + MONTHS[m - 1] + ' ' + d + ' through ' + MONTHS[m - 1] + ' ' + dim + ' = ' +
+          dim + ' - ' + d + ' + 1 = ' + days + ' days',
+        'Prepaid interest: ' + money(daily) + ' x ' + days + ' = ' + money(daily * days)
+      ],
+      tip: 'Counting "through the end of the month" includes the closing day, so add 1. ' +
+        'Mortgage interest is paid in ARREARS, which is why the first payment is skipped a month.',
+      traps: [daily * (days - 1), loan * rate / 100 / 360 * days, daily * d]
+    };
+  });
+
+  add('amort-first', 'Amortization — first payment split', 'Finance', function () {
+    var loan = rnd(150000, 425000, 1000);
+    var rate = pick([5.5, 6, 6.25, 6.5, 7, 7.5]);
+    var pmt = rnd(Math.round(loan * rate / 100 / 12 * 1.18 / 10) * 10,
+      Math.round(loan * rate / 100 / 12 * 1.45 / 10) * 10, 10);
+    var interest = loan * rate / 100 / 12;
+    var principal = pmt - interest;
+
+    return {
+      q: 'A ' + money0(loan) + ' loan at <b>' + rate + '%</b> has a monthly principal-and-interest ' +
+        'payment of ' + money0(pmt) + '. <b>How much of the FIRST payment goes to principal?</b>',
+      answer: principal, unit: 'money', tol: 1,
+      formula: 'Interest = balance x annual rate / 12; principal = payment - interest',
+      steps: [
+        'Annual interest on the full balance: ' + money0(loan) + ' x ' + rate + '% = ' +
+          money(loan * rate / 100),
+        'One month of interest: ' + money(loan * rate / 100) + ' / 12 = ' + money(interest),
+        'Principal portion: ' + money0(pmt) + ' - ' + money(interest) + ' = ' + money(principal),
+        'New balance: ' + money0(loan) + ' - ' + money(principal) + ' = ' + money(loan - principal)
+      ],
+      tip: 'Interest is always computed on the CURRENT balance. Whatever is left of the payment ' +
+        'is principal. Early payments are mostly interest.',
+      traps: [interest, pmt - interest * 2, loan * rate / 100 / 12 / 12]
+    };
+  });
+
+  add('amort-second', 'Amortization — second month balance', 'Finance', function () {
+    var loan = rnd(180000, 400000, 1000);
+    var rate = pick([5.5, 6, 6.5, 7]);
+    var pmt = Math.round(loan * rate / 100 / 12 * 1.3 / 10) * 10;
+    var i1 = loan * rate / 100 / 12;
+    var p1 = pmt - i1;
+    var b1 = loan - p1;
+    var i2 = b1 * rate / 100 / 12;
+    var p2 = pmt - i2;
+    var b2 = b1 - p2;
+
+    return {
+      q: 'A ' + money0(loan) + ' loan at ' + rate + '% has a monthly P&I payment of ' + money0(pmt) +
+        '. <b>What is the loan balance after TWO payments?</b>',
+      answer: b2, unit: 'money', tol: 2,
+      formula: 'Repeat each month: interest = balance x rate / 12, principal = payment - interest',
+      steps: [
+        'Month 1 interest: ' + money0(loan) + ' x ' + rate + '% / 12 = ' + money(i1),
+        'Month 1 principal: ' + money0(pmt) + ' - ' + money(i1) + ' = ' + money(p1) +
+          ' -> balance ' + money(b1),
+        'Month 2 interest: ' + money(b1) + ' x ' + rate + '% / 12 = ' + money(i2),
+        'Month 2 principal: ' + money0(pmt) + ' - ' + money(i2) + ' = ' + money(p2) +
+          ' -> balance ' + money(b2)
+      ],
+      tip: 'You must recalculate interest on the NEW balance each month. Doubling month one\'s ' +
+        'principal gives a wrong (too low) balance.',
+      traps: [loan - p1 * 2, b1, loan - pmt * 2]
+    };
+  });
+
+  add('amort-factor', 'Payment from an amortization factor', 'Finance', function () {
+    var loan = rnd(150000, 480000, 1000);
+    var factor = pick([5.68, 5.996, 6.32, 6.65, 7.34, 8.05, 6.00]);
+    var pmt = loan / 1000 * factor;
+
+    return {
+      q: 'Using an amortization factor of <b>' + factor + ' per $1,000</b> of loan, ' +
+        '<b>what is the monthly principal-and-interest payment on a ' + money0(loan) + ' loan?</b>',
+      answer: pmt, unit: 'money', tol: 1,
+      formula: 'Payment = (loan / 1,000) x factor',
+      steps: [
+        'Thousands: ' + money0(loan) + ' / 1,000 = ' + (loan / 1000),
+        'Payment: ' + (loan / 1000) + ' x ' + factor + ' = ' + money(pmt)
+      ],
+      tip: 'The factor is "dollars of payment per $1,000 borrowed." Divide the loan by 1,000 FIRST.',
+      traps: [loan * factor, loan / factor, loan / 1000 * factor * 12]
+    };
+  });
+
+  add('piti', 'PITI monthly payment', 'Finance', function () {
+    var loan = rnd(180000, 420000, 1000);
+    var factor = pick([5.99, 6.32, 6.65, 7.34]);
+    var pi = loan / 1000 * factor;
+    var taxes = rnd(2400, 6600, 60);
+    var ins = rnd(900, 2100, 12);
+    var pmiRate = pick([0.5, 0.55, 0.62, 0.75]);
+    var pmi = loan * pmiRate / 100 / 12;
+    var total = pi + taxes / 12 + ins / 12 + pmi;
+
+    return {
+      q: 'Loan ' + money0(loan) + '; amortization factor ' + factor + ' per $1,000; annual taxes ' +
+        money0(taxes) + '; annual hazard insurance ' + money0(ins) + '; annual PMI of ' + pmiRate +
+        '% of the loan. <b>What is the total monthly PITI payment?</b>',
+      answer: total, unit: 'money', tol: 2,
+      formula: 'PITI = P&I + (taxes / 12) + (insurance / 12) + (PMI / 12)',
+      steps: [
+        'P&I: ' + (loan / 1000) + ' x ' + factor + ' = ' + money(pi),
+        'Taxes: ' + money0(taxes) + ' / 12 = ' + money(taxes / 12),
+        'Insurance: ' + money0(ins) + ' / 12 = ' + money(ins / 12),
+        'PMI: ' + money0(loan) + ' x ' + pmiRate + '% = ' + money(loan * pmiRate / 100) +
+          ' / 12 = ' + money(pmi),
+        'Total: ' + money(total)
+      ],
+      tip: 'Everything must be MONTHLY before you add. Annual figures get divided by 12.',
+      traps: [pi + taxes + ins, pi, total - pmi]
+    };
+  });
+
+  add('qualifying', 'Qualifying ratios (28/36)', 'Finance', function () {
+    var income = rnd(4200, 9600, 100);
+    var debts = rnd(250, 900, 25);
+    var front = income * 0.28;
+    var back = income * 0.36 - debts;
+    var max = Math.min(front, back);
+
+    return {
+      q: 'A buyer\'s gross monthly income is ' + money0(income) + ' and monthly recurring debts ' +
+        'total ' + money0(debts) + '. Using <b>28/36 qualifying ratios</b>, <b>what is the maximum ' +
+        'monthly PITI payment the buyer qualifies for?</b>',
+      answer: max, unit: 'money', tol: 1,
+      formula: 'Front-end: income x 28%. Back-end: (income x 36%) - debts. Use the LOWER.',
+      steps: [
+        'Front-end (housing) ratio: ' + money0(income) + ' x 28% = ' + money(front),
+        'Back-end (total debt) ratio: ' + money0(income) + ' x 36% = ' + money(income * 0.36) +
+          ' - ' + money0(debts) + ' = ' + money(back),
+        'The lender uses the LOWER: ' + money(max) +
+          (front < back ? ' (front-end governs)' : ' (back-end governs)')
+      ],
+      tip: 'Compute BOTH ratios and take the smaller. Remember to subtract other debts from the ' +
+        '36% figure — that is the step people forget.',
+      traps: [front === max ? back : front, income * 0.36, income * 0.28 - debts]
+    };
+  });
+
+  add('interest-solve', 'Solve for rate, principal, or time', 'Finance', function () {
+    var principal = rnd(60000, 340000, 1000);
+    var rate = pick([4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8]);
+    var annual = principal * rate / 100;
+    var mode = pick(['rate', 'principal', 'months']);
+
+    if (mode === 'rate') {
+      return {
+        q: 'A straight (interest-only) loan of ' + money0(principal) + ' generates ' + money(annual) +
+          ' of interest in one year. <b>What is the interest rate?</b> Answer as a percent.',
+        answer: rate, unit: 'percent', tol: 0.02,
+        formula: 'Rate = interest / principal',
+        steps: [
+          money(annual) + ' / ' + money0(principal) + ' = ' + (annual / principal),
+          'Move the decimal two places: ' + rate + '%'
+        ],
+        tip: 'I = P x R x T. Cover the piece you want and the other two tell you to multiply or divide.',
+        traps: [rate / 12, rate * 12, rate / 100]
+      };
+    }
+    if (mode === 'principal') {
+      return {
+        q: 'A straight (interest-only) loan at ' + rate + '% produces ' + money(annual) +
+          ' of interest per year. <b>What is the principal?</b>',
+        answer: principal, unit: 'money', tol: 2,
+        formula: 'Principal = interest / rate',
+        steps: [
+          money(annual) + ' / ' + (rate / 100) + ' = ' + money0(principal)
+        ],
+        tip: 'Dividing by a decimal smaller than 1 makes the answer bigger. If your answer shrank, ' +
+          'you multiplied.',
+        traps: [annual * rate / 100, principal / 12, annual * 12]
+      };
+    }
+    var months = pick([3, 4, 6, 8, 9, 18]);
+    var paid = annual / 12 * months;
+    return {
+      q: 'A straight loan of ' + money0(principal) + ' at ' + rate + '% ran for <b>' + months +
+        ' months</b>. <b>How much interest was paid?</b>',
+      answer: paid, unit: 'money', tol: 1,
+      formula: 'I = P x R x T (T in years, or annual interest / 12 x months)',
+      steps: [
+        'Annual interest: ' + money0(principal) + ' x ' + rate + '% = ' + money(annual),
+        'Monthly: ' + money(annual) + ' / 12 = ' + money(annual / 12),
+        months + ' months: ' + money(annual / 12) + ' x ' + months + ' = ' + money(paid)
+      ],
+      tip: 'Time must match the rate. An annual rate needs the time expressed in years (or ' +
+        'convert the interest to monthly first).',
+      traps: [annual, annual * months, paid / 2]
+    };
+  });
+
+  add('equity', 'Owner\'s equity', 'Finance', function () {
+    var value = rnd(230000, 560000, 5000);
+    var first = Math.round(value * rnd(40, 70) / 100 / 1000) * 1000;
+    var second = pick([0, rnd(15000, 55000, 1000)]);
+    var lien = pick([0, 0, rnd(3000, 14000, 500)]);
+    var equity = value - first - second - lien;
+
+    return {
+      q: 'A home is worth ' + money0(value) + '. The owner owes ' + money0(first) +
+        ' on the first mortgage' + (second ? ', ' + money0(second) + ' on a home equity loan' : '') +
+        (lien ? ', and there is a ' + money0(lien) + ' mechanic\'s lien' : '') +
+        '. <b>What is the owner\'s equity?</b>',
+      answer: equity, unit: 'money', tol: 1,
+      formula: 'Equity = current market value - all liens against the property',
+      steps: [
+        'Total owed: ' + money0(first) + (second ? ' + ' + money0(second) : '') +
+          (lien ? ' + ' + money0(lien) : '') + ' = ' + money0(first + second + lien),
+        'Equity: ' + money0(value) + ' - ' + money0(first + second + lien) + ' = ' + money0(equity)
+      ],
+      tip: 'Equity uses CURRENT market value, not what the owner originally paid, and subtracts ' +
+        'every lien — not just the first mortgage.',
+      traps: [value - first, first + second + lien, value - first + second]
+    };
+  });
+
+  /* ====================================================================
+     VALUATION & INVESTMENT
+     ==================================================================== */
+
+  add('cap-rate-value', 'Income approach — value from NOI', 'Valuation', function () {
+    var gross = rnd(48000, 190000, 1000);
+    var vac = pick([4, 5, 6, 7, 8, 10]);
+    var expPct = pick([30, 35, 38, 40, 42]);
+    var egi = gross * (1 - vac / 100);
+    var noi = egi * (1 - expPct / 100);
+    var cap = pick([6, 6.5, 7, 7.5, 8, 8.5, 9]);
+    var value = noi / (cap / 100);
+
+    return {
+      q: 'An apartment building has potential gross income of ' + money0(gross) +
+        ', a vacancy and collection loss of ' + vac + '%, and operating expenses equal to ' +
+        expPct + '% of effective gross income. At a <b>' + cap + '% capitalization rate</b>, ' +
+        '<b>what is the indicated value?</b>',
+      answer: value, unit: 'money', tol: 50,
+      formula: 'PGI - vacancy = EGI; EGI - operating expenses = NOI; Value = NOI / cap rate',
+      steps: [
+        'Vacancy: ' + money0(gross) + ' x ' + vac + '% = ' + money(gross * vac / 100),
+        'Effective gross income: ' + money0(gross) + ' - ' + money(gross * vac / 100) + ' = ' + money(egi),
+        'Operating expenses: ' + money(egi) + ' x ' + expPct + '% = ' + money(egi * expPct / 100),
+        'NOI: ' + money(egi) + ' - ' + money(egi * expPct / 100) + ' = ' + money(noi),
+        'Value: ' + money(noi) + ' / ' + (cap / 100) + ' = ' + money(value)
+      ],
+      tip: 'NOI is BEFORE debt service. Never subtract the mortgage payment. Value = NOI / Rate — ' +
+        'remember "IRV": Income = Rate x Value.',
+      traps: [gross / (cap / 100), egi / (cap / 100), noi * (cap / 100)]
+    };
+  });
+
+  add('cap-rate-solve', 'Income approach — solve for the cap rate', 'Valuation', function () {
+    var value = rnd(400000, 1800000, 25000);
+    var cap = pick([5, 5.25, 5.5, 6, 6.25, 6.5, 7, 7.25, 7.5, 8, 8.5, 9, 9.5, 10]);
+    var noi = value * cap / 100;
+
+    return {
+      q: 'An investment property producing an NOI of ' + money0(noi) + ' sold for ' + money0(value) +
+        '. <b>What was the capitalization rate?</b> Answer as a percent.',
+      answer: cap, unit: 'percent', tol: 0.05,
+      formula: 'Cap rate = NOI / value',
+      steps: [
+        money0(noi) + ' / ' + money0(value) + ' = ' + r2(noi / value * 1000) / 1000,
+        'As a percent: ' + cap + '%'
+      ],
+      tip: 'IRV triangle: I on top, R and V on the bottom. Cover R and you get I / V.',
+      traps: [cap / 12, cap * 2, value / noi]
+    };
+  });
+
+  add('grm', 'Gross rent multiplier', 'Valuation', function () {
+    var monthly = rnd(1400, 3600, 25);
+    var grm = pick([110, 120, 132, 140, 150, 160]);
+    var value = monthly * grm;
+    var mode = pick(['value', 'grm']);
+
+    if (mode === 'value') {
+      return {
+        q: 'Comparable properties in the neighborhood indicate a <b>monthly gross rent multiplier ' +
+          'of ' + grm + '</b>. A rental home produces ' + money0(monthly) + ' per month. ' +
+          '<b>What is its indicated value?</b>',
+        answer: value, unit: 'money', tol: 5,
+        formula: 'Value = monthly gross rent x GRM',
+        steps: [money0(monthly) + ' x ' + grm + ' = ' + money0(value)],
+        tip: 'Check whether the multiplier is MONTHLY (GRM, typically 100-200) or ANNUAL ' +
+          '(GIM, typically 6-12). Using the wrong one is off by a factor of 12.',
+        traps: [monthly * 12 * grm, monthly * grm / 12, value / 12]
+      };
+    }
+    return {
+      q: 'A rental property sold for ' + money0(value) + ' and rents for ' + money0(monthly) +
+        ' per month. <b>What is the monthly gross rent multiplier?</b>',
+      answer: grm, unit: 'number', tol: 0.5,
+      formula: 'GRM = sale price / monthly gross rent',
+      steps: [money0(value) + ' / ' + money0(monthly) + ' = ' + grm],
+      tip: 'GRM uses GROSS rent — expenses and vacancy are ignored. That is why it is a rough tool.',
+      traps: [grm / 12, grm * 12, value / (monthly * 12)]
+    };
+  });
+
+  add('cost-approach', 'Cost approach with depreciation', 'Valuation', function () {
+    var rcn = rnd(190000, 480000, 5000);
+    var life = pick([40, 50, 60]);
+    var age = rnd(4, 25);
+    var land = rnd(40000, 130000, 5000);
+    var dep = rcn * age / life;
+    var value = rcn - dep + land;
+
+    return {
+      q: 'Reproduction cost new of a building is ' + money0(rcn) + '. It has an effective age of <b>' +
+        age + ' years</b> and a total economic life of <b>' + life + ' years</b>. The site is worth ' +
+        money0(land) + '. Using the <b>cost approach with straight-line depreciation</b>, ' +
+        '<b>what is the indicated value?</b>',
+      answer: value, unit: 'money', tol: 5,
+      formula: 'Value = reproduction cost new - accrued depreciation + land value',
+      steps: [
+        'Depreciation rate: ' + age + ' / ' + life + ' = ' + r2(age / life * 100) + '%',
+        'Accrued depreciation: ' + money0(rcn) + ' x ' + r2(age / life * 100) + '% = ' + money(dep),
+        'Depreciated building: ' + money0(rcn) + ' - ' + money(dep) + ' = ' + money(rcn - dep),
+        'Add land (land does NOT depreciate): ' + money(rcn - dep) + ' + ' + money0(land) +
+          ' = ' + money(value)
+      ],
+      tip: 'LAND NEVER DEPRECIATES. Depreciate the building only, then add the site value back in.',
+      traps: [(rcn + land) - (rcn + land) * age / life, rcn - dep, value - land * 2]
+    };
+  });
+
+  add('appreciation', 'Appreciation / depreciation over time', 'Valuation', function () {
+    var start = rnd(180000, 420000, 5000);
+    var rate = pick([2, 3, 3.5, 4, 5]);
+    var years = pick([2, 3, 4, 5]);
+    var compound = Math.random() < 0.5;
+    var end = compound ? start * Math.pow(1 + rate / 100, years) : start * (1 + rate * years / 100);
+
+    return {
+      q: 'A home purchased for ' + money0(start) + ' appreciates <b>' + rate + '% per year, ' +
+        (compound ? 'compounded annually' : 'on a simple (straight-line) basis') + '</b>, for ' +
+        years + ' years. <b>What is it worth at the end?</b>',
+      answer: end, unit: 'money', tol: 10,
+      formula: compound
+        ? 'Value = start x (1 + rate)^years — each year builds on the last'
+        : 'Value = start x (1 + rate x years) — always off the ORIGINAL value',
+      steps: compound
+        ? (function () {
+          var s = [], v = start;
+          for (var y = 1; y <= years; y++) {
+            var nv = v * (1 + rate / 100);
+            s.push('Year ' + y + ': ' + money(v) + ' x 1.0' + (rate < 10 ? String(rate).replace('.', '') : rate) +
+              ' = ' + money(nv));
+            v = nv;
+          }
+          s.push('Value after ' + years + ' years: ' + money(end));
+          return s;
+        })()
+        : [
+          'Total appreciation: ' + rate + '% x ' + years + ' years = ' + (rate * years) + '%',
+          money0(start) + ' x ' + (1 + rate * years / 100) + ' = ' + money(end)
+        ],
+      tip: compound
+        ? 'Compounded means you must run it year by year — you cannot just multiply the rate by ' +
+          'the number of years (that answer is always offered and is always slightly low).'
+        : 'Straight-line always applies the percentage to the ORIGINAL value, never the new one.',
+      traps: [compound ? start * (1 + rate * years / 100) : start * Math.pow(1 + rate / 100, years),
+        start * rate * years / 100, start * (1 + rate / 100)]
+    };
+  });
+
+  add('profit-percent', 'Percent of profit / original price', 'Valuation', function () {
+    var mode = pick(['findOriginal', 'findPercent']);
+    var orig = rnd(140000, 380000, 1000);
+    var pct = pick([8, 10, 12, 15, 20, 25]);
+    var sold = orig * (1 + pct / 100);
+
+    if (mode === 'findOriginal') {
+      return {
+        q: 'A homeowner sold a property for ' + money0(sold) + ', which was <b>' + pct +
+          '% more than she paid</b> for it. <b>What did she originally pay?</b>',
+        answer: orig, unit: 'money', tol: 2,
+        formula: 'Original = sale price / (1 + percent gain)',
+        steps: [
+          'She sold for 100% + ' + pct + '% = ' + (100 + pct) + '% of what she paid',
+          money0(sold) + ' / ' + (1 + pct / 100) + ' = ' + money0(orig)
+        ],
+        tip: 'DIVIDE by 1.' + (pct < 10 ? '0' + pct : pct) + '. Subtracting ' + pct +
+          '% from the sale price gives a different (wrong) number — and it is always a choice.',
+        traps: [sold * (1 - pct / 100), sold - orig, sold - pct / 100 * sold]
+      };
+    }
+    return {
+      q: 'A property was purchased for ' + money0(orig) + ' and later sold for ' + money0(sold) +
+        '. <b>What was the percent of profit?</b>',
+      answer: pct, unit: 'percent', tol: 0.05,
+      formula: 'Percent change = (new - old) / OLD',
+      steps: [
+        'Profit: ' + money0(sold) + ' - ' + money0(orig) + ' = ' + money0(sold - orig),
+        'Percent: ' + money0(sold - orig) + ' / ' + money0(orig) + ' = ' + (pct / 100) + ' = ' + pct + '%'
+      ],
+      tip: 'Divide by the OLD number — what you started with. Dividing by the sale price is the ' +
+        'classic wrong answer.',
+      traps: [(sold - orig) / sold * 100, pct / 2, 100 - pct]
+    };
+  });
+
+  add('capital-gain', 'Capital gain on sale', 'Valuation', function () {
+    var purchase = rnd(150000, 320000, 5000);
+    var improve = rnd(15000, 70000, 1000);
+    var sale = rnd(purchase + improve + 40000, purchase + improve + 190000, 5000);
+    var costPct = pick([6, 7, 8]);
+    var costs = sale * costPct / 100;
+    var basis = purchase + improve;
+    var realized = sale - costs;
+    var gain = realized - basis;
+
+    return {
+      q: 'An owner bought a property for ' + money0(purchase) + ' and made ' + money0(improve) +
+        ' of capital improvements. It sold for ' + money0(sale) + ' with selling costs of ' +
+        costPct + '% of the sale price. <b>What is the capital gain?</b>',
+      answer: gain, unit: 'money', tol: 5,
+      formula: 'Adjusted basis = purchase + improvements. Gain = (sale - selling costs) - adjusted basis',
+      steps: [
+        'Adjusted basis: ' + money0(purchase) + ' + ' + money0(improve) + ' = ' + money0(basis),
+        'Selling costs: ' + money0(sale) + ' x ' + costPct + '% = ' + money(costs),
+        'Amount realized: ' + money0(sale) + ' - ' + money(costs) + ' = ' + money(realized),
+        'Gain: ' + money(realized) + ' - ' + money0(basis) + ' = ' + money(gain)
+      ],
+      tip: 'Improvements RAISE the basis (lowering the gain). Selling costs LOWER the amount ' +
+        'realized. Both work in the seller\'s favor.',
+      traps: [sale - purchase, realized - purchase, sale - basis]
+    };
+  });
+
+  add('assessed-mills', 'Property tax from a mill rate', 'Valuation', function () {
+    var market = rnd(180000, 520000, 5000);
+    var ratio = pick([100, 100, 60, 50, 40]);
+    var assessed = market * ratio / 100;
+    var mills = rnd(28, 96);
+    var tax = assessed / 1000 * mills;
+
+    return {
+      q: 'A property has a market value of ' + money0(market) +
+        (ratio === 100 ? '' : ' and is assessed at ' + ratio + '% of market value') +
+        '. The tax rate is <b>' + mills + ' mills</b>. <b>What is the annual property tax?</b>',
+      answer: tax, unit: 'money', tol: 1,
+      formula: 'One mill = $1 per $1,000 of assessed value = 0.001',
+      steps: [
+        (ratio === 100 ? 'Assessed value equals market value: ' + money0(assessed)
+          : 'Assessed value: ' + money0(market) + ' x ' + ratio + '% = ' + money0(assessed)),
+        'Thousands: ' + money0(assessed) + ' / 1,000 = ' + (assessed / 1000),
+        'Tax: ' + (assessed / 1000) + ' x ' + mills + ' = ' + money(tax)
+      ],
+      tip: 'A mill is one-tenth of one cent (0.001). Divide the assessed value by 1,000 first, ' +
+        'then multiply by the mills. Note: Minnesota actually uses a "tax capacity" system rather ' +
+        'than mills, but the national portion of the exam tests mills.',
+      traps: [market / 1000 * mills, assessed * mills / 100, assessed * mills]
+    };
+  });
+
+  /* ====================================================================
+     AREA, ACREAGE & LEGAL DESCRIPTIONS
+     ==================================================================== */
+
+  add('lot-acres', 'Lot size in acres', 'Area', function () {
+    var w = rnd(80, 400, 5);
+    var d = rnd(110, 600, 5);
+    var sq = w * d;
+    var acres = sq / 43560;
+
+    return {
+      q: 'A rectangular lot measures <b>' + w + ' feet by ' + d + ' feet</b>. ' +
+        '<b>How many acres is it?</b> Round to two decimals.',
+      answer: acres, unit: 'acres', tol: 0.02,
+      formula: '1 acre = 43,560 square feet',
+      steps: [
+        'Area: ' + w + ' x ' + d + ' = ' + num(sq) + ' sq ft',
+        'Acres: ' + num(sq) + ' / 43,560 = ' + r2(acres) + ' acres'
+      ],
+      tip: '43,560 is the number to memorize cold. To go from sq ft to acres you DIVIDE.',
+      traps: [sq / 4356, sq / 5280, acres * 43560]
+    };
+  });
+
+  add('lot-value-sqft', 'Price per square foot / per acre', 'Area', function () {
+    var acres = pick([0.5, 0.75, 1, 1.5, 2, 2.5, 5]);
+    var perAcre = rnd(12000, 48000, 500);
+    var total = acres * perAcre;
+    var sq = acres * 43560;
+
+    return {
+      q: 'A ' + acres + '-acre parcel near ' + pick(CITIES) + ' is valued at ' + money0(perAcre) +
+        ' per acre. <b>What is the value per square foot?</b> Round to the nearest cent.',
+      answer: total / sq, unit: 'money2', tol: 0.02,
+      formula: 'Value per sq ft = total value / total square feet',
+      steps: [
+        'Total value: ' + acres + ' x ' + money0(perAcre) + ' = ' + money0(total),
+        'Total square feet: ' + acres + ' x 43,560 = ' + num(sq),
+        'Per square foot: ' + money0(total) + ' / ' + num(sq) + ' = ' + money(total / sq),
+        'Shortcut: price per acre / 43,560 gives the same answer.'
+      ],
+      tip: 'The acreage cancels out — you can just divide the per-acre price by 43,560.',
+      traps: [perAcre / 43560 * 10, total / acres, sq / total]
+    };
+  });
+
+  add('section-acres', 'Legal description — acreage', 'Area', function () {
+    var parts = pick([
+      { t: 'the NW1/4 of the SE1/4', f: [1 / 4, 1 / 4] },
+      { t: 'the N1/2 of the SW1/4', f: [1 / 2, 1 / 4] },
+      { t: 'the SE1/4 of the NE1/4 of the SW1/4', f: [1 / 4, 1 / 4, 1 / 4] },
+      { t: 'the E1/2 of the NW1/4 of the NE1/4', f: [1 / 2, 1 / 4, 1 / 4] },
+      { t: 'the S1/2 of the SE1/4', f: [1 / 2, 1 / 4] },
+      { t: 'the W1/2 of the SW1/4 of the SE1/4', f: [1 / 2, 1 / 4, 1 / 4] }
+    ]);
+    var frac = parts.f.reduce(function (a, b) { return a * b; }, 1);
+    var acres = 640 * frac;
+    var sec = rnd(1, 36);
+    var perAcre = rnd(3500, 11000, 250);
+    var wantValue = Math.random() < 0.45;
+
+    if (wantValue) {
+      return {
+        q: 'Farmland described as <b>' + parts.t + ' of Section ' + sec + '</b> sells for ' +
+          money0(perAcre) + ' per acre. <b>What is the total sale price?</b>',
+        answer: acres * perAcre, unit: 'money', tol: 5,
+        formula: 'A section = 640 acres. Multiply the fractions together, then by 640.',
+        steps: [
+          'Multiply the fractions: ' + parts.f.map(function (x) {
+            return x === 0.5 ? '1/2' : '1/4';
+          }).join(' x ') + ' = 1/' + Math.round(1 / frac),
+          'Acres: 640 / ' + Math.round(1 / frac) + ' = ' + acres + ' acres',
+          'Price: ' + acres + ' x ' + money0(perAcre) + ' = ' + money0(acres * perAcre)
+        ],
+        tip: 'Read the description RIGHT TO LEFT, but for acreage you can just multiply all the ' +
+          'fractions and apply them to 640.',
+        traps: [640 * perAcre, acres * perAcre / 2, acres * perAcre * 2]
+      };
+    }
+    return {
+      q: 'How many acres are in <b>' + parts.t + ' of Section ' + sec + '</b>?',
+      answer: acres, unit: 'acres', tol: 0.01,
+      formula: 'Section = 640 acres = 1 square mile. Multiply all the fractions by 640.',
+      steps: [
+        'Fractions: ' + parts.f.map(function (x) { return x === 0.5 ? '1/2' : '1/4'; }).join(' x ') +
+          ' = 1/' + Math.round(1 / frac),
+        '640 x 1/' + Math.round(1 / frac) + ' = ' + acres + ' acres'
+      ],
+      tip: 'Memorize: section = 640 acres; township = 36 sections = 36 sq miles; ' +
+        'a quarter-quarter (40 acres) is the smallest common farm parcel.',
+      traps: [acres * 2, acres / 2, 640 - acres]
+    };
+  });
+
+  add('triangle-lot', 'Triangular / irregular lot', 'Area', function () {
+    var b = rnd(90, 320, 10);
+    var h = rnd(80, 300, 10);
+    var area = b * h / 2;
+    var perSq = rnd(3, 14);
+
+    return {
+      q: 'A triangular corner lot has a base of <b>' + b + ' feet</b> and a height of <b>' + h +
+        ' feet</b>. At ' + money0(perSq) + ' per square foot, <b>what is the lot worth?</b>',
+      answer: area * perSq, unit: 'money', tol: 2,
+      formula: 'Triangle area = 1/2 x base x height',
+      steps: [
+        'Area: (' + b + ' x ' + h + ') / 2 = ' + num(area) + ' sq ft',
+        'Value: ' + num(area) + ' x ' + money0(perSq) + ' = ' + money0(area * perSq)
+      ],
+      tip: 'Do not forget to divide by 2. Forgetting it doubles your answer — and that number is ' +
+        'always one of the choices.',
+      traps: [b * h * perSq, area, b * h]
+    };
+  });
+
+  add('house-sqft', 'Square footage & price per square foot', 'Area', function () {
+    var l = rnd(28, 60, 2), w = rnd(24, 44, 2);
+    var stories = pick([1, 1, 2]);
+    var sq = l * w * stories;
+    var price = rnd(180000, 450000, 5000);
+
+    return {
+      q: 'A ' + (stories === 2 ? 'two-story' : 'one-story') + ' home measures <b>' + l +
+        ' feet by ' + w + ' feet</b>' + (stories === 2 ? ' on each floor' : '') +
+        ' and is listed at ' + money0(price) + '. <b>What is the price per square foot ' +
+        'of living area?</b> Round to the nearest cent.',
+      answer: price / sq, unit: 'money2', tol: 0.05,
+      formula: 'Price per sq ft = price / gross living area',
+      steps: [
+        'Area per floor: ' + l + ' x ' + w + ' = ' + num(l * w) + ' sq ft',
+        (stories === 2 ? 'Two floors: ' + num(l * w) + ' x 2 = ' + num(sq) + ' sq ft'
+          : 'Total living area: ' + num(sq) + ' sq ft'),
+        'Price per sq ft: ' + money0(price) + ' / ' + num(sq) + ' = ' + money(price / sq)
+      ],
+      tip: 'Gross living area counts finished ABOVE-GRADE space. A Minnesota basement — even a ' +
+        'finished one — is valued separately, not added into GLA.',
+      traps: [price / (l * w), price / (sq * 2), sq / price]
+    };
+  });
+
+  add('conversions', 'Measurement conversions', 'Area', function () {
+    var mode = pick(['sqyd', 'acres2sq', 'mile', 'frontfoot']);
+    if (mode === 'sqyd') {
+      var l = rnd(12, 40, 2), w = rnd(10, 30, 2);
+      var sq = l * w, yd = sq / 9;
+      var cost = rnd(28, 65);
+      return {
+        q: 'A room measures ' + l + ' feet by ' + w + ' feet. Carpet costs ' + money0(cost) +
+          ' per square YARD. <b>What is the carpet cost?</b>',
+        answer: yd * cost, unit: 'money', tol: 1,
+        formula: '1 square yard = 9 square feet',
+        steps: [
+          'Area: ' + l + ' x ' + w + ' = ' + num(sq) + ' sq ft',
+          'Square yards: ' + num(sq) + ' / 9 = ' + r2(yd),
+          'Cost: ' + r2(yd) + ' x ' + money0(cost) + ' = ' + money(yd * cost)
+        ],
+        tip: '9 sq ft per sq yard (3 ft x 3 ft), not 3. Carpet and flooring questions live on this.',
+        traps: [sq * cost, sq / 3 * cost, yd * cost / 3]
+      };
+    }
+    if (mode === 'acres2sq') {
+      var ac = pick([0.25, 0.33, 0.5, 1.25, 2.5, 3, 4.5]);
+      return {
+        q: 'How many <b>square feet</b> are in a ' + ac + '-acre parcel?',
+        answer: ac * 43560, unit: 'sqft', tol: 1,
+        formula: '1 acre = 43,560 square feet',
+        steps: [ac + ' x 43,560 = ' + num(ac * 43560) + ' sq ft'],
+        tip: 'Acres to square feet: MULTIPLY. Square feet to acres: DIVIDE.',
+        traps: [ac * 4356, ac / 43560, 43560]
+      };
+    }
+    if (mode === 'mile') {
+      var sides = pick([1, 2, 3, 4, 6]);
+      return {
+        q: 'A square parcel contains exactly <b>' + (sides * sides) + ' square miles</b>. ' +
+          '<b>How many acres is it?</b>',
+        answer: sides * sides * 640, unit: 'acres', tol: 1,
+        formula: '1 square mile = 640 acres = 1 section',
+        steps: [(sides * sides) + ' sq mi x 640 acres = ' + num(sides * sides * 640) + ' acres'],
+        tip: '640 acres per section/square mile; 5,280 feet per mile; 36 sections per township.',
+        traps: [sides * 640, sides * sides * 43560, 640]
+      };
+    }
+    var ff = rnd(60, 180, 5);
+    var depth = rnd(120, 300, 10);
+    var perFF = rnd(600, 3200, 50);
+    return {
+      q: 'A commercial lot has <b>' + ff + ' front feet</b> and a depth of ' + depth +
+        ' feet. Land in the area sells for ' + money0(perFF) + ' <b>per front foot</b>. ' +
+        '<b>What is the lot worth?</b>',
+      answer: ff * perFF, unit: 'money', tol: 2,
+      formula: 'Front-foot value = front footage x price per front foot (depth is a distractor)',
+      steps: [
+        ff + ' front feet x ' + money0(perFF) + ' = ' + money0(ff * perFF),
+        'The ' + depth + '-foot depth is not used — front-foot pricing ignores it.'
+      ],
+      tip: 'Front footage is the side ON THE STREET. When a problem prices per front foot, the ' +
+        'depth is deliberately there to bait you into computing square footage.',
+      traps: [ff * depth * perFF, ff * depth, depth * perFF]
+    };
+  });
+
+  /* ====================================================================
+     CLOSING STATEMENT LOGIC
+     ==================================================================== */
+
+  add('buyer-cash', 'Cash the buyer needs at closing', 'Closing', function () {
+    var price = rnd(215000, 495000, 5000);
+    var ltv = pick([80, 90, 95]);
+    var loan = price * ltv / 100;
+    var em = rnd(2000, 12000, 500);
+    var costs = rnd(3800, 9500, 100);
+    var prepaids = rnd(1200, 3600, 50);
+    var taxCredit = rnd(900, 3200, 50);
+    var cash = price - loan - em + costs + prepaids - taxCredit;
+
+    return {
+      q: 'Sale price ' + money0(price) + ' with an ' + ltv + '% LTV loan. The buyer already paid ' +
+        money0(em) + ' earnest money, owes ' + money0(costs) + ' in closing costs and ' +
+        money0(prepaids) + ' in prepaids, and receives a ' + money0(taxCredit) +
+        ' credit for taxes the seller owes. <b>How much cash must the buyer bring to closing?</b>',
+      answer: cash, unit: 'money', tol: 2,
+      formula: 'Cash due = (debits: price + costs + prepaids) - (credits: loan + earnest money + prorations)',
+      steps: [
+        'Buyer DEBITS: ' + money0(price) + ' + ' + money0(costs) + ' + ' + money0(prepaids) +
+          ' = ' + money0(price + costs + prepaids),
+        'Buyer CREDITS: loan ' + money0(loan) + ' + earnest money ' + money0(em) +
+          ' + tax proration ' + money0(taxCredit) + ' = ' + money0(loan + em + taxCredit),
+        'Cash to close: ' + money0(price + costs + prepaids) + ' - ' + money0(loan + em + taxCredit) +
+          ' = ' + money0(cash)
+      ],
+      tip: 'Debit = what you owe. Credit = what you already have or are given. Earnest money is a ' +
+        'buyer CREDIT because it is already paid — do not add it again.',
+      traps: [cash + em, cash + taxCredit * 2, price - loan + costs]
+    };
+  });
+
+  /* ================================================================== API */
+
+  var CATS = [];
+  GEN.forEach(function (g) { if (CATS.indexOf(g.cat) < 0) CATS.push(g.cat); });
+
+  function byId(id) {
+    for (var i = 0; i < GEN.length; i++) if (GEN[i].id === id) return GEN[i];
+    return null;
+  }
+
+  /* Build 4 multiple-choice options around the correct answer. */
+  function choicesFor(p) {
+    var out = [p.answer];
+    var pool = (p.traps || []).slice();
+    // pad with plausible perturbations
+    pool.push(p.answer * 1.1, p.answer * 0.9, p.answer * 1.25, p.answer / 2, p.answer * 2);
+    for (var i = 0; i < pool.length && out.length < 4; i++) {
+      var v = pool[i];
+      if (!isFinite(v) || v <= 0) continue;
+      var dup = out.some(function (o) { return Math.abs(o - v) < Math.max(p.tol, Math.abs(p.answer) * 0.004); });
+      if (!dup) out.push(v);
+    }
+    // shuffle
+    for (var j = out.length - 1; j > 0; j--) {
+      var k = Math.floor(Math.random() * (j + 1));
+      var t = out[j]; out[j] = out[k]; out[k] = t;
+    }
+    return out;
+  }
+
+  function fmt(v, unit) {
+    switch (unit) {
+      case 'money': return money(v);
+      case 'money2': return money(v);
+      case 'percent': return (Math.round(v * 1000) / 1000) + '%';
+      case 'acres': return (Math.round(v * 100) / 100) + ' acres';
+      case 'sqft': return num(Math.round(v)) + ' sq ft';
+      default: return String(Math.round(v * 100) / 100);
+    }
+  }
+
+  /* Parse whatever the student types: "$1,234.50", "6.5%", "1234.5" */
+  function parseAnswer(s) {
+    if (s === null || s === undefined) return NaN;
+    var clean = String(s).replace(/[$,\s]/g, '').replace(/%/g, '')
+      .replace(/acres?/ig, '').replace(/sq\.?\s*ft\.?/ig, '');
+    if (clean === '' || clean === '-') return NaN;
+    return parseFloat(clean);
+  }
+
+  global.MathGen = {
+    generators: GEN,
+    cats: CATS,
+    byId: byId,
+    random: function (cat) {
+      var pool = cat && cat !== 'All' ? GEN.filter(function (g) { return g.cat === cat; }) : GEN;
+      var g = pick(pool);
+      var p = g.gen();
+      p.genId = g.id;
+      p.genName = g.name;
+      p.cat = g.cat;
+      return p;
+    },
+    fromId: function (id) {
+      var g = byId(id);
+      if (!g) return null;
+      var p = g.gen();
+      p.genId = g.id; p.genName = g.name; p.cat = g.cat;
+      return p;
+    },
+    choicesFor: choicesFor,
+    fmt: fmt,
+    parseAnswer: parseAnswer,
+    money: money, money0: money0
+  };
+})(window);
+
+</script>
+<script>
+/* ==========================================================================
+   questions.js — multiple-choice bank for the MN Real Estate Salesperson exam
+   portion: 'national' (80 of the 120 exam questions) or 'state' (the other 40)
+   a: index of the correct choice
+   why: explanation shown after answering
+   ========================================================================== */
+(function (global) {
+  'use strict';
+
+  var Q = [];
+  function q(portion, cat, text, choices, a, why) {
+    Q.push({ id: 'q' + (Q.length + 1), portion: portion, cat: cat, q: text, choices: choices, a: a, why: why });
+  }
+
+  /* ======================================================================
+     AGENCY  (national)
+     ====================================================================== */
+
+  q('national', 'Agency', 'An agent owes the duties of loyalty, obedience, disclosure, confidentiality, accounting, and reasonable care. To whom are these fiduciary duties owed?',
+    ['The client (principal)', 'The customer', 'Both parties equally', 'The broker only'], 0,
+    'Fiduciary duties run to the CLIENT. A customer receives honesty and fair dealing plus disclosure of material facts, but not fiduciary duties.');
+
+  q('national', 'Agency', 'A buyer tells a listing agent, "I am willing to go up to $340,000, but offer $315,000." The listing agent represents the seller. What must the agent do?',
+    ['Keep the information confidential from the seller',
+      'Disclose the buyer\'s top price to the seller',
+      'Refuse to present the low offer',
+      'Advise the buyer to raise the offer'], 1,
+    'The listing agent owes disclosure and loyalty to the SELLER. Anything material learned about the buyer\'s position must be passed to the client. This is exactly why buyers should not confide in the listing agent.');
+
+  q('national', 'Agency', 'Which duty survives the termination of the agency relationship?',
+    ['Obedience', 'Confidentiality', 'Loyalty', 'Accounting for the client\'s time'], 1,
+    'Confidentiality continues after the relationship ends. The other fiduciary duties end when the agency terminates.');
+
+  q('national', 'Agency', 'An agency relationship created by the words and conduct of the parties, without a written agreement, is:',
+    ['Express agency', 'Implied agency', 'Ostensible agency', 'Universal agency'], 1,
+    'Implied agency arises from conduct. Express agency is created by words, written or oral. Accidentally creating implied agency with a buyer is a common liability trap.');
+
+  q('national', 'Agency', 'A licensee who represents neither party but assists both in a transaction is generally called:',
+    ['A dual agent', 'A subagent', 'A facilitator or transaction broker', 'A designated agent'], 2,
+    'A facilitator/transaction broker is a non-agent who helps the transaction along. Minnesota specifically recognizes and defines the FACILITATOR status by statute.');
+
+  q('national', 'Agency', 'Puffing differs from misrepresentation because puffing is:',
+    ['A statement of opinion that a reasonable person would not rely on',
+      'A false statement made innocently',
+      'Always illegal',
+      'A material fact stated incorrectly'], 0,
+    '"Best view in town" is opinion (puffing). "The roof is three years old" when it is twenty is a misrepresentation of material fact and creates liability.');
+
+  q('national', 'Agency', 'A latent defect is one that:',
+    ['Is obvious upon reasonable inspection',
+      'Is hidden and not discoverable by ordinary inspection',
+      'Only affects the exterior of the property',
+      'Has been repaired'], 1,
+    'Latent = hidden. Known latent material defects must be disclosed; that duty is owed even to a customer and cannot be waived by an "as-is" clause.');
+
+  q('national', 'Agency', 'A seller instructs the listing agent not to show the property to families with children. The agent should:',
+    ['Comply, because the seller is the client',
+      'Comply but document the instruction',
+      'Refuse and explain that the instruction is an illegal discriminatory act',
+      'Withdraw quietly without explanation'], 2,
+    'The duty of obedience covers only LAWFUL instructions. Following this one would violate the familial status protection in federal fair housing law.');
+
+  q('national', 'Agency', 'Which of these would terminate an agency relationship by operation of law?',
+    ['Mutual agreement of the parties', 'Death or incapacity of the principal',
+      'The agent finding a buyer', 'The client changing brokerages'], 1,
+    'Death, incapacity, bankruptcy, or destruction of the property terminate agency by operation of law — no action by the parties is needed.');
+
+  q('national', 'Agency', 'A designated agency arrangement means:',
+    ['The broker designates one licensee to represent the buyer and another to represent the seller',
+      'The broker represents both parties personally',
+      'The seller designates which agent may show the home',
+      'The buyer designates a preferred lender'], 0,
+    'In designated agency the broker names individual licensees for each side. The broker typically remains a dual agent while the designated licensees each advocate for their own client.');
+
+  /* ======================================================================
+     CONTRACTS  (national)
+     ====================================================================== */
+
+  q('national', 'Contracts', 'The essential elements of a valid contract include all of the following EXCEPT:',
+    ['Offer and acceptance', 'Consideration', 'Legal purpose', 'Written form'], 3,
+    'Writing is a requirement of the STATUTE OF FRAUDS for certain contracts (like real estate sales), not an element of validity itself. The four elements are competent parties, mutual assent, consideration, and legal purpose.');
+
+  q('national', 'Contracts', 'A contract that is missing a required element and has no legal effect whatsoever is:',
+    ['Voidable', 'Void', 'Unenforceable', 'Executory'], 1,
+    'Void = never a contract at all. Voidable = valid until the injured party disaffirms (e.g., a minor\'s contract). Unenforceable = valid but a court will not enforce it (e.g., not in writing).');
+
+  q('national', 'Contracts', 'A seller receives an offer and returns it with the price changed. This is:',
+    ['An acceptance with conditions', 'A counteroffer that terminates the original offer',
+      'A binding contract at the new price', 'An option'], 1,
+    'Any change to the terms is a counteroffer. It REJECTS the original offer — the seller cannot later go back and accept the first offer unless the buyer re-extends it.');
+
+  q('national', 'Contracts', 'Which contract requires the offeree to perform, not merely to promise to perform?',
+    ['Bilateral contract', 'Unilateral contract', 'Executed contract', 'Implied contract'], 1,
+    'Unilateral = a promise in exchange for an ACT. An open listing and a reward offer are classic examples. A bilateral contract is a promise for a promise.');
+
+  q('national', 'Contracts', 'Earnest money in a purchase agreement is best described as:',
+    ['A required element of contract validity',
+      'Evidence of the buyer\'s good faith that also becomes part of consideration',
+      'The broker\'s commission', 'A non-refundable fee'], 1,
+    'Earnest money is NOT required to form a valid contract — the mutual promises are the consideration. It shows good faith and is usually applied to the purchase price at closing.');
+
+  q('national', 'Contracts', 'A purchase agreement contains a financing contingency. If the buyer makes a good-faith effort and cannot obtain the loan, the buyer:',
+    ['Forfeits the earnest money', 'May generally cancel and recover the earnest money',
+      'Must buy the property for cash', 'Must accept any loan offered'], 1,
+    'A contingency is a condition. If the condition genuinely fails despite good-faith effort, the contract terminates and the earnest money is returned.');
+
+  q('national', 'Contracts', 'The legal remedy that forces a party to actually convey the property, rather than pay money damages, is:',
+    ['Liquidated damages', 'Rescission', 'Specific performance', 'Novation'], 2,
+    'Because every parcel of real estate is legally unique, courts will order SPECIFIC PERFORMANCE — money damages are considered inadequate.');
+
+  q('national', 'Contracts', 'Substituting a new party into a contract, releasing the original party from liability, is:',
+    ['Assignment', 'Novation', 'Subordination', 'Rescission'], 1,
+    'Novation RELEASES the original party. Assignment transfers rights but the original party usually remains secondarily liable — that distinction is heavily tested.');
+
+  q('national', 'Contracts', 'An option contract gives the optionee:',
+    ['The obligation to buy at a set price', 'The right, but not the obligation, to buy within a set time',
+      'Title to the property', 'A lien on the property'], 1,
+    'An option is unilateral: the optionor (owner) is bound; the optionee may walk away and simply lose the option consideration.');
+
+  q('national', 'Contracts', 'A listing agreement in which the broker earns a commission no matter who sells the property, including the owner, is:',
+    ['An open listing', 'An exclusive agency listing', 'An exclusive right to sell listing', 'A net listing'], 2,
+    'Exclusive RIGHT TO SELL = broker paid regardless of who procures the buyer. Exclusive AGENCY = owner can sell it themselves commission-free.');
+
+  q('national', 'Contracts', 'A net listing, in which the broker keeps everything above a price set by the seller, is:',
+    ['Preferred by most brokers', 'Illegal or discouraged in most states because of the conflict of interest',
+      'The same as an open listing', 'Required to be in writing only'], 1,
+    'Net listings create a direct conflict between the broker\'s profit and the client\'s interest. They are prohibited or strongly restricted in most states.');
+
+  q('national', 'Contracts', 'Time is of the essence in a contract means:',
+    ['Deadlines are approximate', 'Deadlines must be met exactly or a party is in breach',
+      'The contract expires in 30 days', 'Closing must occur at a specific hour'], 1,
+    'With this clause, missing a stated deadline is a breach — no reasonable-time grace is implied.');
+
+  q('national', 'Contracts', 'Which of the following would NOT terminate an offer?',
+    ['The offeror revokes it before acceptance', 'The offeree makes a counteroffer',
+      'The offeree tells a friend she likes the offer', 'The offeror dies before acceptance'], 2,
+    'Only communication to the OFFEROR matters. Private thoughts or statements to third parties have no legal effect on the offer.');
+
+  q('national', 'Contracts', 'Liquidated damages in a purchase agreement typically means:',
+    ['The seller may sue for unlimited damages',
+      'The parties agreed in advance on the amount recoverable, often the earnest money',
+      'The buyer receives the property', 'The broker keeps the entire deposit'], 1,
+    'Liquidated damages is a pre-agreed, capped remedy. Retaining the earnest money as the seller\'s sole remedy is the most common form.');
+
+  q('national', 'Contracts', 'A contract signed by a person who has been declared legally incompetent by a court is:',
+    ['Valid', 'Voidable by that person', 'Void', 'Enforceable against both parties'], 2,
+    'ADJUDICATED incompetent = VOID. Someone who is merely impaired but not adjudicated creates a VOIDABLE contract. The exam tests that distinction.');
+
+  q('national', 'Contracts', 'Under the parol evidence rule:',
+    ['Oral agreements always override written ones',
+      'Prior oral agreements generally cannot contradict a complete written contract',
+      'All contracts must be notarized', 'Only licensed attorneys may draft contracts'], 1,
+    'Once the parties reduce the deal to a complete written contract, earlier oral side deals cannot be used to contradict it. Get every promise in the written agreement.');
+
+  q('national', 'Contracts', 'An "as-is" clause in a purchase agreement:',
+    ['Relieves the seller of the duty to disclose known material defects',
+      'Does not relieve the seller of the duty to disclose known material defects',
+      'Makes the contract void', 'Is prohibited in residential transactions'], 1,
+    '"As-is" addresses who pays for REPAIRS. It never licenses concealment of known material defects, and it does not override Minnesota\'s statutory seller disclosure duty.');
+
+  /* ======================================================================
+     PROPERTY, OWNERSHIP & TITLE  (national)
+     ====================================================================== */
+
+  q('national', 'Property & Title', 'The bundle of rights in real property includes all EXCEPT:',
+    ['Possession', 'Enjoyment', 'Exclusion', 'Taxation'], 3,
+    'The bundle is possession, enjoyment, control, exclusion, and disposition. Taxation is a GOVERNMENT power (PETE), not an owner\'s right.');
+
+  q('national', 'Property & Title', 'The government powers that limit private ownership are remembered as PETE. The "E" powers are:',
+    ['Escrow and encumbrance', 'Eminent domain and escheat', 'Easement and estate', 'Equity and encroachment'], 1,
+    'PETE = Police power, Eminent domain, Taxation, Escheat. Escheat is the state taking property when an owner dies with no heirs and no will.');
+
+  q('national', 'Property & Title', 'Ownership by two or more people with right of survivorship, requiring the four unities, is:',
+    ['Tenancy in common', 'Joint tenancy', 'Tenancy by the entirety', 'Severalty'], 1,
+    'Joint tenancy requires unity of Possession, Interest, Time, Title (PITT) and carries survivorship. Tenancy in common has no survivorship and interests may be unequal.');
+
+  q('national', 'Property & Title', 'Ownership by one person or one legal entity alone is:',
+    ['Severalty', 'Tenancy in common', 'Community property', 'Partition'], 0,
+    'Severalty comes from "severed" — the owner is severed from all others. Despite sounding plural, it means sole ownership.');
+
+  q('national', 'Property & Title', 'The highest and most complete form of ownership is:',
+    ['Life estate', 'Fee simple absolute', 'Leasehold estate', 'Fee simple determinable'], 1,
+    'Fee simple absolute is unlimited in duration and inheritable, subject only to government powers and private restrictions.');
+
+  q('national', 'Property & Title', 'A right to cross a neighbor\'s land to reach your own is a(n):',
+    ['License', 'Easement appurtenant', 'Easement in gross', 'Encroachment'], 1,
+    'Appurtenant easements involve two adjoining parcels (dominant and servient) and RUN WITH THE LAND. Easement in gross benefits a person or company (utility lines).');
+
+  q('national', 'Property & Title', 'A deed that provides the greatest protection to the grantee is a:',
+    ['Quitclaim deed', 'Special warranty deed', 'General warranty deed', 'Bargain and sale deed'], 2,
+    'General warranty deed warrants title back through the entire chain. A quitclaim conveys only whatever interest the grantor may have, with no warranties.');
+
+  q('national', 'Property & Title', 'Which deed is most commonly used to clear a cloud on the title?',
+    ['General warranty deed', 'Quitclaim deed', 'Sheriff\'s deed', 'Trustee\'s deed'], 1,
+    'A quitclaim releases any possible claim without warranting anything, which makes it the standard tool for curing title defects.');
+
+  q('national', 'Property & Title', 'For a deed to be valid it must be:',
+    ['Recorded', 'Delivered to and accepted by the grantee', 'Signed by the grantee', 'Notarized'], 1,
+    'Delivery and acceptance make the deed effective. Recording gives CONSTRUCTIVE NOTICE to the world and protects priority, but a deed is valid between the parties without it.');
+
+  q('national', 'Property & Title', 'Recording a deed provides:',
+    ['Actual notice', 'Constructive notice', 'Marketable title', 'A title guarantee'], 1,
+    'Constructive (legal) notice = the public record charges everyone with knowledge. Actual notice is what a person genuinely knows.');
+
+  q('national', 'Property & Title', 'An encroachment is:',
+    ['A permitted use of another\'s land', 'An unauthorized physical intrusion onto another\'s land',
+      'A lien', 'A zoning violation only'], 1,
+    'A fence or garage built over the boundary line is an encroachment; it is discovered by a SURVEY and can make title unmarketable.');
+
+  q('national', 'Property & Title', 'Which lien takes priority over all others, regardless of when it was recorded?',
+    ['First mortgage', 'Mechanic\'s lien', 'Real property tax lien', 'Judgment lien'], 2,
+    'Ad valorem property tax liens (and special assessments) are superior to everything, including a first mortgage recorded earlier.');
+
+  q('national', 'Property & Title', 'A mechanic\'s lien secures payment for:',
+    ['Auto repairs performed on the property', 'Labor and materials furnished to improve the property',
+      'Unpaid income taxes', 'Homeowners association dues'], 1,
+    'Contractors, subcontractors, and suppliers who improve real property may file a mechanic\'s lien. Priority often relates back to when work began, which is why lien waivers matter.');
+
+  q('national', 'Property & Title', 'Personal property that has become permanently attached to real property is a:',
+    ['Trade fixture', 'Fixture', 'Chattel', 'Emblement'], 1,
+    'The tests are Method of attachment, Adaptability, Relationship of the parties, Intent, and Agreement (MARIA), with INTENT weighing most heavily.');
+
+  q('national', 'Property & Title', 'A tenant installs shelving and display counters to run a retail store. At lease end these are:',
+    ['Fixtures that stay with the property', 'Trade fixtures the tenant may remove',
+      'Property of the lender', 'Emblements'], 1,
+    'Trade fixtures installed for business use remain the tenant\'s property and may be removed before the lease ends, with the tenant repairing any damage.');
+
+  q('national', 'Property & Title', 'A lease for a definite period that ends automatically without notice is a:',
+    ['Estate at will', 'Estate for years', 'Periodic tenancy', 'Estate at sufferance'], 1,
+    'Estate for years has a definite start and end date — even if the term is only six months. No notice is required for it to end.');
+
+  q('national', 'Property & Title', 'A tenant remains in possession after the lease expires, without the landlord\'s permission. This is a(n):',
+    ['Estate at sufferance', 'Periodic tenancy', 'Estate for years', 'Estate at will'], 0,
+    'A holdover tenant with no consent has an estate at SUFFERANCE — the lowest estate, just above trespass.');
+
+  q('national', 'Property & Title', 'Zoning is an exercise of which government power?',
+    ['Eminent domain', 'Police power', 'Escheat', 'Taxation'], 1,
+    'Police power protects public health, safety, and welfare. It requires no compensation, unlike eminent domain.');
+
+  q('national', 'Property & Title', 'A property use that lawfully predates a new zoning ordinance and is allowed to continue is:',
+    ['A variance', 'A special use permit', 'A legal nonconforming use', 'Spot zoning'], 2,
+    '"Grandfathered in." A VARIANCE is permission to deviate from current zoning going forward; a nonconforming use already existed lawfully.');
+
+  q('national', 'Property & Title', 'Private restrictions placed on all lots in a subdivision by the developer are:',
+    ['Zoning ordinances', 'Restrictive covenants (CC&Rs)', 'Easements in gross', 'Police power'], 1,
+    'CC&Rs are PRIVATE and enforced by injunction among owners or the HOA. When a covenant and zoning conflict, the more restrictive one controls.');
+
+  /* ======================================================================
+     FINANCE  (national)
+     ====================================================================== */
+
+  q('national', 'Finance', 'In a lien theory state, the mortgage gives the lender:',
+    ['Legal title until the debt is paid', 'A lien against the property while the borrower keeps title',
+      'The right to occupy the property', 'A leasehold interest'], 1,
+    'Minnesota is a LIEN THEORY state: the borrower holds title and possession; the lender holds only a security interest until foreclosure is complete.');
+
+  q('national', 'Finance', 'The clause that lets a lender declare the entire balance due upon default is the:',
+    ['Defeasance clause', 'Acceleration clause', 'Alienation clause', 'Subordination clause'], 1,
+    'ACCELERATION makes the whole balance due immediately. The ALIENATION (due-on-sale) clause triggers on transfer of the property, not default.');
+
+  q('national', 'Finance', 'A due-on-sale clause prevents:',
+    ['Prepaying the loan', 'A buyer from assuming the existing loan without lender consent',
+      'The lender from foreclosing', 'Refinancing'], 1,
+    'Also called the alienation clause. It is why most conventional loans cannot simply be taken over by a buyer.');
+
+  q('national', 'Finance', 'Which loan type typically requires a funding fee and allows qualified veterans to purchase with no down payment?',
+    ['FHA', 'VA', 'USDA', 'Conventional'], 1,
+    'VA loans offer a guaranty to the lender and charge a funding fee. FHA insures loans and charges MIP; USDA serves eligible rural areas.');
+
+  q('national', 'Finance', 'Private mortgage insurance (PMI) on a conventional loan protects:',
+    ['The borrower', 'The lender against borrower default', 'The seller', 'The appraiser'], 1,
+    'PMI protects the LENDER. It is typically required above 80% LTV and, under federal law, must automatically terminate at 78% LTV on most loans.');
+
+  q('national', 'Finance', 'The secondary mortgage market does which of the following?',
+    ['Originates loans to consumers', 'Buys and sells existing loans, providing lenders with liquidity',
+      'Sets federal interest rates', 'Insures FHA loans'], 1,
+    'Fannie Mae, Freddie Mac, and Ginnie Mae purchase loans so originating lenders can lend again. They do not lend to consumers directly.');
+
+  q('national', 'Finance', 'Usury laws set:',
+    ['Minimum down payments', 'Maximum interest rates a lender may charge',
+      'Maximum loan amounts', 'Appraisal standards'], 1,
+    'Usury = charging interest above the legal maximum.');
+
+  q('national', 'Finance', 'RESPA applies to:',
+    ['All real estate transactions', 'Federally related residential mortgage loans',
+      'Commercial loans only', 'Cash sales'], 1,
+    'RESPA governs settlement services on federally related residential loans. It bans KICKBACKS and unearned fees (Section 8) and requires the Loan Estimate and Closing Disclosure.');
+
+  q('national', 'Finance', 'Under RESPA, a title company pays a real estate broker $500 for each referred client. This is:',
+    ['Legal if disclosed', 'An illegal kickback', 'A permitted marketing expense', 'Legal if under $1,000'], 1,
+    'Section 8 of RESPA prohibits fees for referrals of settlement service business. Disclosure does not cure it, and there is no dollar threshold.');
+
+  q('national', 'Finance', 'The Truth in Lending Act (Regulation Z) requires disclosure of the:',
+    ['Sale price', 'Annual percentage rate and total finance charge', 'Property taxes', 'Appraised value'], 1,
+    'TILA/Reg Z is about the COST OF CREDIT — APR, finance charge, amount financed, total of payments. It also governs advertising trigger terms.');
+
+  q('national', 'Finance', 'An advertisement states "assume a 6% loan with only $5,000 down." Under Regulation Z this triggers:',
+    ['Nothing, it is general information', 'The requirement to disclose additional credit terms including APR',
+      'A fair housing violation', 'A RESPA violation'], 1,
+    'Stating a specific down payment, payment amount, term, or finance charge is a TRIGGER TERM requiring full disclosure of the other key credit terms.');
+
+  q('national', 'Finance', 'The Equal Credit Opportunity Act prohibits discrimination in lending based on all EXCEPT:',
+    ['Marital status', 'Receipt of public assistance income', 'Age (if of legal contracting age)',
+      'The applicant\'s credit score'], 3,
+    'ECOA protects race, color, religion, national origin, sex, marital status, age, and receipt of public assistance. Creditworthiness itself is a legitimate basis for a decision.');
+
+  q('national', 'Finance', 'A buyer takes title "subject to" the existing mortgage. This means:',
+    ['The buyer becomes personally liable for the debt',
+      'The seller remains personally liable; the buyer risks losing the property if payments stop',
+      'The lender released the seller', 'The loan is paid off at closing'], 1,
+    '"Subject to" = no personal liability for the buyer, seller still on the hook. ASSUMPTION with a release (novation) is what frees the seller.');
+
+  q('national', 'Finance', 'In a contract for deed (land contract), during the contract term the seller holds:',
+    ['Equitable title', 'Legal title, while the buyer holds equitable title',
+      'No interest', 'A leasehold'], 1,
+    'The vendor (seller) keeps LEGAL title until the contract is paid; the vendee (buyer) has EQUITABLE title and possession. Contracts for deed are very common in Minnesota.');
+
+  q('national', 'Finance', 'A loan in which the payment covers interest only, leaving the principal due at the end, is a:',
+    ['Fully amortized loan', 'Straight (term) loan', 'Graduated payment loan', 'Reverse mortgage'], 1,
+    'A straight/term loan has interest-only payments and a balloon of the full principal. A fully amortized loan pays to zero over the term.');
+
+  q('national', 'Finance', 'Discount points are paid to:',
+    ['Lower the interest rate by prepaying interest to the lender',
+      'Cover the appraisal', 'Pay the broker', 'Fund the escrow account'], 0,
+    'Points are prepaid interest that buys down the rate. One point = 1% OF THE LOAN AMOUNT.');
+
+  /* ======================================================================
+     VALUATION  (national)
+     ====================================================================== */
+
+  q('national', 'Valuation', 'The principle stating that value tends to be set by the cost of acquiring an equally desirable substitute is:',
+    ['Progression', 'Substitution', 'Conformity', 'Anticipation'], 1,
+    'SUBSTITUTION underlies all three appraisal approaches, and it is the entire logic of the sales comparison approach.');
+
+  q('national', 'Valuation', 'A modest home located among much larger, more expensive homes will tend to be worth more. This is:',
+    ['Regression', 'Progression', 'Contribution', 'Plottage'], 1,
+    'PROGRESSION: the lesser property is pulled UP by better neighbors. REGRESSION: the better property is pulled DOWN by lesser neighbors.');
+
+  q('national', 'Valuation', 'In the sales comparison approach, adjustments are made to:',
+    ['The subject property', 'The comparable properties', 'Both equally', 'The listing price'], 1,
+    'Never adjust the subject. If the COMP is better, subtract from the comp; if the comp is inferior, add. Remember: "CBS" — Comp Better, Subtract.');
+
+  q('national', 'Valuation', 'A four-bedroom home is in a neighborhood of two-bedroom homes and does not gain full value from the extra rooms. This illustrates:',
+    ['Highest and best use', 'Over-improvement / the principle of conformity',
+      'External obsolescence', 'Physical deterioration'], 1,
+    'Conformity holds that maximum value arises when properties are reasonably similar. An over-improvement does not return its cost.');
+
+  q('national', 'Valuation', 'Loss in value from an outdated floor plan or a one-car garage is:',
+    ['Physical deterioration', 'Functional obsolescence', 'External obsolescence', 'Curable physical wear'], 1,
+    'FUNCTIONAL = something wrong INSIDE the property\'s design or utility. PHYSICAL = wear and tear. EXTERNAL = caused by something off-site.');
+
+  q('national', 'Valuation', 'A new landfill opens next to a subdivision, reducing home values. This is:',
+    ['Functional obsolescence', 'Physical deterioration', 'External (economic) obsolescence', 'Curable depreciation'], 2,
+    'External obsolescence comes from OUTSIDE the property line and is always considered INCURABLE — the owner cannot fix it.');
+
+  q('national', 'Valuation', 'Which approach to value is most reliable for a single-family owner-occupied home?',
+    ['Cost approach', 'Income approach', 'Sales comparison approach', 'Gross rent multiplier'], 2,
+    'Sales comparison (market) approach is the primary method for residential. Cost approach is best for new or special-purpose buildings; income for investment property.');
+
+  q('national', 'Valuation', 'The cost approach is MOST appropriate for:',
+    ['A 60-year-old farmhouse', 'A new school or church with few comparable sales',
+      'A rented duplex', 'A condominium'], 1,
+    'Special-purpose and brand-new properties lack good comps and income, so reproduction/replacement cost minus depreciation plus land is the best indicator.');
+
+  q('national', 'Valuation', 'Highest and best use must be all of the following EXCEPT:',
+    ['Legally permissible', 'Physically possible', 'Financially feasible', 'The current use'], 3,
+    'Highest and best use is the legally permissible, physically possible, financially feasible, and maximally productive use — which is frequently NOT the current use.');
+
+  q('national', 'Valuation', 'A competitive market analysis (CMA) prepared by a licensee differs from an appraisal because it:',
+    ['Is a certified opinion of value', 'Is not an appraisal and may not be represented as one',
+      'Requires a USPAP report', 'Must be ordered by a lender'], 1,
+    'A CMA helps set a listing or offer price. Calling it an appraisal, or charging a fee as though it were one, is a licensing violation.');
+
+  q('national', 'Valuation', 'Market value differs from market price in that market value is:',
+    ['What the property actually sold for', 'The most probable price under typical, arm\'s-length conditions',
+      'Always higher than market price', 'Set by the county assessor'], 1,
+    'Market PRICE is the historical fact of what was paid. Market VALUE is an opinion of what should be paid by a willing buyer and willing seller, neither under duress.');
+
+  /* ======================================================================
+     FAIR HOUSING  (national)
+     ====================================================================== */
+
+  q('national', 'Fair Housing', 'The seven protected classes under the federal Fair Housing Act are race, color, religion, sex, national origin, disability, and:',
+    ['Age', 'Familial status', 'Marital status', 'Source of income'], 1,
+    'Familial status (children under 18, pregnant women, those securing custody) was added in 1988 along with disability. Age and marital status are NOT federal classes — but marital status IS protected in Minnesota.');
+
+  q('national', 'Fair Housing', 'Directing buyers of a particular race toward or away from certain neighborhoods is:',
+    ['Blockbusting', 'Steering', 'Redlining', 'Panic selling'], 1,
+    'STEERING = channeling people based on a protected class. BLOCKBUSTING = inducing panic selling. REDLINING = a lender or insurer denying service to an area.');
+
+  q('national', 'Fair Housing', 'Telling homeowners that property values will drop because minority families are moving in, to induce listings, is:',
+    ['Steering', 'Blockbusting', 'Redlining', 'A legitimate market opinion'], 1,
+    'Blockbusting (panic peddling) is a serious federal violation, whether or not the statement is true.');
+
+  q('national', 'Fair Housing', 'A landlord must permit a tenant with a disability to install a wheelchair ramp. Under federal law:',
+    ['The landlord pays for the modification', 'The tenant generally pays for the reasonable modification',
+      'The request may be denied', 'Only new buildings are covered'], 1,
+    'Reasonable MODIFICATIONS (physical changes) are generally at the TENANT\'s expense; reasonable ACCOMMODATIONS (rule changes, like waiving a no-pets policy for a service animal) are at the landlord\'s expense.');
+
+  q('national', 'Fair Housing', 'A tenant with a documented need requests an assistance animal in a "no pets" building. The landlord should:',
+    ['Charge a pet deposit', 'Deny the request', 'Grant a reasonable accommodation with no pet fee',
+      'Require the animal be professionally certified'], 2,
+    'An assistance animal is not a pet. Pet fees and deposits may not be charged, and there is no federal "certification" requirement.');
+
+  q('national', 'Fair Housing', 'Which advertisement most likely violates fair housing law?',
+    ['"Spacious 3-bedroom near schools"', '"Perfect for a Christian family"',
+      '"Newly remodeled, walk-in closet"', '"Quiet cul-de-sac location"'], 1,
+    'Ads must describe the PROPERTY, not the desired occupant. References to religion, family makeup, or ethnicity signal a preference and violate the Act.');
+
+  q('national', 'Fair Housing', 'The "Mrs. Murphy" exemption may apply to:',
+    ['A single-family home sold by an owner using a broker',
+      'An owner-occupied building with four or fewer units, when no broker is used',
+      'Any apartment complex', 'All rentals under $1,000'], 1,
+    'Even where an exemption exists, it is lost if a real estate LICENSEE is involved or if discriminatory ADVERTISING is used. Race discrimination is never exempt (42 U.S.C. 1982 / Jones v. Mayer).');
+
+  q('national', 'Fair Housing', 'A buyer asks an agent about the racial makeup of a neighborhood. The agent should:',
+    ['Provide the census data', 'Give a general impression',
+      'Decline to answer and explain that fair housing law prohibits such guidance, offering objective sources instead',
+      'Refuse to work with the buyer'], 2,
+    'Answering would be steering, regardless of intent or of which answer the buyer wants to hear. Point them to publicly available objective data they can research themselves.');
+
+  /* ======================================================================
+     MINNESOTA — LICENSE LAW  (state)
+     ====================================================================== */
+
+  q('state', 'MN License Law', 'Real estate licensing in Minnesota is governed primarily by which chapter of Minnesota Statutes?',
+    ['Chapter 82', 'Chapter 513', 'Chapter 515B', 'Chapter 559'], 0,
+    'Chapter 82 is the real estate license law. Ch. 513 is seller disclosure, Ch. 515B is MCIOA (common interest communities), Ch. 559 covers contract for deed cancellation.');
+
+  q('state', 'MN License Law', 'Minnesota real estate licensees are regulated by the:',
+    ['Department of Housing', 'Commissioner of Commerce', 'Real Estate Commission', 'Attorney General'], 1,
+    'The Minnesota Department of Commerce, headed by the Commissioner of Commerce, issues licenses, investigates complaints, and imposes discipline.');
+
+  q('state', 'MN License Law', 'A Minnesota salesperson\'s license is held:',
+    ['By the salesperson personally, allowing independent practice',
+      'By the broker with whom the salesperson is affiliated',
+      'By the Department of Commerce until renewal', 'By the local association of REALTORS'], 1,
+    'A salesperson may act only under the supervision of a licensed broker, and the broker holds the license. Compensation must come from the salesperson\'s own broker.');
+
+  q('state', 'MN License Law', 'Minnesota pre-license education for a salesperson consists of:',
+    ['30 hours total', '60 hours total', '90 hours (three 30-hour courses)', '120 hours total'], 2,
+    'Course I (30 hours) must be completed before taking the exam; Courses II and III (30 hours each) must be completed before the license is issued.');
+
+  q('state', 'MN License Law', 'Minnesota continuing education for a salesperson requires:',
+    ['15 hours per year with no two-year total', '30 hours per two-year license period, with at least 15 hours each year',
+      '20 hours every two years', '45 hours every three years'], 1,
+    '30 hours per 24-month cycle, minimum 15 hours each license year by June 30, including the current year\'s required Commissioner-designated module.');
+
+  q('state', 'MN License Law', 'If a written agreement is silent about the timing, a Minnesota listing broker must deposit earnest money into the trust account within:',
+    ['24 hours', 'Three business days of receipt or final acceptance, whichever is later',
+      'Five business days', 'Ten days'], 1,
+    'Minn. Stat. 82.75. Note also that if an offer is REJECTED, the earnest money must be returned to the prospective buyer no later than the next business day.');
+
+  q('state', 'MN License Law', 'Commingling means:',
+    ['Depositing client trust funds into the broker\'s business or personal account',
+      'Sharing a commission with a cooperating broker',
+      'Working with two clients at once', 'Holding two licenses'], 0,
+    'Commingling client money with the broker\'s own funds is a serious violation. CONVERSION — actually spending client funds — is worse still.');
+
+  q('state', 'MN License Law', 'A Minnesota licensee may accept compensation for real estate services from:',
+    ['Any party to the transaction', 'The licensee\'s own broker only',
+      'The buyer directly', 'The title company'], 1,
+    'A salesperson is paid by their broker, not directly by clients, customers, or other brokerages.');
+
+  q('state', 'MN License Law', 'The Minnesota agency disclosure must be provided to a consumer:',
+    ['At closing', 'At the first substantive contact with the consumer',
+      'Only when an offer is written', 'Only if the consumer requests it'], 1,
+    'The Agency Relationships in Real Estate Transactions disclosure is delivered at FIRST SUBSTANTIVE CONTACT, before confidential information is exchanged. It is a disclosure, not a contract.');
+
+  q('state', 'MN License Law', 'Which agency status does Minnesota specifically recognize for a licensee who represents NEITHER party?',
+    ['Subagent', 'Facilitator', 'Designated broker', 'Universal agent'], 1,
+    'A Minnesota FACILITATOR is not an agent. The facilitator owes limited duties — reasonable care, accounting for money, and confidentiality of certain information — but not loyalty or advocacy.');
+
+  q('state', 'MN License Law', 'Dual agency in Minnesota requires:',
+    ['Only oral consent', 'Written consent of both the seller and the buyer',
+      'Approval from the Commissioner', 'Nothing, if disclosed at closing'], 1,
+    'Both parties must give informed WRITTEN consent, typically obtained up front in the listing agreement and the buyer representation agreement, and confirmed again in the purchase agreement.');
+
+  q('state', 'MN License Law', 'A Minnesota dual agent may NOT:',
+    ['Prepare the purchase agreement', 'Disclose to one party confidential information about the other, such as price motivation',
+      'Collect a commission from the seller', 'Show the property'], 1,
+    'In dual agency the licensee cannot advocate for either side and must not reveal one party\'s price or terms flexibility to the other.');
+
+  q('state', 'MN License Law', 'Minnesota listing agreements must contain a definite expiration date and:',
+    ['An automatic renewal clause', 'A prohibition on automatic renewal (override/protective clauses are limited)',
+      'A net listing provision', 'A waiver of agency duties'], 1,
+    'Minnesota prohibits automatic-renewal listing provisions. A definite termination date is required, and the override (protection) period has statutory limits.');
+
+  q('state', 'MN License Law', 'Advertising a listed property, a Minnesota salesperson must include:',
+    ['Only the salesperson\'s name', 'The name of the broker or brokerage as it appears on the license',
+      'The seller\'s name', 'The MLS number only'], 1,
+    'All advertising must identify the licensed brokerage. Advertising that suggests the salesperson is acting independently is a "blind ad" violation.');
+
+  q('state', 'MN License Law', 'A Minnesota licensee who wants to purchase a listed property personally must:',
+    ['Say nothing until closing', 'Disclose the licensee status in writing to the seller',
+      'Resign the license', 'Buy only through another brokerage'], 1,
+    'Licensees must disclose their licensed status in writing when buying or selling for their own account — nondisclosure is a Chapter 82 violation.');
+
+  q('state', 'MN License Law', 'The purpose of the Minnesota real estate education, research, and recovery fund is to:',
+    ['Pay licensees\' legal fees', 'Compensate members of the public who suffer actual loss from certain licensee misconduct',
+      'Fund the Department of Commerce salaries', 'Provide free continuing education'], 1,
+    'The recovery fund reimburses aggrieved consumers when a judgment against a licensee cannot be collected. The licensee\'s license is suspended until the fund is repaid.');
+
+  q('state', 'MN License Law', 'A Minnesota licensee is convicted of felony theft. The Commissioner may:',
+    ['Take no action, since it was outside real estate', 'Deny, suspend, or revoke the license',
+      'Only issue a warning', 'Require an extra CE course only'], 1,
+    'The Commissioner may discipline for conduct demonstrating untrustworthiness or financial irresponsibility, including conduct outside the practice of real estate.');
+
+  /* ======================================================================
+     MINNESOTA — DISCLOSURES  (state)
+     ====================================================================== */
+
+  q('state', 'MN Disclosures', 'Minnesota\'s seller disclosure law (Minn. Stat. 513.52-.60) requires the seller to disclose:',
+    ['Only defects the buyer asks about', 'All material facts of which the seller is aware that could adversely and significantly affect ordinary use or enjoyment of the property',
+      'Only structural defects', 'Nothing if the property is sold as-is'], 1,
+    'The standard is what the SELLER KNOWS and that MATERIALLY affects use or enjoyment. A seller may alternatively furnish qualifying written inspection reports in lieu of the disclosure.');
+
+  q('state', 'MN Disclosures', 'Under the Minnesota Radon Awareness Act, before signing a purchase agreement the seller must give the buyer:',
+    ['A radon test result', 'A radon disclosure plus the MDH publication "Radon in Real Estate Transactions"',
+      'A mitigation system', 'Nothing, radon is not regulated'], 1,
+    'Minn. Stat. 144.496 requires the written disclosure of known radon information AND delivery of the Minnesota Department of Health publication. Testing itself is not mandatory.');
+
+  q('state', 'MN Disclosures', 'A Minnesota well disclosure statement is required:',
+    ['Only for commercial property', 'At the time of transfer, disclosing the status and location of all known wells',
+      'Only if the well is in use', 'Only in the metro area'], 1,
+    'Minn. Stat. 103I.235. The seller must disclose known wells, their status, and location; a Well Disclosure Certificate is filed with the deed unless an exemption applies.');
+
+  q('state', 'MN Disclosures', 'A property is served by an individual septic system. Minnesota law requires disclosure of the:',
+    ['Water heater age', 'Subsurface sewage treatment system (SSTS) location and status',
+      'Electrical panel size', 'Number of bedrooms only'], 1,
+    'Minn. Stat. 115.55 requires written disclosure of a known SSTS, including whether it is in use and whether it is compliant or failing.');
+
+  q('state', 'MN Disclosures', 'Minnesota requires a seller to disclose if the property was ever used for:',
+    ['A home business', 'Methamphetamine production', 'A rental', 'Smoking'], 1,
+    'Minn. Stat. 152.0275 requires disclosure of known methamphetamine production on the property, unless remediation was completed per Department of Health standards.');
+
+  q('state', 'MN Disclosures', 'Regarding a predatory offender living in the neighborhood, a Minnesota licensee:',
+    ['Must disclose the offender\'s address', 'Has no duty to disclose and should refer the buyer to law enforcement and the public database',
+      'Must cancel the transaction', 'Must notify the Commissioner'], 1,
+    'Disclosing this is not the licensee\'s role and risks fair housing and privacy problems. Refer buyers to the BCA predatory offender database and local law enforcement.');
+
+  q('state', 'MN Disclosures', 'Under federal law, a home built before 1978 requires:',
+    ['A radon test', 'Lead-based paint disclosure and the EPA pamphlet, with a 10-day inspection opportunity',
+      'An SSTS disclosure', 'A well certificate'], 1,
+    'The Residential Lead-Based Paint Hazard Reduction Act applies to target housing built BEFORE 1978. The buyer gets a 10-day opportunity to test unless waived in writing.');
+
+  q('state', 'MN Disclosures', 'Minnesota law states that a "stigmatized" property — for example, one where a death occurred — is:',
+    ['A material fact that must always be disclosed', 'Not a material fact requiring disclosure',
+      'Cause to cancel the listing', 'Disclosed only to buyers with children'], 1,
+    'Minnesota statute provides that a perceived psychological impairment (a death, suicide, or reputed haunting) is NOT a material fact requiring disclosure.');
+
+  q('state', 'MN Disclosures', 'A Minnesota property is within an airport zoning district. The seller must:',
+    ['Say nothing', 'Provide the required airport zoning disclosure to the buyer',
+      'Obtain FAA approval', 'Install soundproofing'], 1,
+    'Minnesota requires disclosure when property lies within a designated airport zoning district, so buyers understand height and use restrictions and noise exposure.');
+
+  q('state', 'MN Disclosures', 'Under Minnesota\'s statutory new-home warranty (Ch. 327A), major construction defects are warranted for:',
+    ['1 year', '2 years', '5 years', '10 years'], 3,
+    '1 year for defects in workmanship and materials; 2 years for plumbing, electrical, heating, and cooling systems; 10 years for MAJOR STRUCTURAL defects.');
+
+  /* ======================================================================
+     MINNESOTA — CONTRACTS, CLOSING & OWNERSHIP  (state)
+     ====================================================================== */
+
+  q('state', 'MN Contracts', 'A Minnesota contract for deed on which the buyer has paid 15% of the purchase price may be cancelled by statutory notice giving the buyer:',
+    ['30 days to cure', '60 days to cure', '90 days to cure', '6 months to cure'], 1,
+    'Minn. Stat. 559.21 tiers the cure period by how much has been paid: LESS THAN 10% = 30 days; 10% up to 25% = 60 days; 25% or more = 90 days.');
+
+  q('state', 'MN Contracts', 'In a Minnesota contract for deed, the buyer (vendee) holds:',
+    ['Legal title', 'Equitable title and possession', 'A leasehold interest', 'No interest until paid in full'], 1,
+    'The vendor keeps legal title as security; the vendee has equitable title and possession, and receives the deed when the contract is satisfied.');
+
+  q('state', 'MN Contracts', 'Minnesota is which type of state for mortgage theory?',
+    ['Title theory', 'Lien theory', 'Intermediate theory', 'Equitable theory'], 1,
+    'In lien theory the borrower holds title and possession; the lender has only a lien. Minnesota nonetheless permits non-judicial foreclosure by advertisement when the mortgage has a power of sale.');
+
+  q('state', 'MN Contracts', 'The typical redemption period after a Minnesota mortgage foreclosure sale by advertisement is:',
+    ['30 days', '6 months', '1 year', '2 years'], 1,
+    'Six months is the standard statutory redemption period, though shorter or longer periods apply in certain circumstances (abandonment, large tracts, or agricultural property).');
+
+  q('state', 'MN Contracts', 'Minnesota\'s Torrens system differs from abstract (recording) property because Torrens property has:',
+    ['No property taxes', 'A Certificate of Title issued by the county, in which the state adjudicates ownership',
+      'No legal description', 'No mortgages'], 1,
+    'Torrens (registered) land carries a Certificate of Title listing all memorials/encumbrances. It is common in Hennepin and Ramsey counties. Abstract property relies on a chain-of-title search.');
+
+  q('state', 'MN Contracts', 'The Minnesota Common Interest Ownership Act (MCIOA) is found in:',
+    ['Chapter 82', 'Chapter 515B', 'Chapter 513', 'Chapter 327A'], 1,
+    'MCIOA (Ch. 515B) governs condominiums, townhomes, and cooperatives — including the resale disclosure certificate a seller must furnish to a buyer.');
+
+  q('state', 'MN Contracts', 'On the resale of a Minnesota unit governed by MCIOA, the buyer generally may cancel within:',
+    ['24 hours of signing', '10 days after receiving the resale disclosure certificate',
+      '30 days after closing', 'There is no cancellation right'], 1,
+    'The buyer\'s cancellation right runs from delivery of the resale disclosure certificate, which discloses assessments, budgets, reserves, and pending litigation.');
+
+  q('state', 'MN Contracts', 'Minnesota state deed tax is customarily paid by the ____ and is based on the ____.',
+    ['buyer; loan amount', 'seller; sale price (net consideration)',
+      'buyer; sale price', 'lender; appraised value'], 1,
+    'Deed tax = 0.0033 of net consideration, customarily a SELLER cost. Do not confuse it with the mortgage registry tax (0.0023 of the loan, customarily a BUYER cost).');
+
+  q('state', 'MN Contracts', 'Minnesota mortgage registry tax is calculated on:',
+    ['The sale price', 'The principal debt secured by the mortgage', 'The appraised value', 'The down payment'], 1,
+    '0.0023 of the loan amount statewide, plus 0.0001 ERF in Hennepin and Ramsey counties.');
+
+  q('state', 'MN Contracts', 'Minnesota real estate taxes are:',
+    ['Paid in advance for the coming year', 'Paid in arrears, typically in two installments (May 15 and October 15)',
+      'Paid monthly to the county', 'Paid only at closing'], 1,
+    'Because taxes are paid in ARREARS, at closing the seller typically owes the buyer for the portion of the year the seller owned the property — a seller debit and buyer credit.');
+
+  q('state', 'MN Contracts', 'The Minnesota Human Rights Act protects several classes beyond the federal Fair Housing Act, including:',
+    ['Height and weight', 'Marital status, status with regard to public assistance, and sexual orientation',
+      'Occupation', 'Political affiliation only'], 1,
+    'MHRA (Ch. 363A) adds creed, marital status, status with regard to public assistance, sexual orientation and gender identity, and (in some contexts) age to the federal list.');
+
+  q('state', 'MN Contracts', 'A Minnesota landlord may enter a leased residential unit:',
+    ['At any time without notice', 'Only after making a reasonable attempt to give reasonable notice, for a reasonable business purpose',
+      'Only with a court order', 'Only during business hours on weekdays'], 1,
+    'Minnesota law requires a reasonable business purpose and a good-faith effort to give reasonable notice, except in emergencies.');
+
+  q('state', 'MN Contracts', 'A Minnesota residential tenant\'s security deposit must generally be returned, with interest and any itemized withholding, within:',
+    ['7 days after move-out', '21 days after the tenancy ends and the landlord receives a forwarding address',
+      '60 days', '90 days'], 1,
+    'Minnesota requires return within three weeks, with a written statement of any amounts withheld. Bad-faith retention exposes the landlord to penalties.');
+
+  q('state', 'MN Contracts', 'In Minnesota, who may legally prepare a purchase agreement for a residential transaction?',
+    ['Only a licensed attorney', 'A licensee may complete standard forms incident to the transaction, but may not give legal advice',
+      'Any party to the transaction only', 'Only the title company'], 1,
+    'Filling in blanks on approved standard forms is permitted; drafting custom legal provisions or advising on legal consequences is the unauthorized practice of law.');
+
+  q('state', 'MN Contracts', 'A Minnesota buyer\'s broker agreement must:',
+    ['Be oral only', 'Be in writing with a definite expiration date, and may not automatically renew',
+      'Be filed with the Commissioner', 'Last at least one year'], 1,
+    'Like listing agreements, buyer representation agreements require writing, a definite termination date, and no automatic renewal.');
+
+  q('state', 'MN Contracts', 'Minnesota homestead property tax classification primarily benefits:',
+    ['Commercial owners', 'Owner-occupants of their primary residence',
+      'Out-of-state investors', 'New construction only'], 1,
+    'Homestead classification gives owner-occupants a lower effective property tax burden. It must be applied for with the county, and the buyer\'s agent should remind buyers to file.');
+
+  /* ======================================================================
+     MATH CONCEPTS (rules without calculation)
+     ====================================================================== */
+
+  q('national', 'Math Concepts', 'One acre contains how many square feet?',
+    ['5,280', '43,560', '640', '10,000'], 1,
+    '43,560 sq ft = 1 acre. Also memorize: 5,280 feet in a mile; 640 acres in a section; 36 sections in a township; 9 sq ft in a sq yard.');
+
+  q('national', 'Math Concepts', 'A section of land contains:',
+    ['40 acres', '160 acres', '640 acres', '5,280 acres'], 2,
+    'A section is one square mile = 640 acres. A quarter section = 160 acres; a quarter-quarter = 40 acres.');
+
+  q('national', 'Math Concepts', 'One mill equals:',
+    ['$1 per $100 of value', '$1 per $1,000 of value', '1% of value', '$10 per $1,000 of value'], 1,
+    'A mill is one-tenth of a cent, or 0.001 — that is $1 of tax per $1,000 of assessed value.');
+
+  q('national', 'Math Concepts', 'A seller wants to net a specific amount after a 6% commission. To find the required sale price you should:',
+    ['Multiply the net by 1.06', 'Divide the net (plus costs) by 0.94',
+      'Add 6% of the net to the net', 'Divide the net by 1.06'], 1,
+    'The seller keeps 94% of the price, so Price = (net + costs) / 0.94. Multiplying by 1.06 is the classic wrong answer and always appears as a choice.');
+
+  q('national', 'Math Concepts', 'In the IRV formula used in the income approach, to find VALUE you:',
+    ['Multiply income by rate', 'Divide income by rate', 'Divide rate by income', 'Add income and rate'], 1,
+    'Income = Rate x Value, so Value = Income / Rate and Rate = Income / Value. Cover the letter you want in the triangle.');
+
+  q('national', 'Math Concepts', 'Discount points are calculated as a percentage of the:',
+    ['Sale price', 'Loan amount', 'Appraised value', 'Down payment'], 1,
+    'One point = 1% of the LOAN. On a $300,000 loan, 2 points cost $6,000.');
+
+  q('national', 'Math Concepts', 'When prorating an item that the seller has already PREPAID, the closing statement shows:',
+    ['A debit to the seller and a credit to the buyer', 'A credit to the seller and a debit to the buyer',
+      'A debit to both', 'No entry'], 1,
+    'Prepaid (insurance, HOA dues) = credit seller. Paid in ARREARS (Minnesota real estate taxes) = credit buyer, debit seller.');
+
+  q('national', 'Math Concepts', 'The sale price appears on the closing statement as:',
+    ['A credit to the buyer and a debit to the seller', 'A debit to the buyer and a credit to the seller',
+      'A debit to both parties', 'A credit to both parties'], 1,
+    'The buyer OWES the price (debit) and the seller EARNS it (credit). Earnest money and the new loan are buyer CREDITS.');
+
+  q('national', 'Math Concepts', 'Land is depreciated in the cost approach:',
+    ['Over 27.5 years', 'Over 39 years', 'Never — land does not depreciate', 'At the same rate as the building'], 2,
+    'Only improvements depreciate. In the cost approach you depreciate the building, then ADD BACK the full site value.');
+
+  q('national', 'Math Concepts', 'To convert square feet to square yards, you:',
+    ['Multiply by 3', 'Divide by 3', 'Divide by 9', 'Multiply by 9'], 2,
+    'A square yard is 3 ft x 3 ft = 9 square feet. Carpet questions depend on this.');
+
+  q('national', 'Math Concepts', 'A lender will base the loan amount on:',
+    ['The sale price always', 'The appraised value always', 'The LESSER of sale price or appraised value',
+      'The greater of sale price or appraised value'], 2,
+    'Always the LESSER. A low appraisal means the buyer must bring extra cash to bridge the gap.');
+
+  q('national', 'Math Concepts', 'To find the percent of profit on a sale, you divide the profit by:',
+    ['The sale price', 'The original purchase price', 'The appraised value', 'The loan amount'], 1,
+    'Percent change is always measured against what you STARTED with. Dividing by the sale price gives a smaller, incorrect figure.');
+
+  /* ======================================================================
+     PROFESSIONAL PRACTICE & ETHICS
+     ====================================================================== */
+
+  q('national', 'Ethics', 'A licensee discovers the seller lied on the disclosure about a chronic wet basement. The licensee should:',
+    ['Say nothing, since the seller is the client', 'Refuse to disclose but continue marketing',
+      'Advise the seller to correct the disclosure and, if the seller refuses, disclose the material fact or withdraw',
+      'Disclose only if the buyer asks directly'], 2,
+    'The duty of confidentiality never covers concealing a known MATERIAL DEFECT. Participating in the misrepresentation exposes the licensee to discipline and civil liability.');
+
+  q('national', 'Ethics', 'A buyer asks the agent to write an offer at a price the agent believes is far too high. The agent should:',
+    ['Refuse to write the offer', 'Write the offer as instructed while advising the buyer of the agent\'s market opinion',
+      'Change the price to what is reasonable', 'Present it to the seller as a lower offer'], 1,
+    'The duty of obedience covers lawful instructions. The agent advises but the CLIENT decides — and altering the client\'s terms is never acceptable.');
+
+  q('national', 'Ethics', 'All offers received on a listed property must be:',
+    ['Presented only if above list price', 'Presented to the seller promptly, even after another offer is accepted, unless the seller instructs otherwise in writing',
+      'Screened by the broker for suitability', 'Presented only if accompanied by a preapproval'], 1,
+    'Prompt presentation of ALL offers is a core duty. The seller decides which to accept; the licensee does not filter offers based on personal judgment.');
+
+  q('national', 'Ethics', 'A licensee is asked to perform a task outside their expertise, such as evaluating a structural crack. The proper response is to:',
+    ['Give a best guess', 'Recommend the client consult a qualified professional',
+      'Ignore the issue', 'Refer it to the listing broker'], 1,
+    'Competence is an ethical duty. Licensees must not practice engineering, law, or appraisal — refer clients to appropriate licensed professionals.');
+
+  q('national', 'Ethics', 'A licensee posts on social media that a specific listing "will definitely appraise at $400,000." This is:',
+    ['Acceptable marketing', 'Puffing', 'A potentially actionable misrepresentation and possibly an unlicensed appraisal opinion',
+      'Required disclosure'], 2,
+    'Stating a definite future valuation as fact goes beyond opinion and can constitute misrepresentation as well as holding out an appraisal opinion without an appraiser license.');
+
+  q('national', 'Ethics', 'A broker\'s duty of accounting requires:',
+    ['Preparing the client\'s tax return', 'Promptly reporting and safeguarding all money and documents received on behalf of the client',
+      'Auditing the title company', 'Filing the closing statement with the state'], 1,
+    'Accounting covers earnest money, keys, and documents. Trust account records must be maintained and available for inspection by the Commissioner.');
+
+  /* ================================================================== API */
+
+  var CATS = [];
+  Q.forEach(function (x) { if (CATS.indexOf(x.cat) < 0) CATS.push(x.cat); });
+
+  global.QBank = {
+    all: Q,
+    cats: CATS,
+    byCat: function (c) {
+      return c === 'All' ? Q.slice() : Q.filter(function (x) { return x.cat === c; });
+    },
+    byPortion: function (p) { return Q.filter(function (x) { return x.portion === p; }); },
+    count: Q.length
+  };
+})(window);
+
+</script>
+<script>
+/* ==========================================================================
+   app.js — UI + state for the MN Real Estate Salesperson practice app
+   No dependencies, no build step, no network. Progress lives in localStorage.
+   ========================================================================== */
+(function () {
+  'use strict';
+
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var STORE = 'mnre.practice.v1';
+
+  /* ------------------------------------------------------------ storage */
+  var blank = { math: {}, quiz: {}, exams: [], totals: { mathSeen: 0, mathRight: 0, quizSeen: 0, quizRight: 0 } };
+  var state = load();
+
+  function load() {
+    try {
+      var raw = localStorage.getItem(STORE);
+      if (!raw) return JSON.parse(JSON.stringify(blank));
+      var s = JSON.parse(raw);
+      s.math = s.math || {}; s.quiz = s.quiz || {}; s.exams = s.exams || [];
+      s.totals = s.totals || { mathSeen: 0, mathRight: 0, quizSeen: 0, quizRight: 0 };
+      return s;
+    } catch (e) { return JSON.parse(JSON.stringify(blank)); }
+  }
+  function save() {
+    try { localStorage.setItem(STORE, JSON.stringify(state)); } catch (e) { /* private mode */ }
+  }
+  function record(bucket, key, right) {
+    var b = state[bucket];
+    if (!b[key]) b[key] = { seen: 0, right: 0 };
+    b[key].seen++;
+    if (right) b[key].right++;
+    state.totals[bucket + 'Seen']++;
+    if (right) state.totals[bucket + 'Right']++;
+    save();
+  }
+
+  /* ------------------------------------------------------------ tabs */
+  function showView(name) {
+    $$('.view').forEach(function (v) { v.hidden = v.id !== 'view-' + name; });
+    $$('.tab').forEach(function (t) {
+      var on = t.dataset.view === name;
+      t.classList.toggle('active', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    if (name === 'progress') renderProgress();
+    window.scrollTo(0, 0);
+  }
+  $$('.tab').forEach(function (t) {
+    t.addEventListener('click', function () { showView(t.dataset.view); });
+  });
+
+  /* ======================================================================
+     MATH DRILL
+     ====================================================================== */
+  var drill = { p: null, answered: false, streak: 0, best: 0, session: { seen: 0, right: 0 } };
+
+  function fillDrillCats() {
+    var sel = $('#drill-cat');
+    var opts = ['All'].concat(MathGen.cats);
+    sel.innerHTML = opts.map(function (c) { return '<option value="' + c + '">' + c + '</option>'; }).join('');
+    var sel2 = $('#drill-type');
+    sel2.innerHTML = '<option value="">— or pick one problem type —</option>' +
+      MathGen.generators.map(function (g) {
+        return '<option value="' + g.id + '">' + g.cat + ': ' + g.name + '</option>';
+      }).join('');
+  }
+
+  function weakestGenIds(n) {
+    var scored = MathGen.generators.map(function (g) {
+      var s = state.math[g.id] || { seen: 0, right: 0 };
+      // unseen counts as maximally weak; otherwise accuracy, ties broken by low volume
+      var acc = s.seen ? s.right / s.seen : -1;
+      return { id: g.id, acc: acc, seen: s.seen };
+    });
+    scored.sort(function (a, b) {
+      if (a.acc !== b.acc) return a.acc - b.acc;
+      return a.seen - b.seen;
+    });
+    return scored.slice(0, n).map(function (x) { return x.id; });
+  }
+
+  function newDrill(forceId) {
+    var p;
+    if (forceId) p = MathGen.fromId(forceId);
+    else if ($('#drill-weak').checked) {
+      var weak = weakestGenIds(8);
+      p = MathGen.fromId(weak[Math.floor(Math.random() * weak.length)]);
+    } else p = MathGen.random($('#drill-cat').value);
+
+    drill.p = p; drill.answered = false;
+    $('#drill-tag').textContent = p.cat + '  •  ' + p.genName;
+    $('#drill-q').innerHTML = p.q;
+    $('#drill-input').value = '';
+    $('#drill-input').disabled = false;
+    $('#drill-hint-unit').textContent = unitHint(p.unit);
+    $('#drill-feedback').hidden = true;
+    $('#drill-feedback').className = 'feedback';
+    $('#drill-work').hidden = true;
+    $('#drill-check').hidden = false;
+    $('#drill-next').hidden = true;
+    $('#drill-formula').textContent = p.formula;
+    $('#drill-input').focus();
+  }
+
+  function unitHint(u) {
+    switch (u) {
+      case 'money': return 'Answer in dollars (e.g. 12500 or $12,500.00)';
+      case 'money2': return 'Answer in dollars and cents (e.g. 4.25)';
+      case 'percent': return 'Answer as a percent (e.g. 6.5)';
+      case 'acres': return 'Answer in acres';
+      case 'sqft': return 'Answer in square feet';
+      default: return 'Enter a number';
+    }
+  }
+
+  function checkDrill() {
+    if (drill.answered) return;
+    var p = drill.p;
+    var val = MathGen.parseAnswer($('#drill-input').value);
+    if (isNaN(val)) { $('#drill-input').focus(); return; }
+
+    var ok = Math.abs(val - p.answer) <= p.tol;
+    drill.answered = true;
+    drill.session.seen++;
+    if (ok) { drill.session.right++; drill.streak++; drill.best = Math.max(drill.best, drill.streak); }
+    else drill.streak = 0;
+    record('math', p.genId, ok);
+
+    var fb = $('#drill-feedback');
+    fb.hidden = false;
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    fb.innerHTML = ok
+      ? '<b>Correct.</b> ' + MathGen.fmt(p.answer, p.unit)
+      : '<b>Not quite.</b> You answered ' + MathGen.fmt(val, p.unit) +
+        '. The correct answer is <b>' + MathGen.fmt(p.answer, p.unit) + '</b>.';
+
+    $('#drill-steps').innerHTML = p.steps.map(function (s, i) {
+      return '<li><span class="stepn">' + (i + 1) + '</span><span>' + s + '</span></li>';
+    }).join('');
+    $('#drill-tip').innerHTML = '<b>Watch out:</b> ' + p.tip;
+    $('#drill-work').hidden = false;
+    $('#drill-input').disabled = true;
+    $('#drill-check').hidden = true;
+    $('#drill-next').hidden = false;
+    $('#drill-next').focus();
+    updateDrillScore();
+  }
+
+  function updateDrillScore() {
+    var s = drill.session;
+    $('#drill-score').textContent = s.seen
+      ? s.right + ' / ' + s.seen + ' this session  •  streak ' + drill.streak + ' (best ' + drill.best + ')'
+      : '';
+  }
+
+  $('#drill-check').addEventListener('click', checkDrill);
+  $('#drill-next').addEventListener('click', function () { newDrill($('#drill-type').value || null); });
+  $('#drill-input').addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); drill.answered ? newDrill($('#drill-type').value || null) : checkDrill(); }
+  });
+  $('#drill-reveal').addEventListener('click', function () {
+    if (drill.answered) return;
+    drill.answered = true;
+    var p = drill.p;
+    record('math', p.genId, false);
+    drill.streak = 0;
+    $('#drill-feedback').hidden = false;
+    $('#drill-feedback').className = 'feedback bad';
+    $('#drill-feedback').innerHTML = '<b>Answer:</b> ' + MathGen.fmt(p.answer, p.unit) +
+      ' <span class="muted">(counted as missed — try the same type again)</span>';
+    $('#drill-steps').innerHTML = p.steps.map(function (s, i) {
+      return '<li><span class="stepn">' + (i + 1) + '</span><span>' + s + '</span></li>';
+    }).join('');
+    $('#drill-tip').innerHTML = '<b>Watch out:</b> ' + p.tip;
+    $('#drill-work').hidden = false;
+    $('#drill-input').disabled = true;
+    $('#drill-check').hidden = true;
+    $('#drill-next').hidden = false;
+    updateDrillScore();
+  });
+  $('#drill-again').addEventListener('click', function () { newDrill(drill.p ? drill.p.genId : null); });
+  $('#drill-cat').addEventListener('change', function () { $('#drill-type').value = ''; newDrill(); });
+  $('#drill-type').addEventListener('change', function () { newDrill($('#drill-type').value || null); });
+  $('#drill-weak').addEventListener('change', function () { newDrill(); });
+
+  /* ======================================================================
+     QUIZ
+     ====================================================================== */
+  var quiz = { list: [], i: 0, answered: false, session: { seen: 0, right: 0 } };
+
+  function fillQuizCats() {
+    var sel = $('#quiz-cat');
+    sel.innerHTML = ['All'].concat(QBank.cats).map(function (c) {
+      return '<option value="' + c + '">' + c + '</option>';
+    }).join('');
+  }
+
+  function shuffle(a) {
+    a = a.slice();
+    for (var i = a.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function startQuiz() {
+    var pool = QBank.byCat($('#quiz-cat').value);
+    if ($('#quiz-missed').checked) {
+      var missed = pool.filter(function (x) {
+        var s = state.quiz[x.id];
+        return s && s.right < s.seen;
+      });
+      if (missed.length) pool = missed;
+    }
+    quiz.list = shuffle(pool);
+    quiz.i = 0;
+    quiz.session = { seen: 0, right: 0 };
+    renderQuiz();
+  }
+
+  function renderQuiz() {
+    if (!quiz.list.length) { $('#quiz-q').textContent = 'No questions in that filter yet.'; return; }
+    if (quiz.i >= quiz.list.length) quiz.i = 0;
+    var x = quiz.list[quiz.i];
+    quiz.answered = false;
+    quiz.order = shuffle(x.choices.map(function (c, i) { return i; }));
+
+    $('#quiz-tag').textContent = x.cat + '  •  ' + (x.portion === 'state' ? 'MN state portion' : 'National portion');
+    $('#quiz-count').textContent = (quiz.i + 1) + ' of ' + quiz.list.length;
+    $('#quiz-q').innerHTML = x.q;
+    $('#quiz-choices').innerHTML = quiz.order.map(function (origIdx, pos) {
+      return '<button class="choice" data-orig="' + origIdx + '">' +
+        '<span class="letter">' + 'ABCD'[pos] + '</span>' +
+        '<span>' + x.choices[origIdx] + '</span></button>';
+    }).join('');
+    $('#quiz-feedback').hidden = true;
+    $('#quiz-next').hidden = true;
+    $$('#quiz-choices .choice').forEach(function (b) {
+      b.addEventListener('click', function () { answerQuiz(parseInt(b.dataset.orig, 10), b); });
+    });
+    updateQuizScore();
+  }
+
+  function answerQuiz(origIdx, btn) {
+    if (quiz.answered) return;
+    quiz.answered = true;
+    var x = quiz.list[quiz.i];
+    var ok = origIdx === x.a;
+    quiz.session.seen++;
+    if (ok) quiz.session.right++;
+    record('quiz', x.id, ok);
+
+    $$('#quiz-choices .choice').forEach(function (b) {
+      var oi = parseInt(b.dataset.orig, 10);
+      b.disabled = true;
+      if (oi === x.a) b.classList.add('right');
+      else if (b === btn) b.classList.add('wrong');
+    });
+    var fb = $('#quiz-feedback');
+    fb.hidden = false;
+    fb.className = 'feedback ' + (ok ? 'ok' : 'bad');
+    fb.innerHTML = (ok ? '<b>Correct.</b> ' : '<b>Incorrect.</b> The answer is <b>' +
+      x.choices[x.a] + '</b>. ') + '<div class="why">' + x.why + '</div>';
+    $('#quiz-next').hidden = false;
+    $('#quiz-next').focus();
+    updateQuizScore();
+  }
+
+  function updateQuizScore() {
+    var s = quiz.session;
+    $('#quiz-score').textContent = s.seen ? s.right + ' / ' + s.seen + ' this session' : '';
+  }
+
+  $('#quiz-next').addEventListener('click', function () { quiz.i++; renderQuiz(); });
+  $('#quiz-cat').addEventListener('change', startQuiz);
+  $('#quiz-missed').addEventListener('change', startQuiz);
+  $('#quiz-restart').addEventListener('click', startQuiz);
+
+  /* ======================================================================
+     EXAM SIMULATOR — 80 national + 40 state, 75% required on EACH
+     ====================================================================== */
+  var exam = { items: [], answers: [], i: 0, timer: null, endAt: 0, running: false };
+
+  function mathAsMC() {
+    var p = MathGen.random('All');
+    var ch = MathGen.choicesFor(p);
+    return {
+      kind: 'math',
+      id: 'math:' + p.genId,
+      portion: 'national',
+      cat: p.cat,
+      q: p.q,
+      choices: ch.map(function (v) { return MathGen.fmt(v, p.unit); }),
+      a: ch.findIndex(function (v) { return Math.abs(v - p.answer) <= p.tol; }),
+      why: '<b>' + p.formula + '</b><ol class="mini">' + p.steps.map(function (s) {
+        return '<li>' + s + '</li>';
+      }).join('') + '</ol><p><b>Watch out:</b> ' + p.tip + '</p>',
+      genId: p.genId
+    };
+  }
+
+  /* Permute a question's choices and remap the answer index. Without this the
+     bank's answer key skews heavily toward one letter and the exam is gameable. */
+  function withShuffledChoices(x, portion) {
+    var order = shuffle(x.choices.map(function (_, i) { return i; }));
+    return {
+      kind: 'bank', id: x.id, portion: portion, cat: x.cat, q: x.q,
+      choices: order.map(function (oi) { return x.choices[oi]; }),
+      a: order.indexOf(x.a),
+      why: x.why
+    };
+  }
+
+  function buildExam(mathCount) {
+    mathCount = mathCount === undefined ? 14 : mathCount;
+    var nat = shuffle(QBank.byPortion('national')).slice(0, 80 - mathCount).map(function (x) {
+      return withShuffledChoices(x, 'national');
+    });
+    for (var i = 0; i < mathCount; i++) nat.push(mathAsMC());
+
+    var stPool = QBank.byPortion('state');
+    var st = shuffle(stPool);
+    while (st.length < 40) st = st.concat(shuffle(stPool));   // repeat if bank is short
+    st = st.slice(0, 40).map(function (x) { return withShuffledChoices(x, 'state'); });
+
+    return shuffle(nat).concat(shuffle(st));
+  }
+
+  function startExam() {
+    var mins = parseInt($('#exam-mins').value, 10) || 240;
+    exam.items = buildExam(parseInt($('#exam-math').value, 10));
+    exam.answers = new Array(exam.items.length).fill(null);
+    exam.i = 0;
+    exam.running = true;
+    exam.endAt = Date.now() + mins * 60000;
+    $('#exam-setup').hidden = true;
+    $('#exam-run').hidden = false;
+    $('#exam-results').hidden = true;
+    if (exam.timer) clearInterval(exam.timer);
+    exam.timer = setInterval(tickExam, 500);
+    tickExam();
+    renderExam();
+  }
+
+  function tickExam() {
+    var left = Math.max(0, exam.endAt - Date.now());
+    var m = Math.floor(left / 60000), s = Math.floor((left % 60000) / 1000);
+    $('#exam-clock').textContent = m + ':' + (s < 10 ? '0' : '') + s;
+    $('#exam-clock').classList.toggle('warn', left < 15 * 60000);
+    if (left <= 0) finishExam();
+  }
+
+  function renderExam() {
+    var x = exam.items[exam.i];
+    $('#exam-count').textContent = 'Question ' + (exam.i + 1) + ' of ' + exam.items.length;
+    $('#exam-tag').textContent = (x.portion === 'state' ? 'MN state' : 'National') + '  •  ' + x.cat;
+    $('#exam-q').innerHTML = x.q;
+    $('#exam-choices').innerHTML = x.choices.map(function (c, i) {
+      var sel = exam.answers[exam.i] === i ? ' selected' : '';
+      return '<button class="choice' + sel + '" data-i="' + i + '">' +
+        '<span class="letter">' + 'ABCD'[i] + '</span><span>' + c + '</span></button>';
+    }).join('');
+    $$('#exam-choices .choice').forEach(function (b) {
+      b.addEventListener('click', function () {
+        exam.answers[exam.i] = parseInt(b.dataset.i, 10);
+        renderExam();
+        renderExamGrid();
+      });
+    });
+    $('#exam-prev').disabled = exam.i === 0;
+    $('#exam-nextq').disabled = exam.i === exam.items.length - 1;
+    renderExamGrid();
+  }
+
+  function renderExamGrid() {
+    var answered = exam.answers.filter(function (a) { return a !== null; }).length;
+    $('#exam-progress').textContent = answered + ' answered, ' + (exam.items.length - answered) + ' left';
+    $('#exam-grid').innerHTML = exam.items.map(function (x, i) {
+      var cls = 'gridbtn' + (exam.answers[i] !== null ? ' done' : '') + (i === exam.i ? ' cur' : '');
+      return '<button class="' + cls + '" data-i="' + i + '">' + (i + 1) + '</button>';
+    }).join('');
+    $$('#exam-grid .gridbtn').forEach(function (b) {
+      b.addEventListener('click', function () { exam.i = parseInt(b.dataset.i, 10); renderExam(); });
+    });
+  }
+
+  function finishExam() {
+    if (!exam.running) return;
+    exam.running = false;
+    clearInterval(exam.timer);
+
+    var natR = 0, natT = 0, stR = 0, stT = 0, byCat = {};
+    exam.items.forEach(function (x, i) {
+      var ok = exam.answers[i] === x.a;
+      if (x.portion === 'state') { stT++; if (ok) stR++; } else { natT++; if (ok) natR++; }
+      if (!byCat[x.cat]) byCat[x.cat] = { r: 0, t: 0 };
+      byCat[x.cat].t++; if (ok) byCat[x.cat].r++;
+      if (x.kind === 'bank') record('quiz', x.id, ok);
+      else record('math', x.genId, ok);
+    });
+
+    var natPass = natR / natT >= 0.75, stPass = stR / stT >= 0.75;
+    state.exams.push({
+      date: new Date().toISOString().slice(0, 10),
+      natR: natR, natT: natT, stR: stR, stT: stT, pass: natPass && stPass
+    });
+    save();
+
+    $('#exam-run').hidden = true;
+    $('#exam-results').hidden = false;
+    $('#exam-verdict').className = 'verdict ' + (natPass && stPass ? 'ok' : 'bad');
+    $('#exam-verdict').innerHTML = (natPass && stPass)
+      ? '<b>PASS</b> — both sections cleared 75%.'
+      : '<b>NOT YET</b> — ' + (!natPass && !stPass ? 'both sections are' :
+        (!natPass ? 'the national section is' : 'the Minnesota section is')) + ' below 75%.';
+
+    $('#exam-breakdown').innerHTML =
+      scoreRow('National portion', natR, natT, 60) +
+      scoreRow('Minnesota state portion', stR, stT, 30) +
+      '<p class="muted">On the real exam each section is scored separately and you must reach 75% on both. ' +
+      'If you clear one section, that is the one you do not have to retake.</p>';
+
+    var cats = Object.keys(byCat).sort(function (a, b) {
+      return (byCat[a].r / byCat[a].t) - (byCat[b].r / byCat[b].t);
+    });
+    $('#exam-cats').innerHTML = '<h3>By topic — weakest first</h3>' + cats.map(function (c) {
+      var v = byCat[c], pct = Math.round(v.r / v.t * 100);
+      return '<div class="bar"><span class="barlabel">' + c + '</span>' +
+        '<span class="bartrack"><span class="barfill ' + (pct >= 75 ? 'good' : 'poor') +
+        '" style="width:' + pct + '%"></span></span>' +
+        '<span class="barval">' + v.r + '/' + v.t + '</span></div>';
+    }).join('');
+
+    var missed = exam.items.map(function (x, i) { return { x: x, i: i }; })
+      .filter(function (o) { return exam.answers[o.i] !== o.x.a; });
+    $('#exam-review').innerHTML = '<h3>Review the ' + missed.length + ' you missed</h3>' +
+      (missed.length === 0 ? '<p class="muted">Nothing missed. Clean sheet.</p>' :
+        missed.map(function (o) {
+          var picked = exam.answers[o.i];
+          return '<details class="rev"><summary>' + (o.i + 1) + '. ' + stripTags(o.x.q).slice(0, 110) +
+            '...</summary><div class="revbody"><p>' + o.x.q + '</p>' +
+            '<p class="muted">You answered: ' + (picked === null ? '<i>left blank</i>' : o.x.choices[picked]) + '</p>' +
+            '<p><b>Correct: ' + o.x.choices[o.x.a] + '</b></p><div class="why">' + o.x.why + '</div></div></details>';
+        }).join(''));
+  }
+
+  function scoreRow(label, r, t, need) {
+    var pct = Math.round(r / t * 100);
+    return '<div class="scorerow"><div><b>' + label + '</b><div class="muted">need ' + need +
+      ' of ' + t + ' (75%)</div></div><div class="scorebig ' + (pct >= 75 ? 'good' : 'poor') + '">' +
+      r + '/' + t + '<span>' + pct + '%</span></div></div>';
+  }
+
+  function stripTags(s) { return s.replace(/<[^>]*>/g, ''); }
+
+  $('#exam-start').addEventListener('click', startExam);
+  $('#exam-prev').addEventListener('click', function () { if (exam.i > 0) { exam.i--; renderExam(); } });
+  $('#exam-nextq').addEventListener('click', function () {
+    if (exam.i < exam.items.length - 1) { exam.i++; renderExam(); }
+  });
+  $('#exam-submit').addEventListener('click', function () {
+    var left = exam.answers.filter(function (a) { return a === null; }).length;
+    if (left && !confirm(left + ' question(s) are still blank. Submit anyway?')) return;
+    finishExam();
+  });
+  $('#exam-again').addEventListener('click', function () {
+    $('#exam-results').hidden = true;
+    $('#exam-setup').hidden = false;
+  });
+
+  /* ======================================================================
+     PROGRESS
+     ====================================================================== */
+  function renderProgress() {
+    var t = state.totals;
+    $('#prog-summary').innerHTML =
+      statCard('Math problems', t.mathSeen, t.mathRight) +
+      statCard('Quiz questions', t.quizSeen, t.quizRight);
+
+    // math by generator
+    var rows = MathGen.generators.map(function (g) {
+      var s = state.math[g.id] || { seen: 0, right: 0 };
+      return { name: g.cat + ': ' + g.name, seen: s.seen, right: s.right };
+    }).filter(function (r) { return r.seen > 0; });
+    rows.sort(function (a, b) { return (a.right / a.seen) - (b.right / b.seen); });
+
+    $('#prog-math').innerHTML = rows.length === 0
+      ? '<p class="muted">No math attempted yet. Start with the Math Drill tab.</p>'
+      : rows.map(function (r) {
+        var pct = Math.round(r.right / r.seen * 100);
+        return '<div class="bar"><span class="barlabel">' + r.name + '</span>' +
+          '<span class="bartrack"><span class="barfill ' + (pct >= 75 ? 'good' : 'poor') +
+          '" style="width:' + pct + '%"></span></span><span class="barval">' +
+          r.right + '/' + r.seen + '</span></div>';
+      }).join('');
+
+    // quiz by category
+    var cats = {};
+    QBank.all.forEach(function (x) {
+      var s = state.quiz[x.id];
+      if (!s || !s.seen) return;
+      if (!cats[x.cat]) cats[x.cat] = { seen: 0, right: 0 };
+      cats[x.cat].seen += s.seen; cats[x.cat].right += s.right;
+    });
+    var ck = Object.keys(cats).sort(function (a, b) {
+      return (cats[a].right / cats[a].seen) - (cats[b].right / cats[b].seen);
+    });
+    $('#prog-quiz').innerHTML = ck.length === 0
+      ? '<p class="muted">No quiz questions attempted yet.</p>'
+      : ck.map(function (c) {
+        var v = cats[c], pct = Math.round(v.right / v.seen * 100);
+        return '<div class="bar"><span class="barlabel">' + c + '</span>' +
+          '<span class="bartrack"><span class="barfill ' + (pct >= 75 ? 'good' : 'poor') +
+          '" style="width:' + pct + '%"></span></span><span class="barval">' +
+          v.right + '/' + v.seen + '</span></div>';
+      }).join('');
+
+    // exam history
+    $('#prog-exams').innerHTML = state.exams.length === 0
+      ? '<p class="muted">No practice exams taken yet.</p>'
+      : '<table class="tbl"><tr><th>Date</th><th>National</th><th>MN State</th><th>Result</th></tr>' +
+        state.exams.slice().reverse().map(function (e) {
+          return '<tr><td>' + e.date + '</td><td>' + e.natR + '/' + e.natT + ' (' +
+            Math.round(e.natR / e.natT * 100) + '%)</td><td>' + e.stR + '/' + e.stT + ' (' +
+            Math.round(e.stR / e.stT * 100) + '%)</td><td class="' + (e.pass ? 'good' : 'poor') +
+            '">' + (e.pass ? 'PASS' : 'not yet') + '</td></tr>';
+        }).join('') + '</table>';
+  }
+
+  function statCard(label, seen, right) {
+    var pct = seen ? Math.round(right / seen * 100) : 0;
+    return '<div class="statcard"><div class="statnum ' + (seen && pct >= 75 ? 'good' : '') + '">' +
+      (seen ? pct + '%' : '—') + '</div><div class="statlabel">' + label + '</div>' +
+      '<div class="muted">' + right + ' right of ' + seen + '</div></div>';
+  }
+
+  $('#prog-reset').addEventListener('click', function () {
+    if (!confirm('Erase all saved progress? This cannot be undone.')) return;
+    state = JSON.parse(JSON.stringify(blank));
+    save();
+    renderProgress();
+  });
+
+  /* ------------------------------------------------------------ boot */
+  fillDrillCats();
+  fillQuizCats();
+  newDrill();
+  startQuiz();
+  $$('.qcount').forEach(function (e) { e.textContent = QBank.count; });
+  $$('.gcount').forEach(function (e) { e.textContent = MathGen.generators.length; });
+  showView('drill');
+})();
+
+</script>
+</body>
+</html>
