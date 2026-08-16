@@ -1,0 +1,33 @@
+name: CI
+
+# Guards the study content: if a math generator's answer stops matching its own
+# worked solution, or dist/ goes stale, the run fails rather than quietly
+# shipping a tool that teaches the wrong method.
+#
+# Publishing is handled by GitHub Pages serving the main branch directly
+# (Settings > Pages > Deploy from a branch > main > /root), so there is no
+# deploy job here — the App token cannot create the Pages site itself.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify math generators and question bank
+        run: node test/run.js
+      - name: Verify the bundle rebuilds cleanly
+        run: |
+          node build.js
+          git diff --exit-code dist/ || {
+            echo "dist/ is out of date — run 'node build.js' and commit the result."
+            exit 1
+          }
