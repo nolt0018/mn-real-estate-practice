@@ -190,11 +190,16 @@
      ====================================================================== */
   var quiz = { list: [], i: 0, answered: false, session: { seen: 0, right: 0 } };
 
+  /* Category list depends on the chosen portion — MN statute categories are
+     meaningless when drilling the national section, and vice versa. */
   function fillQuizCats() {
-    var sel = $('#quiz-cat');
-    sel.innerHTML = ['All'].concat(QBank.cats).map(function (c) {
-      return '<option value="' + c + '">' + c + '</option>';
+    var portion = $('#quiz-portion').value;
+    var prev = $('#quiz-cat').value;
+    var cats = QBank.catsFor(portion);
+    $('#quiz-cat').innerHTML = ['All'].concat(cats).map(function (c) {
+      return '<option value="' + c + '">' + (c === 'All' ? 'All topics' : c) + '</option>';
     }).join('');
+    if (cats.indexOf(prev) >= 0) $('#quiz-cat').value = prev;
   }
 
   function shuffle(a) {
@@ -207,7 +212,7 @@
   }
 
   function startQuiz() {
-    var pool = QBank.byCat($('#quiz-cat').value);
+    var pool = QBank.filter($('#quiz-cat').value, $('#quiz-portion').value);
     if ($('#quiz-missed').checked) {
       var missed = pool.filter(function (x) {
         var s = state.quiz[x.id];
@@ -275,6 +280,7 @@
   }
 
   $('#quiz-next').addEventListener('click', function () { quiz.i++; renderQuiz(); });
+  $('#quiz-portion').addEventListener('change', function () { fillQuizCats(); startQuiz(); });
   $('#quiz-cat').addEventListener('change', startQuiz);
   $('#quiz-missed').addEventListener('change', startQuiz);
   $('#quiz-restart').addEventListener('click', startQuiz);
@@ -314,24 +320,36 @@
     };
   }
 
-  function buildExam(mathCount) {
+  /* mode: 'full' (80 national + 40 state), 'national' (80), 'state' (40).
+     Since a failed section is retaken alone, drilling one section is realistic. */
+  function buildExam(mathCount, mode) {
     mathCount = mathCount === undefined ? 14 : mathCount;
-    var nat = shuffle(QBank.byPortion('national')).slice(0, 80 - mathCount).map(function (x) {
-      return withShuffledChoices(x, 'national');
-    });
-    for (var i = 0; i < mathCount; i++) nat.push(mathAsMC());
+    mode = mode || 'national';
+    var out = [];
 
-    var stPool = QBank.byPortion('state');
-    var st = shuffle(stPool);
-    while (st.length < 40) st = st.concat(shuffle(stPool));   // repeat if bank is short
-    st = st.slice(0, 40).map(function (x) { return withShuffledChoices(x, 'state'); });
+    if (mode !== 'state') {
+      var natPool = QBank.byPortion('national');
+      var nat = shuffle(natPool).slice(0, 80 - mathCount).map(function (x) {
+        return withShuffledChoices(x, 'national');
+      });
+      for (var i = 0; i < mathCount; i++) nat.push(mathAsMC());
+      out = out.concat(shuffle(nat));
+    }
 
-    return shuffle(nat).concat(shuffle(st));
+    if (mode !== 'national') {
+      var stPool = QBank.byPortion('state');
+      var st = shuffle(stPool);
+      while (st.length < 40) st = st.concat(shuffle(stPool));  // repeat if bank is short
+      st = st.slice(0, 40).map(function (x) { return withShuffledChoices(x, 'state'); });
+      out = out.concat(shuffle(st));
+    }
+
+    return out;
   }
 
   function startExam() {
     var mins = parseInt($('#exam-mins').value, 10) || 240;
-    exam.items = buildExam(parseInt($('#exam-math').value, 10));
+    exam.items = buildExam(parseInt($('#exam-math').value, 10), $('#exam-mode').value);
     exam.answers = new Array(exam.items.length).fill(null);
     exam.i = 0;
     exam.running = true;
@@ -402,26 +420,33 @@
       else record('math', x.genId, ok);
     });
 
-    var natPass = natR / natT >= 0.75, stPass = stR / stT >= 0.75;
+    // A section that was not part of this exam must not count as failed.
+    var natPass = natT === 0 || natR / natT >= 0.75;
+    var stPass = stT === 0 || stR / stT >= 0.75;
+    var passed = natPass && stPass;
+
     state.exams.push({
       date: new Date().toISOString().slice(0, 10),
-      natR: natR, natT: natT, stR: stR, stT: stT, pass: natPass && stPass
+      natR: natR, natT: natT, stR: stR, stT: stT, pass: passed
     });
     save();
 
     $('#exam-run').hidden = true;
     $('#exam-results').hidden = false;
-    $('#exam-verdict').className = 'verdict ' + (natPass && stPass ? 'ok' : 'bad');
-    $('#exam-verdict').innerHTML = (natPass && stPass)
-      ? '<b>PASS</b> — both sections cleared 75%.'
-      : '<b>NOT YET</b> — ' + (!natPass && !stPass ? 'both sections are' :
-        (!natPass ? 'the national section is' : 'the Minnesota section is')) + ' below 75%.';
+    $('#exam-verdict').className = 'verdict ' + (passed ? 'ok' : 'bad');
+    var failed = [];
+    if (natT && !natPass) failed.push('national');
+    if (stT && !stPass) failed.push('Minnesota');
+    $('#exam-verdict').innerHTML = passed
+      ? '<b>PASS</b> — ' + (natT && stT ? 'both sections cleared 75%.' : 'cleared 75%.')
+      : '<b>NOT YET</b> — the ' + failed.join(' and ') +
+        (failed.length > 1 ? ' sections are' : ' section is') + ' below 75%.';
 
     $('#exam-breakdown').innerHTML =
-      scoreRow('National portion', natR, natT, 60) +
-      scoreRow('Minnesota state portion', stR, stT, 30) +
-      '<p class="muted">On the real exam each section is scored separately and you must reach 75% on both. ' +
-      'If you clear one section, that is the one you do not have to retake.</p>';
+      (natT ? scoreRow('National portion', natR, natT, Math.ceil(natT * 0.75)) : '') +
+      (stT ? scoreRow('Minnesota state portion', stR, stT, Math.ceil(stT * 0.75)) : '') +
+      '<p class="muted">Each section is scored separately on the real exam and each needs 75%. ' +
+      'Whichever section you already passed is the one you do not have to retake.</p>';
 
     var cats = Object.keys(byCat).sort(function (a, b) {
       return (byCat[a].r / byCat[a].t) - (byCat[b].r / byCat[b].t);
@@ -523,9 +548,12 @@
       ? '<p class="muted">No practice exams taken yet.</p>'
       : '<table class="tbl"><tr><th>Date</th><th>National</th><th>MN State</th><th>Result</th></tr>' +
         state.exams.slice().reverse().map(function (e) {
-          return '<tr><td>' + e.date + '</td><td>' + e.natR + '/' + e.natT + ' (' +
-            Math.round(e.natR / e.natT * 100) + '%)</td><td>' + e.stR + '/' + e.stT + ' (' +
-            Math.round(e.stR / e.stT * 100) + '%)</td><td class="' + (e.pass ? 'good' : 'poor') +
+          var cell = function (r, t) {
+            return t ? r + '/' + t + ' (' + Math.round(r / t * 100) + '%)'
+              : '<span class="muted">not taken</span>';
+          };
+          return '<tr><td>' + e.date + '</td><td>' + cell(e.natR, e.natT) + '</td><td>' +
+            cell(e.stR, e.stT) + '</td><td class="' + (e.pass ? 'good' : 'poor') +
             '">' + (e.pass ? 'PASS' : 'not yet') + '</td></tr>';
         }).join('') + '</table>';
   }

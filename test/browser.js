@@ -71,6 +71,30 @@ const check = (cond, label, extra) => {
   await page.click('.tab[data-view="quiz"]');
   await page.waitForTimeout(150);
   check(await page.isVisible('#view-quiz'), 'quiz tab switches');
+  check(await page.inputValue('#quiz-portion') === 'national',
+    'quiz defaults to the national portion');
+
+  // switching portion must rebuild the category list to that portion's topics
+  const natCats = await page.$$eval('#quiz-cat option', o => o.map(e => e.value));
+  await page.selectOption('#quiz-portion', 'state');
+  await page.waitForTimeout(100);
+  const stCats = await page.$$eval('#quiz-cat option', o => o.map(e => e.value));
+  check(natCats.includes('Transfer of Title') && !stCats.includes('Transfer of Title'),
+    'category list follows the selected portion');
+  check(stCats.some(c => c.startsWith('MN')) && !natCats.some(c => c.startsWith('MN')),
+    'MN categories appear only under the state portion');
+
+  // every question served under a portion filter must belong to that portion
+  await page.selectOption('#quiz-portion', 'national');
+  await page.waitForTimeout(100);
+  let mismatched = 0;
+  for (let i = 0; i < 25; i++) {
+    const tag = await page.textContent('#quiz-tag');
+    if (!tag.includes('National portion')) mismatched++;
+    await page.click('#quiz-choices .choice');
+    await page.click('#quiz-next');
+  }
+  check(mismatched === 0, 'national filter never serves a state question', mismatched + ' leaked');
   const nChoices = await page.$$eval('#quiz-choices .choice', e => e.length);
   check(nChoices === 4, 'quiz question has 4 choices');
   await page.click('#quiz-choices .choice');
@@ -82,18 +106,54 @@ const check = (cond, label, extra) => {
   check(await page.isHidden('#quiz-feedback'), 'next question resets feedback');
 
   /* ---------------------------------------------------------------- exam */
+  // Each mode must build the right number of questions.
+  for (const [mode, expect] of [['national', 80], ['state', 40], ['full', 120]]) {
+    await page.reload();
+    await page.waitForTimeout(250);
+    await page.click('.tab[data-view="exam"]');
+    await page.selectOption('#exam-mode', mode);
+    await page.click('#exam-start');
+    await page.waitForTimeout(300);
+    const n = await page.$$eval('#exam-grid .gridbtn', e => e.length);
+    check(n === expect, `exam mode "${mode}" builds ${expect} questions (got ${n})`);
+  }
+
+  // A national-only exam must contain no state questions at all.
+  await page.reload();
+  await page.waitForTimeout(250);
   await page.click('.tab[data-view="exam"]');
+  await page.selectOption('#exam-mode', 'national');
+  await page.click('#exam-start');
+  await page.waitForTimeout(300);
+  let stateLeaks = 0;
+  for (let i = 0; i < 80; i++) {
+    await page.click(`#exam-grid .gridbtn[data-i="${i}"]`);
+    if ((await page.textContent('#exam-tag')).includes('MN state')) stateLeaks++;
+  }
+  check(stateLeaks === 0, 'national-only exam contains zero state questions', stateLeaks + ' leaked');
+
+  // Submitting a national-only exam must not mark the untaken state section failed.
+  page.on('dialog', d => d.accept());
+  await page.click('#exam-submit');
+  await page.waitForTimeout(300);
+  const natOnlyBreak = await page.textContent('#exam-breakdown');
+  check(!natOnlyBreak.includes('Minnesota state portion'),
+    'national-only results omit the untaken state section');
+  const natOnlyVerdict = await page.textContent('#exam-verdict');
+  check(!/Minnesota section is below/.test(natOnlyVerdict),
+    'untaken state section is not reported as failed');
+
+  /* ------------------------------- full exam, always-B regression guard */
+  await page.reload();
+  await page.waitForTimeout(250);
+  await page.click('.tab[data-view="exam"]');
+  await page.selectOption('#exam-mode', 'full');
   await page.selectOption('#exam-mins', '240');
   await page.click('#exam-start');
   await page.waitForTimeout(300);
 
   const total = await page.$$eval('#exam-grid .gridbtn', e => e.length);
-  check(total === 120, 'exam builds exactly 120 questions (got ' + total + ')');
-
-  const portions = await page.evaluate(() => {
-    // walk every question and tally the portion label
-    return null;
-  });
+  check(total === 120, 'full exam builds exactly 120 questions (got ' + total + ')');
 
   // Answer all 120 by always choosing "B" — with shuffled choices this must NOT pass.
   for (let i = 0; i < 120; i++) {
@@ -104,7 +164,6 @@ const check = (cond, label, extra) => {
   const answeredTxt = await page.textContent('#exam-progress');
   check(answeredTxt.includes('120 answered'), 'all 120 answers register', answeredTxt);
 
-  page.on('dialog', d => d.accept());
   await page.click('#exam-submit');
   await page.waitForTimeout(300);
 

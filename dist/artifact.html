@@ -465,12 +465,18 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
   <section class="view" id="view-quiz" hidden>
     <div class="card">
       <div class="controls">
+        <select id="quiz-portion" aria-label="Exam portion">
+          <option value="national">National portion only</option>
+          <option value="state">MN state portion only</option>
+          <option value="All">Both portions</option>
+        </select>
         <select id="quiz-cat" aria-label="Quiz category"></select>
         <label class="check"><input type="checkbox" id="quiz-missed"> Only ones I've missed before</label>
         <button class="btn ghost" id="quiz-restart">Reshuffle</button>
       </div>
       <p class="muted"><span class="qcount"></span> questions covering contracts, agency, ethics,
-        fair housing, finance, property law, appraisal, and Minnesota statute.</p>
+        fair housing, finance, property law, appraisal, transfer of title, leases, land use, and
+        Minnesota statute. <b>Defaults to the national portion.</b></p>
     </div>
 
     <div class="card">
@@ -490,14 +496,22 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
   <!-- =============================================== EXAM -->
   <section class="view" id="view-exam" hidden>
     <div class="card" id="exam-setup">
-      <h2 style="margin-top:0">Full practice exam</h2>
-      <p>80 national questions + 40 Minnesota questions, just like the real thing. Each section is
-        scored on its own and each needs <b>75%</b> — 60 of 80 national, 30 of 40 state.</p>
+      <h2 style="margin-top:0">Practice exam</h2>
+      <p>The real exam is 80 national + 40 Minnesota questions, each section scored on its own and
+        each needing <b>75%</b> — 60 of 80 national, 30 of 40 state. <b>If you already passed one
+        section, you only retake the other</b>, so you can drill just that one here.</p>
       <div class="controls">
+        <label class="check">Sections
+          <select id="exam-mode">
+            <option value="national">National only — 80 questions</option>
+            <option value="full">Full exam — 80 national + 40 state</option>
+            <option value="state">MN state only — 40 questions</option>
+          </select>
+        </label>
         <label class="check">Time limit
           <select id="exam-mins">
-            <option value="240">240 minutes (full)</option>
-            <option value="180">180 minutes</option>
+            <option value="160">160 minutes (national pace)</option>
+            <option value="240">240 minutes (full exam)</option>
             <option value="120">120 minutes</option>
             <option value="600">No real limit</option>
           </select>
@@ -2706,6 +2720,443 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
       'Auditing the title company', 'Filing the closing statement with the state'], 1,
     'Accounting covers earnest money, keys, and documents. Trust account records must be maintained and available for inspection by the Commissioner.');
 
+  /* ======================================================================
+     TRANSFER OF TITLE  (national)
+     ====================================================================== */
+
+  q('national', 'Transfer of Title', 'An owner-occupant claims ownership of a strip of a neighbor\'s land after openly using it, without permission, for the statutory period. This is:',
+    ['Adverse possession', 'Accretion', 'Escheat', 'Novation'], 0,
+    'Adverse possession requires possession that is Open, Notorious, Continuous, Hostile, and Actual for the statutory period. Permission defeats the claim — a permissive use is a license.');
+
+  q('national', 'Transfer of Title', 'A person dies without a will. The property passes:',
+    ['To the state immediately', 'By the state\'s laws of intestate succession to the heirs',
+      'To the mortgage lender', 'To the county'], 1,
+    'Dying intestate means statutory succession decides the heirs. Only if NO heirs can be found does the property escheat to the state.');
+
+  q('national', 'Transfer of Title', 'A gift of real property by will is a:',
+    ['Bequest', 'Devise', 'Legacy', 'Codicil'], 1,
+    'DEVISE = real property (the recipient is the devisee). BEQUEST/LEGACY = personal property. A CODICIL amends an existing will.');
+
+  q('national', 'Transfer of Title', 'The clause in a deed that defines the extent of ownership being conveyed ("to have and to hold") is the:',
+    ['Granting clause', 'Habendum clause', 'Defeasance clause', 'Acceleration clause'], 1,
+    'The GRANTING clause states the intent to convey; the HABENDUM clause defines and limits the estate granted.');
+
+  q('national', 'Transfer of Title', 'An owner\'s title insurance policy protects:',
+    ['The lender for the life of the loan', 'The owner against defects existing before the policy date',
+      'Against future liens the owner creates', 'The buyer\'s down payment only'], 1,
+    'Title insurance is retrospective — it covers defects that already existed but were undiscovered. A LENDER\'s policy protects only the lender and shrinks as the loan is repaid.');
+
+  q('national', 'Transfer of Title', 'Which would NOT appear as an exception in a standard title policy?',
+    ['Rights of parties in possession', 'Unrecorded easements',
+      'A recorded mortgage disclosed in the commitment', 'Boundary disputes a survey would reveal'], 2,
+    'Standard policies except the things a record search cannot find. A properly disclosed recorded lien is a known matter handled at closing, not an unlisted risk.');
+
+  q('national', 'Transfer of Title', 'Land gradually added to a waterfront lot by the natural deposit of soil is acquired by:',
+    ['Avulsion', 'Accretion', 'Erosion', 'Reliction'], 1,
+    'ACCRETION = gradual buildup (the owner gains it). AVULSION = sudden loss or addition by violent action (boundaries generally do not change). RELICTION = water receding to expose land.');
+
+  q('national', 'Transfer of Title', 'A quiet title action is used to:',
+    ['Evict a tenant', 'Have a court determine ownership and clear defects',
+      'Reduce property taxes', 'Enforce a zoning ordinance'], 1,
+    'When a cloud cannot be cleared by a quitclaim — for instance an unlocatable heir — a court proceeding settles title.');
+
+  q('national', 'Transfer of Title', 'An abstract of title is:',
+    ['An insurance policy', 'A condensed history of all recorded documents affecting the property',
+      'A survey', 'A deed'], 1,
+    'The abstract summarizes the chain of title; an attorney then renders an opinion of title based on it. It is not insurance and does not guarantee title.');
+
+  q('national', 'Transfer of Title', 'Marketable title means title that is:',
+    ['Free of every conceivable claim', 'Reasonably free of defects such that a prudent buyer would accept it',
+      'Guaranteed by the state', 'Insured for the full purchase price'], 1,
+    'The standard is reasonableness, not perfection. Ordinary utility easements and recorded covenants generally do not make title unmarketable.');
+
+  q('national', 'Transfer of Title', 'For a deed to be recorded it generally must be:',
+    ['Signed by the grantee', 'Acknowledged (notarized) by the grantor',
+      'Approved by the lender', 'Witnessed by the buyer'], 1,
+    'Recording statutes require acknowledgment to deter forgery. Note the grantee never signs the deed — only the grantor does.');
+
+  q('national', 'Transfer of Title', 'Two deeds to the same property are executed. The one that generally prevails is the deed that was:',
+    ['Signed first', 'Recorded first by a good-faith purchaser without notice',
+      'For the higher price', 'Notarized first'], 1,
+    'Recording establishes priority. This is precisely why recording matters even though a deed is valid between the parties without it.');
+
+  /* ======================================================================
+     LEASES & PROPERTY MANAGEMENT  (national)
+     ====================================================================== */
+
+  q('national', 'Leases', 'In a gross lease, the tenant pays:',
+    ['Rent plus taxes, insurance, and maintenance', 'A fixed rent while the landlord pays the operating expenses',
+      'A percentage of sales', 'Only the utilities'], 1,
+    'GROSS = landlord absorbs expenses. NET = tenant pays some or all of taxes, insurance, and maintenance on top of base rent.');
+
+  q('national', 'Leases', 'A retail lease requiring base rent plus a share of the tenant\'s gross sales is a:',
+    ['Net lease', 'Percentage lease', 'Ground lease', 'Gross lease'], 1,
+    'Percentage leases are standard in shopping centers, letting the landlord share in a successful tenant\'s volume.');
+
+  q('national', 'Leases', 'The difference between an assignment and a sublease is that in an assignment the original tenant:',
+    ['Retains part of the leasehold interest', 'Transfers the ENTIRE remaining leasehold interest',
+      'Becomes the landlord', 'Is released from all liability automatically'], 1,
+    'ASSIGNMENT = whole remaining term. SUBLEASE = the tenant keeps a reversionary interest. In neither case is the original tenant automatically released from liability.');
+
+  q('national', 'Leases', 'A landlord fails to provide heat all winter and the tenant moves out. The tenant may claim:',
+    ['Actual eviction', 'Constructive eviction', 'Adverse possession', 'Novation'], 1,
+    'Constructive eviction: the landlord\'s breach makes the premises unusable. The tenant must actually VACATE within a reasonable time to claim it.');
+
+  q('national', 'Leases', 'The covenant of quiet enjoyment guarantees the tenant:',
+    ['A soundproof unit', 'Possession without interference from the landlord or superior title claims',
+      'The right to sublease', 'A rent reduction for noise'], 1,
+    'It concerns legal possession, not literal noise — a frequent trap in the wording of the answer choices.');
+
+  q('national', 'Leases', 'If a leased property is sold, an existing valid lease generally:',
+    ['Terminates at closing', 'Survives and binds the new owner',
+      'Must be renegotiated', 'Converts to a month-to-month'], 1,
+    'The buyer takes subject to existing leases. This is why estoppel certificates and rent rolls are reviewed during due diligence.');
+
+  q('national', 'Leases', 'A ground lease is typically:',
+    ['A short-term residential lease', 'A long-term lease of land on which the tenant builds improvements',
+      'A lease of farmland only', 'A lease with no rent'], 1,
+    'Ground leases commonly run 50-99 years because the tenant must amortize the cost of a building on land it does not own.');
+
+  q('national', 'Leases', 'Under the Americans with Disabilities Act, a commercial property owner must:',
+    ['Rebuild the property entirely', 'Remove barriers to public accommodations when readily achievable',
+      'Ignore existing structures', 'Provide housing accommodations'], 1,
+    'The ADA governs public accommodations and commercial facilities. Fair housing law — not the ADA — is what governs residential disability accommodations.');
+
+  /* ======================================================================
+     LAND USE & ENVIRONMENTAL  (national)
+     ====================================================================== */
+
+  q('national', 'Land Use', 'An owner wants to build closer to the lot line than the setback allows because of an odd lot shape. The owner should seek a:',
+    ['Nonconforming use', 'Variance', 'Rezoning', 'Special use permit'], 1,
+    'A VARIANCE permits a deviation from the rules due to hardship unique to the parcel. A SPECIAL USE PERMIT allows a use the zoning already contemplates, like a church in a residential zone.');
+
+  q('national', 'Land Use', 'Rezoning a single small parcel to benefit one owner, inconsistent with the surrounding area, is:',
+    ['Downzoning', 'Spot zoning', 'A variance', 'Inverse condemnation'], 1,
+    'Spot zoning is generally illegal because it is not part of a comprehensive plan.');
+
+  q('national', 'Land Use', 'The document a municipality issues confirming a new building may be occupied is a:',
+    ['Building permit', 'Certificate of occupancy', 'Plat', 'Deed restriction'], 1,
+    'The permit authorizes construction; the CO confirms completion in compliance with code and authorizes occupancy.');
+
+  q('national', 'Land Use', 'Government taking of private property for public use, with just compensation, is:',
+    ['Police power', 'Eminent domain, exercised through condemnation', 'Escheat', 'Adverse possession'], 1,
+    'Eminent domain is the POWER; condemnation is the PROCESS. Compensation is required, unlike an exercise of police power such as zoning.');
+
+  q('national', 'Land Use', 'A government regulation so restrictive that it destroys nearly all economic value of a property may support a claim of:',
+    ['Inverse condemnation (regulatory taking)', 'Adverse possession', 'Escheat', 'Novation'], 0,
+    'The owner sues arguing a taking occurred without compensation. Ordinary zoning that merely reduces value is not a taking.');
+
+  q('national', 'Land Use', 'Under CERCLA (Superfund), liability for cleanup of contamination is generally:',
+    ['Limited to the party who caused it', 'Strict, joint and several, and retroactive',
+      'Capped at the property value', 'Waived for innocent buyers with no defense available'], 1,
+    'A current owner can be liable even without causing the contamination. The "innocent landowner" defense generally requires all appropriate inquiry — an environmental site assessment — before purchase.');
+
+  q('national', 'Land Use', 'A federal disclosure requirement applies to residential properties built before which year?',
+    ['1968', '1972', '1978', '1988'], 2,
+    'The lead-based paint rule applies to target housing built BEFORE 1978. Sellers and landlords must disclose known hazards and provide the EPA pamphlet.');
+
+  q('national', 'Land Use', 'Radon is best described as:',
+    ['A synthetic insulation material', 'A naturally occurring radioactive gas that enters through the foundation',
+      'A byproduct of lead paint', 'A form of asbestos'], 1,
+    'Radon is the second leading cause of lung cancer in the US and is common in the upper Midwest. It is mitigated with sub-slab depressurization systems.');
+
+  q('national', 'Land Use', 'The most common environmental concern with a property served by a former gas station site is:',
+    ['Radon', 'An underground storage tank (UST)', 'Asbestos', 'Lead paint'], 1,
+    'USTs can leak petroleum into soil and groundwater, creating cleanup liability that can far exceed the property value.');
+
+  q('national', 'Land Use', 'A property lies in a designated FEMA special flood hazard area. A federally regulated lender will:',
+    ['Refuse the loan', 'Require flood insurance', 'Ignore it', 'Require a radon test'], 1,
+    'Flood insurance is mandatory for federally related loans in a special flood hazard area, typically through the National Flood Insurance Program.');
+
+  q('national', 'Land Use', 'Private deed restrictions and public zoning conflict on lot coverage. Which controls?',
+    ['Zoning always', 'The deed restriction always', 'Whichever is MORE restrictive', 'Neither is enforceable'], 2,
+    'The more restrictive provision governs. Zoning sets a floor of regulation; private covenants may go further.');
+
+  q('national', 'Land Use', 'A subdivision developer must typically record a:',
+    ['Plat map showing lots, blocks, streets, and easements', 'Deed for each future buyer',
+      'Title policy', 'Mortgage'], 0,
+    'The recorded plat creates the lot-and-block legal descriptions used for all future conveyances in the subdivision.');
+
+  /* ======================================================================
+     PROPERTY CHARACTERISTICS & DESCRIPTIONS  (national)
+     ====================================================================== */
+
+  q('national', 'Property & Title', 'An owner whose land borders a flowing river has:',
+    ['Littoral rights', 'Riparian rights', 'Prior appropriation rights', 'No water rights'], 1,
+    'RIPARIAN = rivers and streams (flowing water). LITTORAL = lakes, seas, oceans (standing water). PRIOR APPROPRIATION, used in many western states, allocates water by permit regardless of adjacency.');
+
+  q('national', 'Property & Title', 'The three physical characteristics of land are immobility, indestructibility, and:',
+    ['Scarcity', 'Uniqueness (nonhomogeneity)', 'Improvements', 'Permanence of investment'], 1,
+    'PHYSICAL: immobility, indestructibility, uniqueness. ECONOMIC: scarcity, improvements, permanence of investment, area preference (situs).');
+
+  q('national', 'Property & Title', 'A legal description using compass directions and distances from a point of beginning is:',
+    ['Lot and block', 'Metes and bounds', 'Rectangular survey', 'Street address'], 1,
+    'Metes and bounds must return to the point of beginning to enclose the parcel. A street address is never an adequate legal description.');
+
+  q('national', 'Property & Title', 'In the rectangular (government) survey system, a township contains:',
+    ['640 acres', '36 sections', '160 acres', '6 sections'], 1,
+    'A township is 6 miles by 6 miles = 36 sections = 36 square miles = 23,040 acres.');
+
+  q('national', 'Property & Title', 'The four characteristics that create value are remembered as DUST:',
+    ['Demand, Utility, Scarcity, Transferability', 'Deed, Use, Survey, Title',
+      'Depreciation, Upkeep, Style, Taxes', 'Demand, Uniqueness, Situs, Trend'], 0,
+    'All four must be present. A useful, scarce, in-demand parcel with no transferable title has no market value.');
+
+  q('national', 'Property & Title', 'Combining two adjacent parcels so the resulting value exceeds the sum of the parts is:',
+    ['Assemblage, creating plottage value', 'Accretion', 'Severalty', 'Partition'], 0,
+    'ASSEMBLAGE is the act of combining; PLOTTAGE is the resulting increment in value.');
+
+  /* ======================================================================
+     FINANCE — DEEPER  (national)
+     ====================================================================== */
+
+  q('national', 'Finance', 'In an adjustable-rate mortgage, the interest rate equals:',
+    ['The index alone', 'The index plus the margin', 'The margin alone', 'The cap plus the index'], 1,
+    'The INDEX moves with the market; the MARGIN is the lender\'s fixed markup. Caps limit how much the rate may change per period and over the life of the loan.');
+
+  q('national', 'Finance', 'A loan whose payment is too small to cover the accruing interest, causing the balance to grow, has:',
+    ['Positive amortization', 'Negative amortization', 'A prepayment penalty', 'A release clause'], 1,
+    'Negative amortization increases what is owed over time — the reason many such products are now heavily restricted.');
+
+  q('national', 'Finance', 'A loan covering more than one parcel, with a provision to free individual lots as they sell, is a:',
+    ['Package loan', 'Blanket loan with a partial release clause', 'Bridge loan', 'Wraparound loan'], 1,
+    'Blanket loans are common for developers. The PARTIAL RELEASE clause releases each lot from the lien as it is sold.');
+
+  q('national', 'Finance', 'A loan that finances real estate together with personal property such as appliances or furniture is a:',
+    ['Blanket loan', 'Package loan', 'Open-end loan', 'Ground lease'], 1,
+    'Package loans are common in furnished condominium and resort sales.');
+
+  q('national', 'Finance', 'A seller finances a buyer with a new loan that includes and is subordinate to the existing first mortgage. This is a:',
+    ['Wraparound mortgage', 'Blanket mortgage', 'Package mortgage', 'Bridge loan'], 0,
+    'The wraparound seller keeps paying the underlying loan and profits on the rate spread. A due-on-sale clause in the underlying loan can make this impossible.');
+
+  q('national', 'Finance', 'The clause that cancels the mortgage lien once the debt is paid in full is the:',
+    ['Acceleration clause', 'Defeasance clause', 'Alienation clause', 'Escalation clause'], 1,
+    'The defeasance clause requires the lender to release the lien. The recorded evidence is a satisfaction of mortgage (or a deed of reconveyance where deeds of trust are used).');
+
+  q('national', 'Finance', 'A deed of trust differs from a mortgage in that it involves:',
+    ['Two parties', 'Three parties, including a trustee holding title as security',
+      'No promissory note', 'No foreclosure'], 1,
+    'Trustor (borrower), beneficiary (lender), trustee (neutral third party). The trustee\'s power of sale allows non-judicial foreclosure.');
+
+  q('national', 'Finance', 'The instrument that is the borrower\'s actual PROMISE TO REPAY is the:',
+    ['Mortgage', 'Promissory note', 'Deed', 'Title policy'], 1,
+    'The NOTE is the debt; the MORTGAGE is the security instrument pledging the property as collateral. The note can exist without the mortgage, but not the reverse.');
+
+  q('national', 'Finance', 'A borrower conveys the property to the lender to avoid foreclosure. This is a:',
+    ['Short sale', 'Deed in lieu of foreclosure', 'Novation', 'Redemption'], 1,
+    'A deed in lieu avoids the foreclosure process but does not erase junior liens — the lender takes the property subject to them, which is why lenders often refuse.');
+
+  q('national', 'Finance', 'A sale in which the lender agrees to accept less than the loan balance is a:',
+    ['Deed in lieu', 'Short sale', 'Foreclosure by advertisement', 'Redemption'], 1,
+    'Short sales require lender approval and often take months, which the listing agent must set expectations about.');
+
+  q('national', 'Finance', 'Under TRID, the buyer must receive the Closing Disclosure at least:',
+    ['1 business day before closing', '3 business days before consummation',
+      '7 days after closing', '10 business days before closing'], 1,
+    'The Loan Estimate comes within 3 business days of application; the Closing Disclosure must be received 3 business days BEFORE consummation. Certain changes restart the 3-day clock.');
+
+  q('national', 'Finance', 'The primary purpose of an escrow (impound) account is to:',
+    ['Pay the broker\'s commission', 'Accumulate funds for taxes and insurance so they are paid when due',
+      'Hold the earnest money', 'Reduce the interest rate'], 1,
+    'It protects the lender\'s collateral by ensuring taxes and hazard insurance are never unpaid. RESPA limits the cushion a lender may require.');
+
+  q('national', 'Finance', 'Which is TRUE of FHA loans?',
+    ['They are made directly by the government', 'They are insured by FHA and made by approved lenders',
+      'They require 20% down', 'They are only for veterans'], 1,
+    'FHA INSURES; it does not lend. Borrowers pay an upfront and an annual mortgage insurance premium (MIP), which differs from conventional PMI in that it often lasts the life of the loan.');
+
+  q('national', 'Finance', 'A buyer assumes a seller\'s loan and the lender releases the seller from liability. This is a:',
+    ['Subject-to purchase', 'Novation', 'Subordination', 'Wraparound'], 1,
+    'Only a NOVATION releases the original borrower. A bare assumption typically leaves the seller secondarily liable.');
+
+  /* ======================================================================
+     VALUATION — DEEPER  (national)
+     ====================================================================== */
+
+  q('national', 'Valuation', 'The first step in the appraisal process is to:',
+    ['Inspect the property', 'Define the problem, including the purpose and the interest being appraised',
+      'Gather comparable sales', 'Reconcile the value indicators'], 1,
+    'Everything downstream depends on defining the assignment — the effective date, the interest appraised, and the type of value sought.');
+
+  q('national', 'Valuation', 'Reconciliation in an appraisal means:',
+    ['Averaging the three approaches', 'Weighing the approaches according to their reliability for this property',
+      'Choosing the highest value', 'Adjusting the subject property'], 1,
+    'Averaging is explicitly wrong. The appraiser weights each approach based on the quality of data and the property type.');
+
+  q('national', 'Valuation', 'An appraiser is asked to "bring in the value at $450,000 or we cannot close." The appraiser must:',
+    ['Comply, since the client is paying', 'Decline — value cannot be predetermined',
+      'Split the difference', 'Use only the cost approach'], 1,
+    'Accepting an assignment contingent on a predetermined value violates USPAP and federal appraiser independence rules.');
+
+  q('national', 'Valuation', 'Situs refers to:',
+    ['The soil composition', 'Area or location preference', 'The legal description', 'The zoning classification'], 1,
+    'Situs is an ECONOMIC characteristic — people\'s preference for a location. It is the reason identical houses differ in value by neighborhood.');
+
+  q('national', 'Valuation', 'A comparable sold for $340,000 and has a garage the subject lacks, worth $12,000. The adjusted value indicated is:',
+    ['$352,000', '$340,000', '$328,000', '$316,000'], 2,
+    'The COMP is superior, so SUBTRACT from the comp: $340,000 - $12,000 = $328,000. Remember "CBS" — Comp Better, Subtract. Never adjust the subject.');
+
+  q('national', 'Valuation', 'Deferred maintenance such as a worn roof is an example of:',
+    ['Functional obsolescence', 'Curable physical deterioration', 'External obsolescence', 'Incurable depreciation'], 1,
+    'Curable means the cost to fix is recovered in added value. External obsolescence is always incurable because its cause is off-site.');
+
+  q('national', 'Valuation', 'A broker price opinion (BPO) or CMA differs from an appraisal chiefly because it:',
+    ['Is more accurate', 'Is not performed by a licensed appraiser under USPAP',
+      'Uses no comparable sales', 'Is required by lenders'], 1,
+    'Lenders generally require an independent licensed appraisal for financing decisions; BPOs are commonly used for REO pricing and pre-listing guidance.');
+
+  q('national', 'Valuation', 'The principle of anticipation holds that value is based on:',
+    ['Past sale prices', 'The expectation of future benefits', 'Replacement cost', 'The assessed value'], 1,
+    'Anticipation underlies the income approach — an investor pays today for tomorrow\'s income stream.');
+
+  q('national', 'Valuation', 'A property\'s value falls because a major employer closed. This is:',
+    ['Functional obsolescence', 'Physical deterioration', 'External obsolescence', 'Curable depreciation'], 2,
+    'The cause lies outside the property boundary and outside the owner\'s control, making it external and incurable.');
+
+  /* ======================================================================
+     PRACTICE OF REAL ESTATE & SETTLEMENT  (national)
+     ====================================================================== */
+
+  q('national', 'Practice & Settlement', 'Two competing brokerages agree to both charge a 6% commission. This is:',
+    ['Good business practice', 'Illegal price fixing under antitrust law',
+      'Permitted if disclosed', 'Required by the MLS'], 1,
+    'Commission rates are ALWAYS negotiable between a broker and a client. Price fixing is a per se antitrust violation with criminal exposure.');
+
+  q('national', 'Practice & Settlement', 'Brokers agree that one will handle the north side of town and the other the south. This is:',
+    ['Efficient specialization', 'Illegal market allocation', 'A permitted referral arrangement', 'Designated agency'], 1,
+    'Market allocation is an antitrust violation alongside price fixing, group boycotting, and tie-in arrangements.');
+
+  q('national', 'Practice & Settlement', 'A broker tells a seller "I will list your property only if you also use my affiliated mortgage company." This is:',
+    ['A tie-in arrangement, an antitrust violation', 'A legal package deal',
+      'Required disclosure', 'Standard practice'], 0,
+    'Conditioning one service on the purchase of another is an illegal tie-in. It may also violate RESPA if it steers settlement services.');
+
+  q('national', 'Practice & Settlement', 'Several brokerages agree to stop cooperating with a discount brokerage. This is:',
+    ['A group boycott, an antitrust violation', 'Legal competitive behavior',
+      'Permitted by the MLS', 'A designated agency issue'], 0,
+    'Group boycotting is a per se violation. Each firm must independently decide its own cooperation and compensation policies.');
+
+  q('national', 'Practice & Settlement', 'The broker who is the "procuring cause" of a sale is the one who:',
+    ['Listed the property', 'Started an uninterrupted chain of events leading to the sale',
+      'Showed the property first', 'Wrote the offer'], 1,
+    'Procuring cause disputes turn on an unbroken chain of events, not merely who opened the door first.');
+
+  q('national', 'Practice & Settlement', 'A listing broker generally earns a commission when:',
+    ['The deed is recorded', 'A ready, willing, and able buyer is produced on the seller\'s terms',
+      'The buyer applies for a loan', 'The property is listed'], 1,
+    'Legally the commission is earned at that point, though most listing agreements make payment contingent on closing. If the SELLER wrongfully refuses to close, the commission may still be owed.');
+
+  q('national', 'Practice & Settlement', 'On a closing statement, the buyer\'s new loan amount is:',
+    ['A debit to the buyer', 'A credit to the buyer', 'A credit to the seller', 'A debit to the seller'], 1,
+    'The loan is money coming IN for the buyer, so it is a buyer credit. The purchase price is the buyer\'s debit and the seller\'s credit.');
+
+  q('national', 'Practice & Settlement', 'Which item is normally a SELLER debit at closing?',
+    ['The new loan amount', 'The existing mortgage payoff', 'The earnest money', 'The buyer\'s appraisal fee'], 1,
+    'The payoff is subtracted from the seller\'s proceeds. Earnest money is a buyer credit; the appraisal fee is normally a buyer cost.');
+
+  q('national', 'Practice & Settlement', 'A licensee receives an email from "the title company" changing the wire instructions the day before closing. The correct action is:',
+    ['Forward it to the buyer immediately', 'Verify by calling a known, independently sourced phone number before anyone wires funds',
+      'Wire the funds to test it', 'Ignore the closing'], 1,
+    'Business email compromise targeting closings is one of the most costly frauds in real estate. Never trust contact details contained in the suspicious message itself.');
+
+  q('national', 'Practice & Settlement', 'Errors and omissions (E&O) insurance protects a licensee against:',
+    ['Intentional fraud', 'Claims of negligence or mistakes in professional services',
+      'Property damage', 'Fair housing fines'], 1,
+    'E&O covers unintentional errors. Deliberate misconduct and fraud are excluded — which is why disclosure discipline matters more than insurance.');
+
+  q('national', 'Practice & Settlement', 'A licensee wants to call homeowners from a purchased list. Federal Do Not Call rules generally require:',
+    ['No restrictions for real estate', 'Scrubbing numbers against the National Do Not Call Registry and honoring internal opt-outs',
+      'Calling only after 9 p.m.', 'Written permission from the MLS'], 1,
+    'There is an established business relationship exception, but cold-calling registered numbers exposes the licensee and brokerage to per-call penalties.');
+
+  q('national', 'Practice & Settlement', 'Under ESIGN and UETA, an electronic signature on a purchase agreement is:',
+    ['Never valid', 'Generally as enforceable as an ink signature if the parties consented',
+      'Valid only for leases', 'Valid only if notarized'], 1,
+    'Consent to conduct business electronically is the key requirement, which is why e-sign platforms capture it up front.');
+
+  /* ======================================================================
+     AGENCY & CONTRACTS — DEEPER  (national)
+     ====================================================================== */
+
+  q('national', 'Agency', 'A general agent differs from a special agent in that a general agent:',
+    ['Handles one specific transaction', 'Has authority to act in a broad range of matters for the principal',
+      'Represents both parties', 'Cannot be compensated'], 1,
+    'A property manager is a GENERAL agent. A listing broker is typically a SPECIAL agent for one transaction. A UNIVERSAL agent, such as under a power of attorney, may act in all matters.');
+
+  q('national', 'Agency', 'A broker is generally liable for the acts of affiliated licensees performed within the scope of their duties. This is:',
+    ['Vicarious liability', 'Strict liability', 'Novation', 'Subrogation'], 0,
+    'This is the legal basis for the broker\'s supervisory obligation and for brokerage policies and training requirements.');
+
+  q('national', 'Agency', 'A buyer\'s agent learns the buyer intends to convert a single-family home into an illegal rooming house. The agent should:',
+    ['Assist, because of the duty of obedience', 'Decline to participate in an unlawful use',
+      'Notify the neighbors', 'Disclose it to the MLS'], 1,
+    'Fiduciary duties never require participation in illegal activity. Obedience covers LAWFUL instructions only.');
+
+  q('national', 'Contracts', 'The Statute of Frauds requires which to be in writing to be enforceable?',
+    ['A one-year lease', 'A contract for the sale of real estate',
+      'An oral agreement to paint a house', 'A verbal offer'], 1,
+    'Real estate sale contracts, and typically leases longer than one year, must be written. An oral agreement to sell land is unenforceable, not void.');
+
+  q('national', 'Contracts', 'A document that adds new terms to a contract BEFORE it is signed by all parties is an:',
+    ['Amendment', 'Addendum', 'Assignment', 'Novation'], 1,
+    'ADDENDUM = attached at formation. AMENDMENT = changes an already-executed contract. The exam tests the timing distinction.');
+
+  q('national', 'Contracts', 'When a buyer and seller sign a purchase agreement, the buyer acquires:',
+    ['Legal title', 'Equitable title', 'A leasehold', 'No interest until closing'], 1,
+    'Equitable title arises at contract formation; legal title transfers at closing by deed. This is also why specific performance is available to the buyer.');
+
+  q('national', 'Contracts', 'A contract in which all parties have fully performed is:',
+    ['Executory', 'Executed', 'Void', 'Unilateral'], 1,
+    'EXECUTED = fully performed. EXECUTORY = something remains to be done. A signed purchase agreement before closing is executory, despite people calling it "executed" casually.');
+
+  q('national', 'Contracts', 'A buyer discovers the seller knowingly concealed a cracked foundation after closing. The buyer may seek:',
+    ['Nothing, since closing occurred', 'Rescission and/or damages for fraudulent misrepresentation',
+      'A new appraisal', 'A zoning variance'], 1,
+    'Closing does not extinguish fraud claims. Deliberate concealment of a known material defect supports rescission or damages.');
+
+  q('national', 'Contracts', 'A purchase agreement is signed but the home is destroyed by fire before closing. Who bears the loss depends primarily on:',
+    ['The listing agreement', 'The contract terms and the state\'s risk-of-loss rule',
+      'The appraiser', 'The lender'], 1,
+    'Most modern purchase agreements assign risk of loss to the seller until closing or possession, and give the buyer a right to cancel. Always read the specific contract.');
+
+  q('national', 'Contracts', 'An offer states it must be accepted by 5 p.m. Friday. The seller signs at 6 p.m. Friday and returns it. The result is:',
+    ['A binding contract', 'No contract; the late signature is a counteroffer the buyer may accept or reject',
+      'A voidable contract', 'An option'], 1,
+    'The offer expired at its stated deadline. Signing afterward is a new offer, and the buyer is free to walk away.');
+
+  /* ======================================================================
+     MATH CONCEPTS — DEEPER  (national)
+     ====================================================================== */
+
+  q('national', 'Math Concepts', 'A township contains how many square miles?',
+    ['1', '6', '36', '640'], 2,
+    'A township is 6 miles on each side, so 36 square miles = 36 sections. Each section is 640 acres.');
+
+  q('national', 'Math Concepts', 'To find the monthly interest on a loan balance, you:',
+    ['Multiply the balance by the annual rate', 'Multiply the balance by the annual rate and divide by 12',
+      'Divide the balance by the rate', 'Multiply the payment by the rate'], 1,
+    'Interest always accrues on the CURRENT balance. Compute the annual interest first, then divide by 12.');
+
+  q('national', 'Math Concepts', 'In a proration, "paid in arrears" means the expense:',
+    ['Has already been paid for the period ahead', 'Covers a period that has already passed and is not yet paid',
+      'Is never prorated', 'Is paid by the lender'], 1,
+    'Arrears means you pay after the fact — so at closing the seller owes the buyer for the seller\'s period of ownership.');
+
+  q('national', 'Math Concepts', 'If a buyer is qualified using a 28% front-end ratio, that percentage is applied to:',
+    ['Net monthly income', 'Gross monthly income', 'Annual gross income', 'The loan amount'], 1,
+    'Qualifying ratios always use GROSS income, before taxes and deductions.');
+
+  q('national', 'Math Concepts', 'A property sold for 90% of its list price. To find the list price you:',
+    ['Multiply the sale price by 1.10', 'Divide the sale price by 0.90',
+      'Multiply the sale price by 0.90', 'Add 10% to the sale price'], 1,
+    'The sale price IS 90% of the list, so divide by 0.90. Multiplying by 1.10 is the reliable wrong answer and is always offered.');
+
+  q('national', 'Math Concepts', 'The capitalization rate and value have what relationship?',
+    ['Direct — as the cap rate rises, value rises', 'Inverse — as the cap rate rises, value falls',
+      'No relationship', 'They are always equal'], 1,
+    'Value = NOI / cap rate. A higher cap rate (more perceived risk) divides the same income into a LOWER value.');
+
   /* ================================================================== API */
 
   var CATS = [];
@@ -2716,6 +3167,23 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
     cats: CATS,
     byCat: function (c) {
       return c === 'All' ? Q.slice() : Q.filter(function (x) { return x.cat === c; });
+    },
+    /* filter by category and exam portion together */
+    filter: function (cat, portion) {
+      return Q.filter(function (x) {
+        return (cat === 'All' || x.cat === cat) &&
+          (portion === 'All' || x.portion === portion);
+      });
+    },
+    /* categories that actually contain questions for a given portion, so the
+       dropdown never offers a filter that yields nothing */
+    catsFor: function (portion) {
+      var seen = [];
+      Q.forEach(function (x) {
+        if (portion !== 'All' && x.portion !== portion) return;
+        if (seen.indexOf(x.cat) < 0) seen.push(x.cat);
+      });
+      return seen;
     },
     byPortion: function (p) { return Q.filter(function (x) { return x.portion === p; }); },
     count: Q.length
@@ -2916,11 +3384,16 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
      ====================================================================== */
   var quiz = { list: [], i: 0, answered: false, session: { seen: 0, right: 0 } };
 
+  /* Category list depends on the chosen portion — MN statute categories are
+     meaningless when drilling the national section, and vice versa. */
   function fillQuizCats() {
-    var sel = $('#quiz-cat');
-    sel.innerHTML = ['All'].concat(QBank.cats).map(function (c) {
-      return '<option value="' + c + '">' + c + '</option>';
+    var portion = $('#quiz-portion').value;
+    var prev = $('#quiz-cat').value;
+    var cats = QBank.catsFor(portion);
+    $('#quiz-cat').innerHTML = ['All'].concat(cats).map(function (c) {
+      return '<option value="' + c + '">' + (c === 'All' ? 'All topics' : c) + '</option>';
     }).join('');
+    if (cats.indexOf(prev) >= 0) $('#quiz-cat').value = prev;
   }
 
   function shuffle(a) {
@@ -2933,7 +3406,7 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
   }
 
   function startQuiz() {
-    var pool = QBank.byCat($('#quiz-cat').value);
+    var pool = QBank.filter($('#quiz-cat').value, $('#quiz-portion').value);
     if ($('#quiz-missed').checked) {
       var missed = pool.filter(function (x) {
         var s = state.quiz[x.id];
@@ -3001,6 +3474,7 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
   }
 
   $('#quiz-next').addEventListener('click', function () { quiz.i++; renderQuiz(); });
+  $('#quiz-portion').addEventListener('change', function () { fillQuizCats(); startQuiz(); });
   $('#quiz-cat').addEventListener('change', startQuiz);
   $('#quiz-missed').addEventListener('change', startQuiz);
   $('#quiz-restart').addEventListener('click', startQuiz);
@@ -3040,24 +3514,36 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
     };
   }
 
-  function buildExam(mathCount) {
+  /* mode: 'full' (80 national + 40 state), 'national' (80), 'state' (40).
+     Since a failed section is retaken alone, drilling one section is realistic. */
+  function buildExam(mathCount, mode) {
     mathCount = mathCount === undefined ? 14 : mathCount;
-    var nat = shuffle(QBank.byPortion('national')).slice(0, 80 - mathCount).map(function (x) {
-      return withShuffledChoices(x, 'national');
-    });
-    for (var i = 0; i < mathCount; i++) nat.push(mathAsMC());
+    mode = mode || 'national';
+    var out = [];
 
-    var stPool = QBank.byPortion('state');
-    var st = shuffle(stPool);
-    while (st.length < 40) st = st.concat(shuffle(stPool));   // repeat if bank is short
-    st = st.slice(0, 40).map(function (x) { return withShuffledChoices(x, 'state'); });
+    if (mode !== 'state') {
+      var natPool = QBank.byPortion('national');
+      var nat = shuffle(natPool).slice(0, 80 - mathCount).map(function (x) {
+        return withShuffledChoices(x, 'national');
+      });
+      for (var i = 0; i < mathCount; i++) nat.push(mathAsMC());
+      out = out.concat(shuffle(nat));
+    }
 
-    return shuffle(nat).concat(shuffle(st));
+    if (mode !== 'national') {
+      var stPool = QBank.byPortion('state');
+      var st = shuffle(stPool);
+      while (st.length < 40) st = st.concat(shuffle(stPool));  // repeat if bank is short
+      st = st.slice(0, 40).map(function (x) { return withShuffledChoices(x, 'state'); });
+      out = out.concat(shuffle(st));
+    }
+
+    return out;
   }
 
   function startExam() {
     var mins = parseInt($('#exam-mins').value, 10) || 240;
-    exam.items = buildExam(parseInt($('#exam-math').value, 10));
+    exam.items = buildExam(parseInt($('#exam-math').value, 10), $('#exam-mode').value);
     exam.answers = new Array(exam.items.length).fill(null);
     exam.i = 0;
     exam.running = true;
@@ -3128,26 +3614,33 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
       else record('math', x.genId, ok);
     });
 
-    var natPass = natR / natT >= 0.75, stPass = stR / stT >= 0.75;
+    // A section that was not part of this exam must not count as failed.
+    var natPass = natT === 0 || natR / natT >= 0.75;
+    var stPass = stT === 0 || stR / stT >= 0.75;
+    var passed = natPass && stPass;
+
     state.exams.push({
       date: new Date().toISOString().slice(0, 10),
-      natR: natR, natT: natT, stR: stR, stT: stT, pass: natPass && stPass
+      natR: natR, natT: natT, stR: stR, stT: stT, pass: passed
     });
     save();
 
     $('#exam-run').hidden = true;
     $('#exam-results').hidden = false;
-    $('#exam-verdict').className = 'verdict ' + (natPass && stPass ? 'ok' : 'bad');
-    $('#exam-verdict').innerHTML = (natPass && stPass)
-      ? '<b>PASS</b> — both sections cleared 75%.'
-      : '<b>NOT YET</b> — ' + (!natPass && !stPass ? 'both sections are' :
-        (!natPass ? 'the national section is' : 'the Minnesota section is')) + ' below 75%.';
+    $('#exam-verdict').className = 'verdict ' + (passed ? 'ok' : 'bad');
+    var failed = [];
+    if (natT && !natPass) failed.push('national');
+    if (stT && !stPass) failed.push('Minnesota');
+    $('#exam-verdict').innerHTML = passed
+      ? '<b>PASS</b> — ' + (natT && stT ? 'both sections cleared 75%.' : 'cleared 75%.')
+      : '<b>NOT YET</b> — the ' + failed.join(' and ') +
+        (failed.length > 1 ? ' sections are' : ' section is') + ' below 75%.';
 
     $('#exam-breakdown').innerHTML =
-      scoreRow('National portion', natR, natT, 60) +
-      scoreRow('Minnesota state portion', stR, stT, 30) +
-      '<p class="muted">On the real exam each section is scored separately and you must reach 75% on both. ' +
-      'If you clear one section, that is the one you do not have to retake.</p>';
+      (natT ? scoreRow('National portion', natR, natT, Math.ceil(natT * 0.75)) : '') +
+      (stT ? scoreRow('Minnesota state portion', stR, stT, Math.ceil(stT * 0.75)) : '') +
+      '<p class="muted">Each section is scored separately on the real exam and each needs 75%. ' +
+      'Whichever section you already passed is the one you do not have to retake.</p>';
 
     var cats = Object.keys(byCat).sort(function (a, b) {
       return (byCat[a].r / byCat[a].t) - (byCat[b].r / byCat[b].t);
@@ -3249,9 +3742,12 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
       ? '<p class="muted">No practice exams taken yet.</p>'
       : '<table class="tbl"><tr><th>Date</th><th>National</th><th>MN State</th><th>Result</th></tr>' +
         state.exams.slice().reverse().map(function (e) {
-          return '<tr><td>' + e.date + '</td><td>' + e.natR + '/' + e.natT + ' (' +
-            Math.round(e.natR / e.natT * 100) + '%)</td><td>' + e.stR + '/' + e.stT + ' (' +
-            Math.round(e.stR / e.stT * 100) + '%)</td><td class="' + (e.pass ? 'good' : 'poor') +
+          var cell = function (r, t) {
+            return t ? r + '/' + t + ' (' + Math.round(r / t * 100) + '%)'
+              : '<span class="muted">not taken</span>';
+          };
+          return '<tr><td>' + e.date + '</td><td>' + cell(e.natR, e.natT) + '</td><td>' +
+            cell(e.stR, e.stT) + '</td><td class="' + (e.pass ? 'good' : 'poor') +
             '">' + (e.pass ? 'PASS' : 'not yet') + '</td></tr>';
         }).join('') + '</table>';
   }

@@ -70,12 +70,18 @@
   <section class="view" id="view-quiz" hidden>
     <div class="card">
       <div class="controls">
+        <select id="quiz-portion" aria-label="Exam portion">
+          <option value="national">National portion only</option>
+          <option value="state">MN state portion only</option>
+          <option value="All">Both portions</option>
+        </select>
         <select id="quiz-cat" aria-label="Quiz category"></select>
         <label class="check"><input type="checkbox" id="quiz-missed"> Only ones I've missed before</label>
         <button class="btn ghost" id="quiz-restart">Reshuffle</button>
       </div>
       <p class="muted"><span class="qcount"></span> questions covering contracts, agency, ethics,
-        fair housing, finance, property law, appraisal, and Minnesota statute.</p>
+        fair housing, finance, property law, appraisal, transfer of title, leases, land use, and
+        Minnesota statute. <b>Defaults to the national portion.</b></p>
     </div>
 
     <div class="card">
@@ -95,14 +101,22 @@
   <!-- =============================================== EXAM -->
   <section class="view" id="view-exam" hidden>
     <div class="card" id="exam-setup">
-      <h2 style="margin-top:0">Full practice exam</h2>
-      <p>80 national questions + 40 Minnesota questions, just like the real thing. Each section is
-        scored on its own and each needs <b>75%</b> — 60 of 80 national, 30 of 40 state.</p>
+      <h2 style="margin-top:0">Practice exam</h2>
+      <p>The real exam is 80 national + 40 Minnesota questions, each section scored on its own and
+        each needing <b>75%</b> — 60 of 80 national, 30 of 40 state. <b>If you already passed one
+        section, you only retake the other</b>, so you can drill just that one here.</p>
       <div class="controls">
+        <label class="check">Sections
+          <select id="exam-mode">
+            <option value="national">National only — 80 questions</option>
+            <option value="full">Full exam — 80 national + 40 state</option>
+            <option value="state">MN state only — 40 questions</option>
+          </select>
+        </label>
         <label class="check">Time limit
           <select id="exam-mins">
-            <option value="240">240 minutes (full)</option>
-            <option value="180">180 minutes</option>
+            <option value="160">160 minutes (national pace)</option>
+            <option value="240">240 minutes (full exam)</option>
             <option value="120">120 minutes</option>
             <option value="600">No real limit</option>
           </select>

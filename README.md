@@ -35,15 +35,22 @@ Answers are typed in, not picked from a list — you cannot back-solve from the 
 "Focus on my weak spots" pulls from whichever generators have the worst accuracy.
 
 ### Quiz
-**143 questions** with explanations, covering agency, contracts, property and title,
-finance, valuation, fair housing, ethics, and Minnesota statute. Filter by topic, or
-re-drill only the ones previously missed.
+**232 questions** with explanations — **189 national** and 43 Minnesota. Covers agency,
+contracts, property and title, transfer of title, leases and property management, land use
+and environmental, finance, valuation, fair housing, antitrust and settlement practice, and
+Minnesota statute. Filter by **exam portion** (defaults to national), by topic, or re-drill
+only the ones previously missed.
 
 ### Practice Exam
 Mirrors the real exam's structure: **80 national + 40 Minnesota**, scored as two
-separate sections, each needing **75%** (60/80 and 30/40). Timed, with a question grid
-for jumping around and changing answers. Results break down by topic, weakest first,
-and list every missed question with the explanation.
+separate sections, each needing **75%** (60/80 and 30/40). Because a failed section is
+retaken on its own, you can run **national only (80)**, **state only (40)**, or the full
+exam. A section you didn't sit is left out of the scoring rather than counted against you.
+Timed, with a question grid for jumping around and changing answers. Results break down by
+topic, weakest first, and list every missed question with the explanation.
+
+All exam math questions come from the national pool, matching the real exam — the math and
+the national section are the same problem.
 
 ### Formula Sheet
 One-page reference for every formula in the drills, plus the Minnesota numbers worth
@@ -94,7 +101,7 @@ call in `js/questions.js`. Both are picked up automatically.
 index.html                 app shell
 css/style.css              styles (light + dark)
 js/mathgen.js              37 randomized math generators
-js/questions.js            143-question bank
+js/questions.js            232-question bank (189 national / 43 state)
 js/app.js                  drill / quiz / exam / progress logic
 build.js                   bundles everything into dist/
 dist/                      single-file build

@@ -162,9 +162,30 @@ console.log('Quiz questions: ' + QBank.count +
 if (QBank.byPortion('state').length < 40) {
   fail('state bank has ' + QBank.byPortion('state').length + ' — a 40-question state section will repeat');
 }
-if (QBank.byPortion('national').length < 66) {
-  fail('national bank too small for an 80-question section with 14 math items');
+// The national section is the one being drilled hardest, so it needs enough
+// depth that a full 80-question exam is not near-total repetition.
+if (QBank.byPortion('national').length < 150) {
+  fail('national bank has only ' + QBank.byPortion('national').length +
+    ' — too shallow to drill the national section repeatedly');
 }
+
+// portion filtering must actually partition the bank
+checks++;
+if (QBank.filter('All', 'national').length + QBank.filter('All', 'state').length !== QBank.count) {
+  fails++; console.log('  FAIL: portion filter does not partition the bank');
+}
+QBank.catsFor('national').forEach(function (c) {
+  checks++;
+  if (QBank.filter(c, 'national').length === 0) {
+    fails++; console.log('  FAIL: catsFor(national) offers "' + c + '" but it yields no questions');
+  }
+});
+QBank.catsFor('state').forEach(function (c) {
+  checks++;
+  if (QBank.filter(c, 'state').length === 0) {
+    fails++; console.log('  FAIL: catsFor(state) offers "' + c + '" but it yields no questions');
+  }
+});
 
 var ids = {};
 QBank.all.forEach(function (x) {
