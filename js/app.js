@@ -56,14 +56,46 @@
      ====================================================================== */
   var drill = { p: null, answered: false, streak: 0, best: 0, session: { seen: 0, right: 0 } };
 
+  /* Render a row of topic chips. Each shows how many items it holds so the
+     choice is visible at a glance instead of hidden inside a dropdown. */
+  function renderChips(container, items, current, onPick) {
+    container.innerHTML = items.map(function (it) {
+      return '<button class="chip' + (it.value === current ? ' on' : '') + '" data-v="' +
+        it.value.replace(/"/g, '&quot;') + '" aria-pressed="' + (it.value === current) + '">' +
+        it.label + (it.n === undefined ? '' : '<span class="n">' + it.n + '</span>') + '</button>';
+    }).join('');
+    $$('.chip', container).forEach(function (b) {
+      b.addEventListener('click', function () { onPick(b.dataset.v); });
+    });
+  }
+
+  var drillCat = 'All';
+
   function fillDrillCats() {
-    var sel = $('#drill-cat');
-    var opts = ['All'].concat(MathGen.cats);
-    sel.innerHTML = opts.map(function (c) { return '<option value="' + c + '">' + c + '</option>'; }).join('');
-    var sel2 = $('#drill-type');
-    sel2.innerHTML = '<option value="">— or pick one problem type —</option>' +
-      MathGen.generators.map(function (g) {
-        return '<option value="' + g.id + '">' + g.cat + ': ' + g.name + '</option>';
+    var items = [{ value: 'All', label: 'All math', n: MathGen.generators.length }]
+      .concat(MathGen.cats.map(function (c) {
+        return {
+          value: c, label: c,
+          n: MathGen.generators.filter(function (g) { return g.cat === c; }).length
+        };
+      }));
+    renderChips($('#drill-cats'), items, drillCat, function (v) {
+      drillCat = v;
+      fillDrillCats();
+      fillDrillTypes();
+      newDrill();
+    });
+  }
+
+  /* The problem-type list follows the chosen topic, so it never offers a type
+     that the current topic filter excludes. */
+  function fillDrillTypes() {
+    var pool = drillCat === 'All' ? MathGen.generators
+      : MathGen.generators.filter(function (g) { return g.cat === drillCat; });
+    $('#drill-type').innerHTML =
+      '<option value="">Any ' + (drillCat === 'All' ? 'problem type' : drillCat.toLowerCase() + ' problem') + '</option>' +
+      pool.map(function (g) {
+        return '<option value="' + g.id + '">' + g.name + '</option>';
       }).join('');
   }
 
@@ -87,7 +119,7 @@
     else if ($('#drill-weak').checked) {
       var weak = weakestGenIds(8);
       p = MathGen.fromId(weak[Math.floor(Math.random() * weak.length)]);
-    } else p = MathGen.random($('#drill-cat').value);
+    } else p = MathGen.random(drillCat);
 
     drill.p = p; drill.answered = false;
     $('#drill-tag').textContent = p.cat + '  •  ' + p.genName;
@@ -181,7 +213,6 @@
     updateDrillScore();
   });
   $('#drill-again').addEventListener('click', function () { newDrill(drill.p ? drill.p.genId : null); });
-  $('#drill-cat').addEventListener('change', function () { $('#drill-type').value = ''; newDrill(); });
   $('#drill-type').addEventListener('change', function () { newDrill($('#drill-type').value || null); });
   $('#drill-weak').addEventListener('change', function () { newDrill(); });
 
@@ -190,16 +221,37 @@
      ====================================================================== */
   var quiz = { list: [], i: 0, answered: false, session: { seen: 0, right: 0 } };
 
-  /* Category list depends on the chosen portion — MN statute categories are
+  var quizPortion = 'national';
+  var quizCat = 'All';
+
+  function fillQuizPortions() {
+    renderChips($('#quiz-portions'), [
+      { value: 'national', label: 'National', n: QBank.byPortion('national').length },
+      { value: 'state', label: 'MN state', n: QBank.byPortion('state').length },
+      { value: 'All', label: 'Both', n: QBank.count }
+    ], quizPortion, function (v) {
+      quizPortion = v;
+      quizCat = 'All';
+      fillQuizPortions();
+      fillQuizCats();
+      startQuiz();
+    });
+  }
+
+  /* Topic chips depend on the chosen portion — MN statute topics are
      meaningless when drilling the national section, and vice versa. */
   function fillQuizCats() {
-    var portion = $('#quiz-portion').value;
-    var prev = $('#quiz-cat').value;
-    var cats = QBank.catsFor(portion);
-    $('#quiz-cat').innerHTML = ['All'].concat(cats).map(function (c) {
-      return '<option value="' + c + '">' + (c === 'All' ? 'All topics' : c) + '</option>';
-    }).join('');
-    if (cats.indexOf(prev) >= 0) $('#quiz-cat').value = prev;
+    var cats = QBank.catsFor(quizPortion);
+    if (cats.indexOf(quizCat) < 0) quizCat = 'All';
+    var items = [{ value: 'All', label: 'All topics', n: QBank.filter('All', quizPortion).length }]
+      .concat(cats.map(function (c) {
+        return { value: c, label: c, n: QBank.filter(c, quizPortion).length };
+      }));
+    renderChips($('#quiz-cats'), items, quizCat, function (v) {
+      quizCat = v;
+      fillQuizCats();
+      startQuiz();
+    });
   }
 
   function shuffle(a) {
@@ -212,7 +264,7 @@
   }
 
   function startQuiz() {
-    var pool = QBank.filter($('#quiz-cat').value, $('#quiz-portion').value);
+    var pool = QBank.filter(quizCat, quizPortion);
     if ($('#quiz-missed').checked) {
       var missed = pool.filter(function (x) {
         var s = state.quiz[x.id];
@@ -280,8 +332,6 @@
   }
 
   $('#quiz-next').addEventListener('click', function () { quiz.i++; renderQuiz(); });
-  $('#quiz-portion').addEventListener('change', function () { fillQuizCats(); startQuiz(); });
-  $('#quiz-cat').addEventListener('change', startQuiz);
   $('#quiz-missed').addEventListener('change', startQuiz);
   $('#quiz-restart').addEventListener('click', startQuiz);
 
@@ -574,10 +624,12 @@
 
   /* ------------------------------------------------------------ boot */
   fillDrillCats();
+  fillDrillTypes();
+  fillQuizPortions();
   fillQuizCats();
   newDrill();
   startQuiz();
   $$('.qcount').forEach(function (e) { e.textContent = QBank.count; });
   $$('.gcount').forEach(function (e) { e.textContent = MathGen.generators.length; });
-  showView('drill');
+  showView('exam');
 })();

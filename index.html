@@ -14,9 +14,9 @@
 </header>
 
 <nav class="tabs" role="tablist">
-  <button class="tab active" data-view="drill" role="tab" aria-selected="true">Math Drill</button>
+  <button class="tab active" data-view="exam" role="tab" aria-selected="true">Practice Exam</button>
   <button class="tab" data-view="quiz" role="tab" aria-selected="false">Quiz</button>
-  <button class="tab" data-view="exam" role="tab" aria-selected="false">Practice Exam</button>
+  <button class="tab" data-view="drill" role="tab" aria-selected="false">Math Drill</button>
   <button class="tab" data-view="formulas" role="tab" aria-selected="false">Formula Sheet</button>
   <button class="tab" data-view="progress" role="tab" aria-selected="false">Progress</button>
 </nav>
@@ -24,15 +24,21 @@
 <main>
 
   <!-- =============================================== MATH DRILL -->
-  <section class="view" id="view-drill">
+  <section class="view" id="view-drill" hidden>
     <div class="card">
-      <div class="controls">
-        <select id="drill-cat" aria-label="Math category"></select>
+      <div class="picker">
+        <div class="pickerhead">Pick a topic</div>
+        <div class="chips" id="drill-cats" role="group" aria-label="Math topic"></div>
+      </div>
+      <div class="picker">
+        <div class="pickerhead">Narrow to one problem type <span class="muted">(optional)</span></div>
         <select id="drill-type" aria-label="Specific problem type"></select>
+      </div>
+      <div class="controls" style="margin-bottom:0">
         <label class="check"><input type="checkbox" id="drill-weak"> Focus on my weak spots</label>
       </div>
-      <p class="muted">Numbers are randomly regenerated every time, so you can run the same problem
-        type over and over without memorizing answers. Type your answer and press Enter.</p>
+      <p class="muted" style="margin-bottom:0">Numbers are randomly regenerated every time, so you can
+        run the same problem type over and over without memorizing answers. Type your answer and press Enter.</p>
     </div>
 
     <div class="card">
@@ -69,19 +75,18 @@
   <!-- =============================================== QUIZ -->
   <section class="view" id="view-quiz" hidden>
     <div class="card">
-      <div class="controls">
-        <select id="quiz-portion" aria-label="Exam portion">
-          <option value="national">National portion only</option>
-          <option value="state">MN state portion only</option>
-          <option value="All">Both portions</option>
-        </select>
-        <select id="quiz-cat" aria-label="Quiz category"></select>
+      <div class="picker">
+        <div class="pickerhead">Exam portion</div>
+        <div class="chips" id="quiz-portions" role="group" aria-label="Exam portion"></div>
+      </div>
+      <div class="picker">
+        <div class="pickerhead">Pick a topic</div>
+        <div class="chips" id="quiz-cats" role="group" aria-label="Quiz topic"></div>
+      </div>
+      <div class="controls" style="margin-bottom:0">
         <label class="check"><input type="checkbox" id="quiz-missed"> Only ones I've missed before</label>
         <button class="btn ghost" id="quiz-restart">Reshuffle</button>
       </div>
-      <p class="muted"><span class="qcount"></span> questions covering contracts, agency, ethics,
-        fair housing, finance, property law, appraisal, transfer of title, leases, land use, and
-        Minnesota statute. <b>Defaults to the national portion.</b></p>
     </div>
 
     <div class="card">
@@ -99,7 +104,7 @@
   </section>
 
   <!-- =============================================== EXAM -->
-  <section class="view" id="view-exam" hidden>
+  <section class="view" id="view-exam">
     <div class="card" id="exam-setup">
       <h2 style="margin-top:0">Practice exam</h2>
       <p>The real exam is 80 national + 40 Minnesota questions, each section scored on its own and

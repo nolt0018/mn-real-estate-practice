@@ -23,8 +23,22 @@ const check = (cond, label, extra) => {
 
   /* ---------------------------------------------------------- boot */
   check(errors.length === 0, 'page loads with no JS errors', errors.join(' | '));
-  check(await page.isVisible('#view-drill'), 'math drill is the default view');
+  check(await page.isVisible('#view-exam'), 'practice exam is the default view');
+  const tabOrder = await page.$$eval('.tab', e => e.map(t => t.dataset.view));
+  check(tabOrder.join(',') === 'exam,quiz,drill,formulas,progress',
+    'tabs run exam -> quiz -> drill -> formulas -> progress', tabOrder.join(','));
+
+  await page.click('.tab[data-view="drill"]');
+  await page.waitForTimeout(150);
+  check(await page.isVisible('#view-drill'), 'math drill tab switches');
   check((await page.textContent('#drill-q')).length > 40, 'a math problem rendered');
+
+  // topic chips must be visible, counted, and one selected
+  const drillChips = await page.$$eval('#drill-cats .chip', e => e.map(c => c.textContent));
+  check(drillChips.length >= 6, 'math topic chips are shown (' + drillChips.length + ')');
+  check(drillChips.every(t => /\d+$/.test(t.trim())), 'every math chip shows a count');
+  check(await page.$$eval('#drill-cats .chip.on', e => e.length) === 1,
+    'exactly one math topic chip is active');
 
   /* ------------------------------------------------- drill: wrong then right */
   await page.fill('#drill-input', '1');
@@ -71,22 +85,37 @@ const check = (cond, label, extra) => {
   await page.click('.tab[data-view="quiz"]');
   await page.waitForTimeout(150);
   check(await page.isVisible('#view-quiz'), 'quiz tab switches');
-  check(await page.inputValue('#quiz-portion') === 'national',
+  check(/National/.test(await page.textContent('#quiz-portions .chip.on')),
     'quiz defaults to the national portion');
 
-  // switching portion must rebuild the category list to that portion's topics
-  const natCats = await page.$$eval('#quiz-cat option', o => o.map(e => e.value));
-  await page.selectOption('#quiz-portion', 'state');
-  await page.waitForTimeout(100);
-  const stCats = await page.$$eval('#quiz-cat option', o => o.map(e => e.value));
+  // switching portion must rebuild the topic chips to that portion's topics
+  const natCats = await page.$$eval('#quiz-cats .chip', o => o.map(e => e.dataset.v));
+  await page.click('#quiz-portions .chip[data-v="state"]');
+  await page.waitForTimeout(120);
+  const stCats = await page.$$eval('#quiz-cats .chip', o => o.map(e => e.dataset.v));
   check(natCats.includes('Transfer of Title') && !stCats.includes('Transfer of Title'),
-    'category list follows the selected portion');
+    'topic chips follow the selected portion');
   check(stCats.some(c => c.startsWith('MN')) && !natCats.some(c => c.startsWith('MN')),
-    'MN categories appear only under the state portion');
+    'MN topics appear only under the state portion');
+
+  // picking a topic chip must actually narrow the questions served
+  await page.click('#quiz-portions .chip[data-v="national"]');
+  await page.waitForTimeout(120);
+  await page.click('#quiz-cats .chip[data-v="Finance"]');
+  await page.waitForTimeout(120);
+  check(await page.$$eval('#quiz-cats .chip.on', e => e.length) === 1,
+    'exactly one topic chip is active after picking');
+  let offTopic = 0;
+  for (let i = 0; i < 12; i++) {
+    if (!(await page.textContent('#quiz-tag')).includes('Finance')) offTopic++;
+    await page.click('#quiz-choices .choice');
+    await page.click('#quiz-next');
+  }
+  check(offTopic === 0, 'selecting a topic serves only that topic', offTopic + ' off-topic');
 
   // every question served under a portion filter must belong to that portion
-  await page.selectOption('#quiz-portion', 'national');
-  await page.waitForTimeout(100);
+  await page.click('#quiz-cats .chip[data-v="All"]');
+  await page.waitForTimeout(120);
   let mismatched = 0;
   for (let i = 0; i < 25; i++) {
     const tag = await page.textContent('#quiz-tag');

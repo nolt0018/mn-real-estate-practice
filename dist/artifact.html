@@ -150,6 +150,51 @@ label.check {
   cursor: pointer;
 }
 
+/* ---- topic pickers ---- */
+.picker { margin-bottom: 16px; }
+.pickerhead {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.pickerhead .muted { text-transform: none; letter-spacing: 0; font-weight: 500; }
+.chips { display: flex; flex-wrap: wrap; gap: 7px; }
+.chip {
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  background: var(--panel);
+  color: var(--ink);
+  border: 1.5px solid var(--line);
+  border-radius: 999px;
+  padding: 8px 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip .n {
+  font-size: 11.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  background: var(--bg);
+  border-radius: 999px;
+  padding: 1px 7px;
+  color: var(--ink-soft);
+}
+.chip.on {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+.chip.on:hover { color: #fff; }
+.chip.on .n { background: rgba(255, 255, 255, .22); color: #fff; }
+
 button.btn {
   font: inherit;
   font-weight: 650;
@@ -409,9 +454,9 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
 </header>
 
 <nav class="tabs" role="tablist">
-  <button class="tab active" data-view="drill" role="tab" aria-selected="true">Math Drill</button>
+  <button class="tab active" data-view="exam" role="tab" aria-selected="true">Practice Exam</button>
   <button class="tab" data-view="quiz" role="tab" aria-selected="false">Quiz</button>
-  <button class="tab" data-view="exam" role="tab" aria-selected="false">Practice Exam</button>
+  <button class="tab" data-view="drill" role="tab" aria-selected="false">Math Drill</button>
   <button class="tab" data-view="formulas" role="tab" aria-selected="false">Formula Sheet</button>
   <button class="tab" data-view="progress" role="tab" aria-selected="false">Progress</button>
 </nav>
@@ -419,15 +464,21 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
 <main>
 
   <!-- =============================================== MATH DRILL -->
-  <section class="view" id="view-drill">
+  <section class="view" id="view-drill" hidden>
     <div class="card">
-      <div class="controls">
-        <select id="drill-cat" aria-label="Math category"></select>
+      <div class="picker">
+        <div class="pickerhead">Pick a topic</div>
+        <div class="chips" id="drill-cats" role="group" aria-label="Math topic"></div>
+      </div>
+      <div class="picker">
+        <div class="pickerhead">Narrow to one problem type <span class="muted">(optional)</span></div>
         <select id="drill-type" aria-label="Specific problem type"></select>
+      </div>
+      <div class="controls" style="margin-bottom:0">
         <label class="check"><input type="checkbox" id="drill-weak"> Focus on my weak spots</label>
       </div>
-      <p class="muted">Numbers are randomly regenerated every time, so you can run the same problem
-        type over and over without memorizing answers. Type your answer and press Enter.</p>
+      <p class="muted" style="margin-bottom:0">Numbers are randomly regenerated every time, so you can
+        run the same problem type over and over without memorizing answers. Type your answer and press Enter.</p>
     </div>
 
     <div class="card">
@@ -464,19 +515,18 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
   <!-- =============================================== QUIZ -->
   <section class="view" id="view-quiz" hidden>
     <div class="card">
-      <div class="controls">
-        <select id="quiz-portion" aria-label="Exam portion">
-          <option value="national">National portion only</option>
-          <option value="state">MN state portion only</option>
-          <option value="All">Both portions</option>
-        </select>
-        <select id="quiz-cat" aria-label="Quiz category"></select>
+      <div class="picker">
+        <div class="pickerhead">Exam portion</div>
+        <div class="chips" id="quiz-portions" role="group" aria-label="Exam portion"></div>
+      </div>
+      <div class="picker">
+        <div class="pickerhead">Pick a topic</div>
+        <div class="chips" id="quiz-cats" role="group" aria-label="Quiz topic"></div>
+      </div>
+      <div class="controls" style="margin-bottom:0">
         <label class="check"><input type="checkbox" id="quiz-missed"> Only ones I've missed before</label>
         <button class="btn ghost" id="quiz-restart">Reshuffle</button>
       </div>
-      <p class="muted"><span class="qcount"></span> questions covering contracts, agency, ethics,
-        fair housing, finance, property law, appraisal, transfer of title, leases, land use, and
-        Minnesota statute. <b>Defaults to the national portion.</b></p>
     </div>
 
     <div class="card">
@@ -494,7 +544,7 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
   </section>
 
   <!-- =============================================== EXAM -->
-  <section class="view" id="view-exam" hidden>
+  <section class="view" id="view-exam">
     <div class="card" id="exam-setup">
       <h2 style="margin-top:0">Practice exam</h2>
       <p>The real exam is 80 national + 40 Minnesota questions, each section scored on its own and
@@ -3250,14 +3300,46 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
      ====================================================================== */
   var drill = { p: null, answered: false, streak: 0, best: 0, session: { seen: 0, right: 0 } };
 
+  /* Render a row of topic chips. Each shows how many items it holds so the
+     choice is visible at a glance instead of hidden inside a dropdown. */
+  function renderChips(container, items, current, onPick) {
+    container.innerHTML = items.map(function (it) {
+      return '<button class="chip' + (it.value === current ? ' on' : '') + '" data-v="' +
+        it.value.replace(/"/g, '&quot;') + '" aria-pressed="' + (it.value === current) + '">' +
+        it.label + (it.n === undefined ? '' : '<span class="n">' + it.n + '</span>') + '</button>';
+    }).join('');
+    $$('.chip', container).forEach(function (b) {
+      b.addEventListener('click', function () { onPick(b.dataset.v); });
+    });
+  }
+
+  var drillCat = 'All';
+
   function fillDrillCats() {
-    var sel = $('#drill-cat');
-    var opts = ['All'].concat(MathGen.cats);
-    sel.innerHTML = opts.map(function (c) { return '<option value="' + c + '">' + c + '</option>'; }).join('');
-    var sel2 = $('#drill-type');
-    sel2.innerHTML = '<option value="">— or pick one problem type —</option>' +
-      MathGen.generators.map(function (g) {
-        return '<option value="' + g.id + '">' + g.cat + ': ' + g.name + '</option>';
+    var items = [{ value: 'All', label: 'All math', n: MathGen.generators.length }]
+      .concat(MathGen.cats.map(function (c) {
+        return {
+          value: c, label: c,
+          n: MathGen.generators.filter(function (g) { return g.cat === c; }).length
+        };
+      }));
+    renderChips($('#drill-cats'), items, drillCat, function (v) {
+      drillCat = v;
+      fillDrillCats();
+      fillDrillTypes();
+      newDrill();
+    });
+  }
+
+  /* The problem-type list follows the chosen topic, so it never offers a type
+     that the current topic filter excludes. */
+  function fillDrillTypes() {
+    var pool = drillCat === 'All' ? MathGen.generators
+      : MathGen.generators.filter(function (g) { return g.cat === drillCat; });
+    $('#drill-type').innerHTML =
+      '<option value="">Any ' + (drillCat === 'All' ? 'problem type' : drillCat.toLowerCase() + ' problem') + '</option>' +
+      pool.map(function (g) {
+        return '<option value="' + g.id + '">' + g.name + '</option>';
       }).join('');
   }
 
@@ -3281,7 +3363,7 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
     else if ($('#drill-weak').checked) {
       var weak = weakestGenIds(8);
       p = MathGen.fromId(weak[Math.floor(Math.random() * weak.length)]);
-    } else p = MathGen.random($('#drill-cat').value);
+    } else p = MathGen.random(drillCat);
 
     drill.p = p; drill.answered = false;
     $('#drill-tag').textContent = p.cat + '  •  ' + p.genName;
@@ -3375,7 +3457,6 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
     updateDrillScore();
   });
   $('#drill-again').addEventListener('click', function () { newDrill(drill.p ? drill.p.genId : null); });
-  $('#drill-cat').addEventListener('change', function () { $('#drill-type').value = ''; newDrill(); });
   $('#drill-type').addEventListener('change', function () { newDrill($('#drill-type').value || null); });
   $('#drill-weak').addEventListener('change', function () { newDrill(); });
 
@@ -3384,16 +3465,37 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
      ====================================================================== */
   var quiz = { list: [], i: 0, answered: false, session: { seen: 0, right: 0 } };
 
-  /* Category list depends on the chosen portion — MN statute categories are
+  var quizPortion = 'national';
+  var quizCat = 'All';
+
+  function fillQuizPortions() {
+    renderChips($('#quiz-portions'), [
+      { value: 'national', label: 'National', n: QBank.byPortion('national').length },
+      { value: 'state', label: 'MN state', n: QBank.byPortion('state').length },
+      { value: 'All', label: 'Both', n: QBank.count }
+    ], quizPortion, function (v) {
+      quizPortion = v;
+      quizCat = 'All';
+      fillQuizPortions();
+      fillQuizCats();
+      startQuiz();
+    });
+  }
+
+  /* Topic chips depend on the chosen portion — MN statute topics are
      meaningless when drilling the national section, and vice versa. */
   function fillQuizCats() {
-    var portion = $('#quiz-portion').value;
-    var prev = $('#quiz-cat').value;
-    var cats = QBank.catsFor(portion);
-    $('#quiz-cat').innerHTML = ['All'].concat(cats).map(function (c) {
-      return '<option value="' + c + '">' + (c === 'All' ? 'All topics' : c) + '</option>';
-    }).join('');
-    if (cats.indexOf(prev) >= 0) $('#quiz-cat').value = prev;
+    var cats = QBank.catsFor(quizPortion);
+    if (cats.indexOf(quizCat) < 0) quizCat = 'All';
+    var items = [{ value: 'All', label: 'All topics', n: QBank.filter('All', quizPortion).length }]
+      .concat(cats.map(function (c) {
+        return { value: c, label: c, n: QBank.filter(c, quizPortion).length };
+      }));
+    renderChips($('#quiz-cats'), items, quizCat, function (v) {
+      quizCat = v;
+      fillQuizCats();
+      startQuiz();
+    });
   }
 
   function shuffle(a) {
@@ -3406,7 +3508,7 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
   }
 
   function startQuiz() {
-    var pool = QBank.filter($('#quiz-cat').value, $('#quiz-portion').value);
+    var pool = QBank.filter(quizCat, quizPortion);
     if ($('#quiz-missed').checked) {
       var missed = pool.filter(function (x) {
         var s = state.quiz[x.id];
@@ -3474,8 +3576,6 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
   }
 
   $('#quiz-next').addEventListener('click', function () { quiz.i++; renderQuiz(); });
-  $('#quiz-portion').addEventListener('change', function () { fillQuizCats(); startQuiz(); });
-  $('#quiz-cat').addEventListener('change', startQuiz);
   $('#quiz-missed').addEventListener('change', startQuiz);
   $('#quiz-restart').addEventListener('click', startQuiz);
 
@@ -3768,12 +3868,14 @@ footer { text-align: center; padding: 20px 14px 40px; font-size: 12.5px; color: 
 
   /* ------------------------------------------------------------ boot */
   fillDrillCats();
+  fillDrillTypes();
+  fillQuizPortions();
   fillQuizCats();
   newDrill();
   startQuiz();
   $$('.qcount').forEach(function (e) { e.textContent = QBank.count; });
   $$('.gcount').forEach(function (e) { e.textContent = MathGen.generators.length; });
-  showView('drill');
+  showView('exam');
 })();
 
 </script>
