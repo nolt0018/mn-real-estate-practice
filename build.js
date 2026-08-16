@@ -38,3 +38,18 @@ fs.mkdirSync(path.join(root, 'dist'), { recursive: true });
 const out = path.join(root, 'dist', 'mn-real-estate-practice.html');
 fs.writeFileSync(out, html);
 console.log('Wrote ' + out + '  (' + Math.round(html.length / 1024) + ' KB, no external files needed)');
+
+/* Artifact variant: the publisher wraps the file in its own
+   <!doctype><head><body> skeleton, so strip ours and keep <title> + content. */
+const title = html.match(/<title>([\s\S]*?)<\/title>/)[1];
+const style = html.match(/<style>[\s\S]*?<\/style>/)[0];
+const body = html.match(/<body>([\s\S]*)<\/body>/)[1];
+const artifact = '<title>' + title + '</title>\n' + style + '\n' + body.trim() + '\n';
+
+const aout = path.join(root, 'dist', 'artifact.html');
+fs.writeFileSync(aout, artifact);
+if (/<!DOCTYPE|<html|<head>|<body>/i.test(artifact)) {
+  console.error('ERROR: artifact variant still contains document skeleton tags.');
+  process.exit(1);
+}
+console.log('Wrote ' + aout + '  (' + Math.round(artifact.length / 1024) + ' KB, artifact-ready)');
