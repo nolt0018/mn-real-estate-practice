@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MN Real Estate Salesperson — Exam Practice</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header>
+  <h1>Minnesota Real Estate Salesperson — Exam Practice</h1>
+  <p>120 questions on the real exam: 80 national + 40 Minnesota. You need 75% on <b>each</b> section, scored separately.</p>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button class="tab active" data-view="drill" role="tab" aria-selected="true">Math Drill</button>
+  <button class="tab" data-view="quiz" role="tab" aria-selected="false">Quiz</button>
+  <button class="tab" data-view="exam" role="tab" aria-selected="false">Practice Exam</button>
+  <button class="tab" data-view="formulas" role="tab" aria-selected="false">Formula Sheet</button>
+  <button class="tab" data-view="progress" role="tab" aria-selected="false">Progress</button>
+</nav>
+
+<main>
+
+  <!-- =============================================== MATH DRILL -->
+  <section class="view" id="view-drill">
+    <div class="card">
+      <div class="controls">
+        <select id="drill-cat" aria-label="Math category"></select>
+        <select id="drill-type" aria-label="Specific problem type"></select>
+        <label class="check"><input type="checkbox" id="drill-weak"> Focus on my weak spots</label>
+      </div>
+      <p class="muted">Numbers are randomly regenerated every time, so you can run the same problem
+        type over and over without memorizing answers. Type your answer and press Enter.</p>
+    </div>
+
+    <div class="card">
+      <div class="rowbetween">
+        <span class="tag" id="drill-tag"></span>
+        <span class="score" id="drill-score"></span>
+      </div>
+      <p class="qtext" id="drill-q"></p>
+
+      <div class="answerrow">
+        <input type="text" id="drill-input" inputmode="decimal" autocomplete="off"
+               placeholder="Your answer" aria-label="Your answer">
+        <button class="btn" id="drill-check">Check</button>
+        <button class="btn" id="drill-next" hidden>Next problem &rarr;</button>
+      </div>
+      <div class="hintunit" id="drill-hint-unit"></div>
+
+      <div class="feedback" id="drill-feedback" hidden></div>
+
+      <div class="work" id="drill-work" hidden>
+        <h4>How to work it</h4>
+        <div class="formula" id="drill-formula"></div>
+        <ol class="steps" id="drill-steps"></ol>
+        <div class="tip" id="drill-tip"></div>
+      </div>
+
+      <div class="controls" style="margin-top:16px;margin-bottom:0">
+        <button class="btn ghost" id="drill-reveal">Show me the answer</button>
+        <button class="btn ghost" id="drill-again">Another like this one</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== QUIZ -->
+  <section class="view" id="view-quiz" hidden>
+    <div class="card">
+      <div class="controls">
+        <select id="quiz-cat" aria-label="Quiz category"></select>
+        <label class="check"><input type="checkbox" id="quiz-missed"> Only ones I've missed before</label>
+        <button class="btn ghost" id="quiz-restart">Reshuffle</button>
+      </div>
+      <p class="muted"><span class="qcount"></span> questions covering contracts, agency, ethics,
+        fair housing, finance, property law, appraisal, and Minnesota statute.</p>
+    </div>
+
+    <div class="card">
+      <div class="rowbetween">
+        <span class="tag" id="quiz-tag"></span>
+        <span class="score"><span id="quiz-count"></span> &nbsp; <span id="quiz-score"></span></span>
+      </div>
+      <p class="qtext" id="quiz-q"></p>
+      <div id="quiz-choices"></div>
+      <div class="feedback" id="quiz-feedback" hidden></div>
+      <div class="controls" style="margin-top:14px;margin-bottom:0">
+        <button class="btn" id="quiz-next" hidden>Next question &rarr;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== EXAM -->
+  <section class="view" id="view-exam" hidden>
+    <div class="card" id="exam-setup">
+      <h2 style="margin-top:0">Full practice exam</h2>
+      <p>80 national questions + 40 Minnesota questions, just like the real thing. Each section is
+        scored on its own and each needs <b>75%</b> — 60 of 80 national, 30 of 40 state.</p>
+      <div class="controls">
+        <label class="check">Time limit
+          <select id="exam-mins">
+            <option value="240">240 minutes (full)</option>
+            <option value="180">180 minutes</option>
+            <option value="120">120 minutes</option>
+            <option value="600">No real limit</option>
+          </select>
+        </label>
+        <label class="check">Math questions
+          <select id="exam-math">
+            <option value="14">14 (realistic)</option>
+            <option value="20">20 (math heavy)</option>
+            <option value="28">28 (math brutal)</option>
+            <option value="8">8 (light)</option>
+          </select>
+        </label>
+      </div>
+      <button class="btn" id="exam-start">Start the exam</button>
+      <p class="muted" style="margin-top:14px">You can jump around with the number grid and change
+        answers before you submit, same as the real exam.</p>
+    </div>
+
+    <div id="exam-run" hidden>
+      <div class="card">
+        <div class="rowbetween">
+          <div>
+            <span class="tag" id="exam-tag"></span>
+            <div class="muted" id="exam-count"></div>
+          </div>
+          <div style="text-align:right">
+            <div class="clock" id="exam-clock">--:--</div>
+            <div class="muted" id="exam-progress"></div>
+          </div>
+        </div>
+        <p class="qtext" id="exam-q"></p>
+        <div id="exam-choices"></div>
+        <div class="controls" style="margin-top:16px;margin-bottom:0">
+          <button class="btn ghost" id="exam-prev">&larr; Back</button>
+          <button class="btn" id="exam-nextq">Next &rarr;</button>
+          <button class="btn ghost" id="exam-submit" style="margin-left:auto">Submit exam</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="muted">Jump to a question</div>
+        <div id="exam-grid"></div>
+      </div>
+    </div>
+
+    <div id="exam-results" hidden>
+      <div class="card">
+        <div class="verdict" id="exam-verdict"></div>
+        <div id="exam-breakdown"></div>
+      </div>
+      <div class="card" id="exam-cats"></div>
+      <div class="card" id="exam-review"></div>
+      <div class="card">
+        <button class="btn" id="exam-again">Take another exam</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- =============================================== FORMULAS -->
+  <section class="view" id="view-formulas" hidden>
+    <div class="card ref">
+
+      <div class="callout"><b>The three that decide most math questions:</b>
+        (1) Are you multiplying or dividing? Going <i>backwards</i> always means divide.
+        (2) Is the base the <b>price</b> or the <b>loan</b>? (3) Does the seller own the closing day?</div>
+
+      <h3>Minnesota transfer taxes — memorize cold</h3>
+      <dl>
+        <dt>State deed tax — <span class="eq">price &times; 0.0033</span></dt>
+        <dd>Paid by the <b>seller</b>, based on the <b>sale price</b> (net consideration).
+          Hennepin &amp; Ramsey add a 0.0001 ERF tax &rarr; 0.0034. Consideration of $3,000 or less = $1.65 flat.</dd>
+        <dt>Mortgage registry tax — <span class="eq">loan &times; 0.0023</span></dt>
+        <dd>Paid by the <b>buyer</b>, based on the <b>principal debt</b>. Hennepin &amp; Ramsey add 0.0001 &rarr; 0.0024.</dd>
+      </dl>
+
+      <h3>Commission</h3>
+      <dl>
+        <dt><span class="eq">Total commission = sale price &times; rate</span></dt>
+        <dd>Then apply the brokerage split, <i>then</i> the agent's split. One step at a time, outside in.</dd>
+        <dt>Net to seller — <span class="eq">price = (net wanted + costs) &divide; (1 &minus; rate)</span></dt>
+        <dd><b>Divide</b>, never add the percentage to the net. This is the single most-missed math question.</dd>
+        <dt>Working backwards from a commission check</dt>
+        <dd>Divide by the agent split, divide by the brokerage split, divide by the rate.</dd>
+      </dl>
+
+      <h3>Prorations</h3>
+      <dl>
+        <dt><span class="eq">daily rate = annual amount &divide; 360 or 365</span></dt>
+        <dd>Read which year the question wants. 360-day years use 30-day months.</dd>
+        <dt>Direction of the entry</dt>
+        <dd><b>Paid in arrears</b> (Minnesota property taxes): seller owes the buyer &rarr; <b>debit seller, credit buyer</b>.<br>
+          <b>Prepaid</b> (insurance, HOA dues, rent already collected): &rarr; <b>credit seller, debit buyer</b>
+          — except <b>rent</b>, where the seller collected money for days the buyer will own, so the <b>buyer</b> gets the credit.</dd>
+        <dt>Who owns the closing day?</dt>
+        <dd>The question always tells you. It moves the answer by exactly one day, and the off-by-one answer is always offered.</dd>
+      </dl>
+
+      <h3>Financing</h3>
+      <dl>
+        <dt><span class="eq">loan = value &times; LTV</span> &nbsp; <span class="eq">down = price &minus; loan</span></dt>
+        <dd>Lenders always use the <b>lesser</b> of sale price or appraised value.</dd>
+        <dt>Discount points — <span class="eq">1 point = 1% of the LOAN</span></dt>
+        <dd>Never a percentage of the sale price.</dd>
+        <dt>Interest — <span class="eq">I = P &times; R &times; T</span></dt>
+        <dd>Per diem = annual interest &divide; 365 (or 360). Mortgage interest is paid in <b>arrears</b>.</dd>
+        <dt>Amortization, one month at a time</dt>
+        <dd><span class="eq">interest = balance &times; rate &divide; 12</span>, then
+          <span class="eq">principal = payment &minus; interest</span>, then subtract from the balance and repeat.</dd>
+        <dt>Payment from a factor — <span class="eq">(loan &divide; 1,000) &times; factor</span></dt>
+        <dd>Divide by 1,000 first.</dd>
+        <dt>Qualifying ratios 28 / 36</dt>
+        <dd>Front-end = income &times; 28%. Back-end = (income &times; 36%) &minus; other monthly debts.
+          The buyer qualifies for the <b>lower</b> of the two.</dd>
+        <dt><span class="eq">PITI = P&amp;I + taxes/12 + insurance/12 + PMI/12</span></dt>
+        <dd>Convert every annual figure to monthly before adding.</dd>
+        <dt><span class="eq">equity = current market value &minus; all liens</span></dt>
+        <dd>Current value, not the purchase price. Subtract every lien, not just the first mortgage.</dd>
+      </dl>
+
+      <h3>Valuation &amp; investment</h3>
+      <dl>
+        <dt>IRV — <span class="eq">Income = Rate &times; Value</span></dt>
+        <dd>So <span class="eq">Value = NOI &divide; cap rate</span> and <span class="eq">cap rate = NOI &divide; value</span>.
+          NOI is calculated <b>before</b> debt service — never subtract the mortgage payment.</dd>
+        <dt>Getting to NOI</dt>
+        <dd>Potential gross &minus; vacancy = effective gross; effective gross &minus; operating expenses = NOI.</dd>
+        <dt>GRM — <span class="eq">price &divide; monthly gross rent</span></dt>
+        <dd>Monthly GRM runs roughly 100&ndash;200; an annual multiplier (GIM) runs roughly 6&ndash;12. Check which one is given.</dd>
+        <dt>Cost approach — <span class="eq">cost new &minus; depreciation + land</span></dt>
+        <dd>Straight-line depreciation = effective age &divide; economic life. <b>Land never depreciates.</b></dd>
+        <dt>Percent change — <span class="eq">(new &minus; old) &divide; OLD</span></dt>
+        <dd>To find the original price from a price that includes a gain, <b>divide</b> by (1 + gain).</dd>
+        <dt>Capital gain</dt>
+        <dd>Adjusted basis = purchase + improvements. Gain = (sale price &minus; selling costs) &minus; adjusted basis.</dd>
+        <dt>Property tax — <span class="eq">(assessed value &divide; 1,000) &times; mills</span></dt>
+        <dd>1 mill = $1 per $1,000 = 0.001. (Minnesota really uses a tax-capacity system, but the national portion tests mills.)</dd>
+      </dl>
+
+      <h3>Area &amp; land</h3>
+      <dl>
+        <dt><span class="eq">1 acre = 43,560 sq ft</span></dt>
+        <dd>Square feet &rarr; acres: divide. Acres &rarr; square feet: multiply.</dd>
+        <dt><span class="eq">1 section = 640 acres = 1 square mile</span></dt>
+        <dd>36 sections = 1 township. Quarter section = 160 acres. Quarter-quarter = 40 acres.
+          For a legal description, multiply all the fractions together and apply to 640.</dd>
+        <dt>Other conversions</dt>
+        <dd>1 mile = 5,280 ft &nbsp;•&nbsp; 1 sq yard = 9 sq ft &nbsp;•&nbsp; triangle = &frac12; &times; base &times; height</dd>
+        <dt>Front foot</dt>
+        <dd>Priced per foot of street frontage. The depth given in the problem is a deliberate distractor.</dd>
+      </dl>
+
+      <h3>Closing statement direction</h3>
+      <dl>
+        <dt>Debit = you owe it. Credit = you already have it or it's given to you.</dt>
+        <dd>Sale price: <b>debit buyer, credit seller</b>. New loan and earnest money: <b>credit buyer</b>.
+          Seller's loan payoff and the deed tax: <b>debit seller</b>.</dd>
+        <dt>Buyer's cash to close</dt>
+        <dd>(price + closing costs + prepaids) &minus; (loan + earnest money + credits owed by seller).</dd>
+      </dl>
+
+      <h3>Minnesota facts that show up as numbers</h3>
+      <dl>
+        <dt>Contract for deed cancellation (Minn. Stat. 559.21)</dt>
+        <dd>Under 10% paid &rarr; <b>30 days</b> to cure &nbsp;•&nbsp; 10% to under 25% &rarr; <b>60 days</b>
+          &nbsp;•&nbsp; 25% or more &rarr; <b>90 days</b>.</dd>
+        <dt>Foreclosure</dt>
+        <dd>Minnesota is a <b>lien theory</b> state. Standard redemption period after a sheriff's sale is <b>6 months</b>.</dd>
+        <dt>Trust account</dt>
+        <dd>If the agreement is silent, earnest money goes in within <b>3 business days</b> of receipt or final
+          acceptance, whichever is later. A rejected offer's earnest money returns by the <b>next business day</b>.</dd>
+        <dt>Licensing</dt>
+        <dd>Pre-license: <b>90 hours</b> (three 30-hour courses; Course I before the exam).
+          CE: <b>30 hours per 2-year cycle, at least 15 each year</b> by June 30, including the required module.</dd>
+        <dt>New-home statutory warranty (Ch. 327A)</dt>
+        <dd><b>1 year</b> workmanship &amp; materials &nbsp;•&nbsp; <b>2 years</b> plumbing / electrical / heating / cooling
+          &nbsp;•&nbsp; <b>10 years</b> major structural.</dd>
+        <dt>Other deadlines</dt>
+        <dd>Security deposit returned within <b>21 days</b> &nbsp;•&nbsp; MCIOA resale cancellation within
+          <b>10 days</b> of the disclosure certificate &nbsp;•&nbsp; lead-based paint (pre-<b>1978</b>) inspection
+          opportunity <b>10 days</b>.</dd>
+      </dl>
+
+      <h3>Fair housing classes</h3>
+      <dl>
+        <dt>Federal — 7 classes</dt>
+        <dd>Race, color, religion, sex, national origin, familial status, disability.</dd>
+        <dt>Minnesota Human Rights Act adds</dt>
+        <dd>Creed, marital status, status with regard to public assistance, sexual orientation and gender identity,
+          and age in some contexts. <b>Minnesota protects more than the federal law does</b> — the state portion tests this.</dd>
+      </dl>
+
+      <h3>Minnesota vs. North Dakota — quick contrast</h3>
+      <p class="muted">Parker's exam is the Minnesota one. This is only so the two do not blur together later
+        when he sits for the ND license.</p>
+      <dl>
+        <dt>Regulator</dt>
+        <dd>MN: Commissioner of <b>Commerce</b> (Dept. of Commerce), Minn. Stat. Ch. 82.<br>
+          ND: <b>North Dakota Real Estate Commission</b>, N.D.C.C. Ch. 43-23.</dd>
+        <dt>Non-agent status</dt>
+        <dd>MN formally recognizes the <b>facilitator</b>. Do not assume the same label or duties apply in ND.</dd>
+        <dt>Transfer tax</dt>
+        <dd>MN charges deed tax and mortgage registry tax. <b>North Dakota has no real estate transfer tax</b> —
+          a classic mix-up for border agents.</dd>
+        <dt>Practice note</dt>
+        <dd>A license is state-specific. Property in Moorhead is a Minnesota transaction under Minnesota law
+          even if the buyer, the brokerage, and the lender are all in Fargo.</dd>
+      </dl>
+
+    </div>
+  </section>
+
+  <!-- =============================================== PROGRESS -->
+  <section class="view" id="view-progress" hidden>
+    <div class="card">
+      <h2 style="margin-top:0">Overall</h2>
+      <div id="prog-summary"></div>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">Math by problem type — weakest first</h2>
+      <div id="prog-math"></div>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">Quiz by topic — weakest first</h2>
+      <div id="prog-quiz"></div>
+    </div>
+    <div class="card">
+      <h2 style="margin-top:0">Practice exam history</h2>
+      <div id="prog-exams"></div>
+    </div>
+    <div class="card">
+      <button class="btn ghost" id="prog-reset">Erase all progress</button>
+      <p class="muted" style="margin-bottom:0">Progress is saved in this browser only. Nothing is uploaded anywhere.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="gcount"></span> randomized math generators &nbsp;•&nbsp; <span class="qcount"></span> quiz questions.<br>
+  Study aid only — always defer to your UND course materials and current Minnesota statutes.
+</footer>
+
+<script src="js/mathgen.js"></script>
+<script src="js/questions.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
