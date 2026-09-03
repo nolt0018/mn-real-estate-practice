@@ -205,6 +205,75 @@ QBank.all.forEach(function (x) {
   ok();
 });
 
+/* ------------------------------------------------------------ states
+   The national portion is shared; each state's own law must be sealed off
+   from the other. A Minnesota question served under North Dakota (or vice
+   versa) would teach the wrong statute for the exam being sat.            */
+function eq(a, b, label) {
+  checks++;
+  if (a !== b) { fails++; console.log('  FAIL ' + label + ': ' + a + ' !== ' + b); }
+}
+var natN = QBank.byPortion('national').length;
+var mnSt = QBank.byPortion('state', 'MN'), ndSt = QBank.byPortion('state', 'ND');
+console.log('State banks: MN ' + mnSt.length + ', ND ' + ndSt.length);
+
+eq(QBank.countFor('MN'), natN + mnSt.length, 'MN scope = national + MN state');
+eq(QBank.countFor('ND'), natN + ndSt.length, 'ND scope = national + ND state');
+eq(mnSt.length + ndSt.length, QBank.byPortion('state').length, 'state banks partition the state portion');
+eq(mnSt.filter(function (x) { return x.state !== 'MN'; }).length, 0, 'no non-MN question in MN state bank');
+eq(ndSt.filter(function (x) { return x.state !== 'ND'; }).length, 0, 'no non-ND question in ND state bank');
+eq(QBank.byPortion('national').filter(function (x) { return x.state !== null; }).length, 0,
+  'every national question is state-neutral');
+if (ndSt.length < 40) fail('ND state bank has ' + ndSt.length + ' — a 40-question ND section will repeat');
+QBank.catsFor('state', 'ND').forEach(function (c) {
+  eq(QBank.filter(c, 'state', 'ND').length > 0, true, 'ND category "' + c + '" yields questions');
+  eq(/^ND /.test(c), true, 'ND category "' + c + '" is labelled as ND');
+});
+QBank.catsFor('state', 'MN').forEach(function (c) {
+  eq(/^ND /.test(c), false, 'MN category "' + c + '" is not an ND category');
+});
+// national categories are identical under both states
+eq(QBank.catsFor('national', 'MN').join('|'), QBank.catsFor('national', 'ND').join('|'),
+  'national categories identical under both states');
+
+// North Dakota bans transfer taxes, so the MN tax drills must vanish under ND
+var mnGens = MathGen.forState('MN'), ndGens = MathGen.forState('ND');
+eq(mnGens.length, MathGen.generators.length, 'MN gets every generator');
+eq(ndGens.length, MathGen.generators.length - 3, 'ND drops exactly the three MN tax generators');
+eq(ndGens.some(function (g) { return /^mn-/.test(g.id); }), false, 'no mn-* generator under ND');
+eq(mnGens.some(function (g) { return g.id === 'mn-deed-tax'; }), true, 'MN keeps the deed tax drill');
+eq(MathGen.catsForState('ND').indexOf('MN Taxes'), -1, 'ND has no "MN Taxes" category');
+eq(MathGen.catsForState('MN').indexOf('MN Taxes') >= 0, true, 'MN has the "MN Taxes" category');
+for (var si = 0; si < 300; si++) {
+  var rp = MathGen.random('All', 'ND');
+  if (/^mn-/.test(rp.genId)) { fail('random(All, ND) served ' + rp.genId); break; }
+}
+ok();
+// Content-level guard: no problem served under ND may mention a transfer tax
+// anywhere in its text or worked solution, whichever generator produced it.
+var taxRe = /deed tax|registry tax|0\.0033|0\.0023/i;
+var taxLeaks = {};
+ndGens.forEach(function (g) {
+  for (var t = 0; t < 60; t++) {
+    var gp = MathGen.fromId(g.id, 'ND');
+    var text = gp.q + ' ' + gp.steps.join(' ') + ' ' + gp.formula + ' ' + gp.tip;
+    if (taxRe.test(text)) { taxLeaks[g.id] = true; break; }
+  }
+});
+eq(Object.keys(taxLeaks).join(','), '', 'no ND-scope generator mentions a transfer tax');
+// ...and the same generators under MN must still be able to mention it where relevant
+var mnMentions = 0;
+for (var t2 = 0; t2 < 60; t2++) {
+  var mp = MathGen.fromId('seller-proceeds', 'MN');
+  if (taxRe.test(mp.q + mp.steps.join(' '))) { mnMentions++; break; }
+}
+eq(mnMentions, 1, 'seller-proceeds still includes MN deed tax under MN');
+
+// the ND transfer-tax question must say there is none
+var ndTax = ndSt.filter(function (x) { return /transfer tax or deed tax/.test(x.q); })[0];
+eq(!!ndTax && /constitutionally prohibited/.test(ndTax.choices[ndTax.a]), true,
+  'ND transfer-tax question answers "none"');
+
 // answer position should not be predictable
 var pos = [0, 0, 0, 0];
 QBank.all.forEach(function (x) { pos[x.a]++; });

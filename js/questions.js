@@ -8,8 +8,23 @@
   'use strict';
 
   var Q = [];
+
+  /* National questions carry state:null — they apply to both states, because the
+     national portion of the exam is identical in Minnesota and North Dakota.
+     State-portion questions are tagged with the state whose law they test. */
   function q(portion, cat, text, choices, a, why) {
-    Q.push({ id: 'q' + (Q.length + 1), portion: portion, cat: cat, q: text, choices: choices, a: a, why: why });
+    Q.push({
+      id: 'q' + (Q.length + 1), portion: portion, cat: cat,
+      q: text, choices: choices, a: a, why: why, state: null
+    });
+  }
+
+  /* North Dakota state-portion question. */
+  function nd(cat, text, choices, a, why) {
+    Q.push({
+      id: 'nd' + (Q.length + 1), portion: 'state', cat: cat,
+      q: text, choices: choices, a: a, why: why, state: 'ND'
+    });
   }
 
   /* ======================================================================
@@ -1164,10 +1179,318 @@
       'No relationship', 'They are always equal'], 1,
     'Value = NOI / cap rate. A higher cap rate (more perceived risk) divides the same income into a LOWER value.');
 
+  /* ======================================================================
+     NORTH DAKOTA — LICENSE LAW  (state portion, ND only)
+     ====================================================================== */
+
+  nd('ND License Law', 'Real estate licensing in North Dakota is governed by which chapter of the North Dakota Century Code?',
+    ['Chapter 43-23', 'Chapter 47-10', 'Chapter 32-19', 'Chapter 38-18.1'], 0,
+    'N.D.C.C. ch. 43-23 creates the State Real Estate Commission and governs licensing. (Minnesota\'s equivalent is Chapter 82 — do not mix them up.)');
+
+  nd('ND License Law', 'North Dakota real estate licensees are regulated by the:',
+    ['Commissioner of Commerce', 'North Dakota Real Estate Commission',
+      'Attorney General', 'Secretary of State'], 1,
+    'The NDREC is an independent commission. This differs from Minnesota, where the Department of Commerce regulates licensees — a classic border-agent mix-up.');
+
+  nd('ND License Law', 'A North Dakota broker\'s trust account may contain the broker\'s own money only:',
+    ['Never, under any circumstances', 'Up to $500 of the broker\'s personal funds to cover service charges',
+      'Up to 10% of the account balance', 'Whenever the broker discloses it'], 1,
+    'N.D.C.C. § 43-23-11.1 permits a cushion not exceeding $500 to cover bank service charges. Anything beyond that is commingling.');
+
+  nd('ND License Law', 'A North Dakota salesperson may lawfully be paid a commission by:',
+    ['The buyer directly', 'The licensee\'s own broker', 'The title company', 'Any party to the transaction'], 1,
+    'As in nearly every state, a salesperson is compensated only by the broker who holds their license.');
+
+  nd('ND License Law', 'A North Dakota salesperson\'s license is:',
+    ['Held personally, permitting independent practice', 'Held by and issued to work under a licensed broker',
+      'Issued directly by the Governor', 'Valid in any state'], 1,
+    'A salesperson must be affiliated with and supervised by a licensed broker. A license is state-specific — a Minnesota license does not authorize practice in North Dakota.');
+
+  nd('ND License Law', 'A licensee licensed in Minnesota who wants to sell property located in Fargo must:',
+    ['Do nothing; the MN license covers border cities', 'Hold a North Dakota license (or obtain one by reciprocity)',
+      'Simply notify the NDREC', 'Work only with a Minnesota broker'], 1,
+    'Jurisdiction follows the LOCATION OF THE PROPERTY. Property in Fargo is a North Dakota transaction under North Dakota law even if everyone involved lives in Moorhead.');
+
+  nd('ND License Law', 'North Dakota requires errors and omissions insurance for active licensees:',
+    ['No, it is optional', 'Yes — E&O coverage is a condition of licensure',
+      'Only for brokers', 'Only for property managers'], 1,
+    'North Dakota is one of the states that mandates E&O coverage for active licensees, available through a state group program or an approved equivalent policy.');
+
+  nd('ND License Law', 'The North Dakota Real Estate Commission may discipline a licensee for:',
+    ['Only violations occurring during a transaction', 'Untrustworthiness, incompetence, or improper dealing, including conduct outside a transaction',
+      'Nothing short of a felony conviction', 'Advertising choices only'], 1,
+    'The Commission may deny, suspend, or revoke a license, impose civil penalties, and require education for conduct demonstrating untrustworthiness or incompetence.');
+
+  nd('ND License Law', 'North Dakota law requires a licensee buying or selling property for their own account to:',
+    ['Say nothing', 'Disclose their licensed status in writing', 'Use a different brokerage', 'Surrender the license'], 1,
+    'Failing to disclose licensed status when acting as a principal is a licensing violation in both North Dakota and Minnesota.');
+
+  nd('ND License Law', 'Advertising a listed North Dakota property, a salesperson must include:',
+    ['Only their own name and phone number', 'The name of the brokerage under which they are licensed',
+      'The seller\'s name', 'The MLS number'], 1,
+    'All advertising must identify the brokerage. Ads implying the salesperson acts independently are prohibited "blind ads."');
+
+  nd('ND License Law', 'A North Dakota listing agreement must:',
+    ['Automatically renew until cancelled', 'Have a definite expiration date',
+      'Be filed with the Commission', 'Run at least six months'], 1,
+    'A definite termination date is required. Open-ended or automatically renewing listings are improper.');
+
+  nd('ND License Law', 'Under North Dakota law, a net listing is:',
+    ['The preferred listing form', 'Prohibited or strongly restricted because of the conflict of interest',
+      'Required for commercial property', 'Permitted with oral consent'], 1,
+    'The broker profiting from everything above the seller\'s stated price puts the broker\'s interest directly against the client\'s.');
+
+  nd('ND License Law', 'Dual agency in North Dakota requires:',
+    ['Nothing, if disclosed at closing', 'Informed written consent from both parties',
+      'Approval by the Commission', 'Only the seller\'s consent'], 1,
+    'Both states require informed written consent for dual agency, and in both a dual agent may not disclose one party\'s price flexibility or motivation to the other.');
+
+  nd('ND License Law', 'When must a North Dakota licensee provide agency disclosure to a consumer?',
+    ['At closing', 'At the earliest practical opportunity, before confidential information is exchanged',
+      'Only if asked', 'Only when writing an offer'], 1,
+    'The point of the disclosure is to let the consumer know who represents whom BEFORE they say something that could be used against them.');
+
+  nd('ND License Law', 'A North Dakota broker who deposits earnest money into the brokerage operating account has committed:',
+    ['A permitted convenience', 'Commingling, and possibly conversion if the funds are spent',
+      'A recordkeeping error only', 'Nothing improper if repaid'], 1,
+    'Client funds must go into the trust account. Spending them is conversion — the most serious trust-account violation in either state.');
+
+  nd('ND License Law', 'North Dakota continuing education for an active salesperson is generally:',
+    ['None required', '9 hours annually, including required topics set by the Commission',
+      '30 hours every two years', '45 hours every three years'], 1,
+    'North Dakota uses an ANNUAL continuing education cycle, unlike Minnesota\'s 30 hours per two-year cycle with 15 hours minimum each year. Confirm the current requirement with the NDREC, since required topics change year to year.');
+
+  nd('ND License Law', 'An unlicensed personal assistant in North Dakota may:',
+    ['Hold an open house and answer questions about the property', 'Perform clerical and administrative tasks that do not require a license',
+      'Negotiate offers', 'Show property to buyers'], 1,
+    'Anything involving negotiating, showing, or advising on terms requires a license. Clerical support does not.');
+
+  nd('ND License Law', 'A North Dakota licensee preparing a purchase agreement:',
+    ['Is practicing law', 'May complete approved standard forms incident to a transaction but may not give legal advice',
+      'Must be an attorney', 'May draft custom clauses freely'], 1,
+    'Filling in blanks on standard forms is permitted; drafting custom legal provisions or advising on legal consequences is the unauthorized practice of law in both states.');
+
+  /* ======================================================================
+     NORTH DAKOTA — DEEDS, TITLE & CLAIMS  (state portion, ND only)
+     ====================================================================== */
+
+  nd('ND Deeds & Title', 'The North Dakota Century Code chapter governing real property transfers is:',
+    ['Chapter 47-10', 'Chapter 43-23', 'Chapter 38-11.1', 'Chapter 32-19'], 0,
+    'N.D.C.C. ch. 47-10 covers the method of transfer, deed requirements, and recording of real property in North Dakota.');
+
+  nd('ND Deeds & Title', 'North Dakota law provides that real property is transferred by:',
+    ['Oral agreement before witnesses', 'An instrument in writing, subscribed by the party granting it',
+      'Payment alone', 'Recording alone'], 1,
+    'N.D.C.C. § 47-10-01. A writing signed by the grantor is required — the same statute-of-frauds principle applied to conveyances.');
+
+  nd('ND Deeds & Title', 'A North Dakota warranty deed differs from a quitclaim deed because the warranty deed:',
+    ['Conveys only what the grantor may own', 'Contains covenants warranting the title conveyed',
+      'Requires no signature', 'Cannot be recorded'], 1,
+    'The warranty deed carries covenants and gives the grantee recourse against the grantor. A quitclaim conveys whatever interest exists, if any, with no promises.');
+
+  nd('ND Deeds & Title', 'For a North Dakota deed to be effective between grantor and grantee, it must be:',
+    ['Recorded with the county recorder', 'Delivered by the grantor and accepted by the grantee',
+      'Signed by the grantee', 'Approved by the NDREC'], 1,
+    'Delivery and acceptance make a deed operative. Recording protects PRIORITY against third parties; it is not what makes the deed valid.');
+
+  nd('ND Deeds & Title', 'North Dakota\'s recording act protects a subsequent purchaser who:',
+    ['Records first regardless of knowledge', 'Purchases in good faith, for value, without notice, and records first',
+      'Merely pays the most', 'Takes possession first'], 1,
+    'North Dakota follows a race-notice approach: the later buyer must both lack notice of the prior claim AND record first to prevail.');
+
+  nd('ND Deeds & Title', 'A North Dakota homestead occupied by a married couple generally may not be conveyed or mortgaged unless:',
+    ['The husband alone signs', 'Both spouses join in the instrument',
+      'The lender approves', 'The county recorder consents'], 1,
+    'Both spouses must execute a conveyance or encumbrance of the homestead, even when only one holds record title. A deed missing a spouse\'s signature is a serious title defect.');
+
+  nd('ND Deeds & Title', 'The North Dakota homestead exemption protects the homestead from:',
+    ['Property taxes', 'Forced sale by most general creditors, up to the statutory value',
+      'The purchase-money mortgage', 'All mechanics liens'], 1,
+    'The exemption does not defeat consensual liens such as the mortgage used to buy the home, nor tax liens.');
+
+  nd('ND Deeds & Title', 'Title to real property in North Dakota may be acquired by adverse possession only after possession for:',
+    ['3 years', '10 years', '20 years', '30 years'], 2,
+    'North Dakota generally requires 20 years of adverse possession (a shorter period may apply where the claimant holds under color of title and pays taxes). Contrast Minnesota, which uses 15 years.');
+
+  nd('ND Deeds & Title', 'A North Dakota contractor who improves real property and is not paid may file a:',
+    ['Judgment lien', 'Construction lien', 'Mechanic\'s tax lien', 'Vendor\'s lien'], 1,
+    'North Dakota calls it a CONSTRUCTION lien (N.D.C.C. ch. 35-27). Minnesota calls the same device a mechanic\'s lien — a wording trap on the state portion.');
+
+  nd('ND Deeds & Title', 'A docketed money judgment in North Dakota generally becomes a lien on the debtor\'s real property in:',
+    ['Every county in the state automatically', 'The county where the judgment is docketed',
+      'Only property acquired later', 'No real property at all'], 1,
+    'The judgment must be docketed in each county where the creditor wants a lien to attach.');
+
+  nd('ND Deeds & Title', 'Which lien has priority over a previously recorded first mortgage in North Dakota?',
+    ['A judgment lien', 'A real property tax lien', 'A second mortgage', 'A construction lien filed later'], 1,
+    'Ad valorem property tax liens are superior to all other liens regardless of recording order — true in both North Dakota and Minnesota.');
+
+  nd('ND Deeds & Title', 'A North Dakota action to remove a cloud on title and settle ownership is a:',
+    ['Partition action', 'Quiet title action', 'Foreclosure by action', 'Condemnation'], 1,
+    'Quiet title asks the court to determine ownership and extinguish adverse claims — often used for old severed mineral interests and defective chains.');
+
+  nd('ND Deeds & Title', 'Mortgage foreclosure in North Dakota is:',
+    ['Non-judicial by advertisement only', 'Judicial — by action through the courts',
+      'Handled by the NDREC', 'Prohibited'], 1,
+    'North Dakota foreclosures proceed by ACTION under N.D.C.C. ch. 32-19. Minnesota, by contrast, commonly forecloses non-judicially by advertisement — a major border distinction.');
+
+  nd('ND Deeds & Title', 'Before starting a North Dakota residential foreclosure, the lender must serve a notice giving the borrower:',
+    ['3 days to cure', '30 days to cure the default', '6 months to cure', 'No cure period'], 1,
+    'The pre-foreclosure notice of intent gives 30 days to reinstate, and is served not less than 30 nor more than 90 days before the action is filed.');
+
+  nd('ND Deeds & Title', 'The typical North Dakota redemption period after a residential foreclosure sale is:',
+    ['60 days after the sale', '6 months after the sale', '1 year after the sale', 'There is none'], 0,
+    'Sixty days for most residential property (agricultural land gets a longer period, and abandoned property may have redemption eliminated). Minnesota\'s standard is SIX MONTHS — the single most-confused MN/ND number.');
+
+  nd('ND Deeds & Title', 'A North Dakota contract for deed buyer who defaults is typically dealt with by:',
+    ['Immediate self-help eviction', 'A statutory cancellation or foreclosure process giving the buyer time to cure',
+      'Forfeiture without any notice', 'Referral to the NDREC'], 1,
+    'The vendee has equitable title and cannot simply be locked out. Note the process and timelines differ from Minnesota\'s § 559.21 30/60/90-day tiers.');
+
+  nd('ND Deeds & Title', 'In a North Dakota contract for deed, the seller (vendor) retains:',
+    ['Equitable title', 'Legal title until the contract is paid', 'No interest', 'A leasehold'], 1,
+    'Vendor keeps LEGAL title as security; vendee holds EQUITABLE title and possession. Same structure as Minnesota.');
+
+  nd('ND Deeds & Title', 'An abstract of title with an attorney\'s opinion is:',
+    ['Never used in North Dakota', 'A traditional method of evidencing title in North Dakota, alongside title insurance',
+      'Issued by the NDREC', 'The same as a warranty deed'], 1,
+    'Abstract-and-opinion remains common in North Dakota, particularly in rural counties, though title insurance is widely used as well.');
+
+  nd('ND Deeds & Title', 'North Dakota real property taxes become delinquent and may ultimately lead to:',
+    ['License revocation', 'A tax lien and eventual forfeiture of the property to the county',
+      'A federal lien', 'Nothing'], 1,
+    'Unpaid property taxes lead to a statutory process ending in forfeiture to the county. Buyers should always confirm taxes are current at closing.');
+
+  nd('ND Deeds & Title', 'Two people take title as joint tenants in North Dakota. On the death of one:',
+    ['The interest passes by will', 'The survivor takes the whole by right of survivorship',
+      'The state takes the share', 'The heirs become tenants in common'], 1,
+    'Survivorship defeats the will. Tenancy in common, by contrast, passes the decedent\'s share to their heirs or devisees.');
+
+  /* ======================================================================
+     NORTH DAKOTA — MINERALS, SURFACE & WATER  (state portion, ND only)
+     ====================================================================== */
+
+  nd('ND Minerals & Water', 'In North Dakota, when mineral rights have been severed from the surface, the mineral estate is generally:',
+    ['Subordinate to the surface estate', 'The DOMINANT estate, with the right to reasonable use of the surface',
+      'Extinguished at the next sale', 'Owned by the state'], 1,
+    'The severed mineral estate is dominant — it carries an implied right to use as much of the surface as reasonably necessary to extract the minerals. This surprises buyers constantly.');
+
+  nd('ND Minerals & Water', 'Under North Dakota\'s Dormant Mineral Act, a severed mineral interest may lapse and vest in the surface owner if unused for:',
+    ['5 years', '10 years', '20 years', '40 years'], 2,
+    'N.D.C.C. ch. 38-18.1 — twenty years without use. "Use" includes production, a recorded lease or conveyance, or a recorded statement of claim.');
+
+  nd('ND Minerals & Water', 'Which action preserves a severed North Dakota mineral interest against lapse?',
+    ['Paying the surface owner\'s property taxes', 'Recording a statement of claim with the county recorder',
+      'Listing the surface for sale', 'Notifying the NDREC'], 1,
+    'Recording a statement of claim, receiving royalties from production, or recording a lease or mineral deed all constitute "use" that restarts the clock.');
+
+  nd('ND Minerals & Water', 'The North Dakota Surface Damage Compensation Act requires a mineral developer to:',
+    ['Buy the surface outright', 'Compensate the surface owner for lost land value, lost use, and damage',
+      'Obtain NDREC approval', 'Do nothing'], 1,
+    'N.D.C.C. ch. 38-11.1 protects surface owners by requiring notice and compensation before drilling operations disturb the surface.');
+
+  nd('ND Minerals & Water', 'A listing agent in western North Dakota is asked by a buyer whether the minerals convey. The agent should:',
+    ['Assume they do', 'Advise that a title search or mineral examination is required, since minerals are frequently severed',
+      'Guarantee they do not', 'Refuse to discuss it'], 1,
+    'Never assume. Severed minerals are extremely common in North Dakota, and whether they convey is a title question for an attorney or title examiner, not the agent.');
+
+  nd('ND Minerals & Water', 'A North Dakota deed conveying the surface but reserving the minerals creates:',
+    ['A leasehold', 'A severed (split) estate', 'A life estate', 'An easement in gross'], 1,
+    'Once severed, the mineral estate is separately owned, taxed, conveyed, and inherited, and can be split among many owners over generations.');
+
+  nd('ND Minerals & Water', 'Under North Dakota law, ownership of subsurface pore space belongs to:',
+    ['The mineral owner', 'The surface owner', 'The state', 'The federal government'], 1,
+    'N.D.C.C. ch. 47-31 vests pore space in the SURFACE owner. It matters for saltwater disposal and carbon storage projects.');
+
+  nd('ND Minerals & Water', 'All waters within North Dakota are:',
+    ['Owned privately by the adjoining landowner', 'Property of the state, subject to appropriation for beneficial use',
+      'Owned by the federal government', 'Unregulated'], 1,
+    'North Dakota follows PRIOR APPROPRIATION with a state permit system, unlike the riparian doctrine of the eastern states. A water permit, not adjacency, controls significant use.');
+
+  nd('ND Minerals & Water', 'A North Dakota landowner wanting to irrigate from an adjacent river generally must:',
+    ['Simply begin using the water', 'Obtain a water permit from the State Engineer / Department of Water Resources',
+      'Ask the county recorder', 'Buy the riverbed'], 1,
+    'Beneficial use under a permit is the basis of the right. Domestic and livestock use are typically exempt from the permit requirement.');
+
+  nd('ND Minerals & Water', 'The North Dakota anti-corporate farming law generally restricts:',
+    ['Any purchase of farmland', 'Certain corporations and limited liability companies from owning or leasing farmland or ranchland',
+      'All out-of-state buyers', 'Mineral ownership'], 1,
+    'N.D.C.C. ch. 10-06.1 restricts corporate ownership of farmland with important family-farm exceptions. Agents handling agricultural land must flag it for legal review.');
+
+  nd('ND Minerals & Water', 'A North Dakota buyer of agricultural land should be advised that the seller\'s share of growing crops:',
+    ['Always passes with the land automatically', 'Is a matter that must be addressed in the purchase agreement',
+      'Belongs to the county', 'Cannot be transferred'], 1,
+    'Emblements and crop-share arrangements are negotiated terms. Silence in the contract creates disputes at harvest.');
+
+  nd('ND Minerals & Water', 'Wind rights in North Dakota may not be severed from the surface estate for more than:',
+    ['1 year', 'A limited statutory period tied to development', 'Forever, freely', '99 years unconditionally'], 1,
+    'North Dakota restricts perpetual severance of wind rights to prevent the fragmentation problem that severed minerals created. Treat any wind or solar easement as a matter for legal review.');
+
+  /* ======================================================================
+     NORTH DAKOTA — DISCLOSURES & PRACTICE  (state portion, ND only)
+     ====================================================================== */
+
+  nd('ND Disclosures', 'North Dakota imposes a real estate transfer tax or deed tax of:',
+    ['0.0033 of the sale price', '0.0023 of the loan amount', 'No transfer tax — it is constitutionally prohibited', '1% of value'], 2,
+    'Article X, § 27 of the North Dakota Constitution (approved as Measure 2 in 2014) bars the state and every political subdivision from imposing any sales or transfer tax on real property or any mortgage tax. Minnesota charges BOTH a deed tax and a mortgage registry tax — the biggest financial difference between the two states.');
+
+  nd('ND Disclosures', 'A North Dakota seller who knows the basement floods after heavy rain:',
+    ['May stay silent if not asked', 'Must not conceal or misrepresent the known material defect',
+      'Is protected by an as-is clause', 'Must disclose only to cash buyers'], 1,
+    'Even where a statutory disclosure form is not mandated, active concealment or misrepresentation of a known material defect creates fraud liability for the seller and the licensee who participates.');
+
+  nd('ND Disclosures', 'Federal lead-based paint disclosure applies to a North Dakota home built:',
+    ['Before 1950', 'Before 1978', 'Before 1988', 'Any age'], 1,
+    'The federal rule is identical in every state: target housing built before 1978 requires disclosure, the EPA pamphlet, and a 10-day inspection opportunity unless waived.');
+
+  nd('ND Disclosures', 'A North Dakota property served by a private well and septic system should be evaluated because:',
+    ['State law bans them', 'Water quality and system condition directly affect habitability and financing',
+      'They are always replaced at closing', 'Lenders ignore them'], 1,
+    'Rural North Dakota transactions frequently involve private wells and on-site septic. Lenders often require testing, and buyers should always inspect.');
+
+  nd('ND Disclosures', 'Radon in North Dakota is:',
+    ['Not a concern in the region', 'A significant regional concern, with many counties showing elevated levels',
+      'Regulated by the NDREC', 'Only found in new homes'], 1,
+    'The northern plains have some of the highest radon potential in the country. Testing is advisable in both Dakotas and Minnesota regardless of whether disclosure is mandated.');
+
+  nd('ND Disclosures', 'Fair housing law in North Dakota:',
+    ['Matches the seven federal classes exactly with no additions', 'Includes the federal classes plus state protections such as age and status with respect to marriage and public assistance',
+      'Applies only to apartments', 'Does not exist'], 1,
+    'The North Dakota Human Rights Act adds protections beyond the federal list. Both Dakotas and Minnesota exceed the federal seven — always apply the broader state standard.');
+
+  nd('ND Disclosures', 'A North Dakota licensee asked about the quality of local schools should:',
+    ['Give a personal ranking', 'Provide objective published sources and let the buyer evaluate',
+      'Refuse to work with the buyer', 'Discuss the demographics'], 1,
+    'Characterizing schools as "good" or "bad" is a well-known steering proxy. Point buyers to published data they can assess themselves.');
+
+  nd('ND Disclosures', 'A buyer asks a North Dakota agent about registered offenders nearby. The agent should:',
+    ['Provide addresses from memory', 'Refer the buyer to the state sex offender registry and law enforcement',
+      'Say the neighborhood is safe', 'Cancel the showing'], 1,
+    'Referring to the official registry avoids both inaccuracy and the fair housing and privacy risks of the agent characterizing a neighborhood.');
+
+  nd('ND Disclosures', 'North Dakota winters make which inspection item especially important to buyers?',
+    ['Swimming pool equipment', 'Heating system, insulation, and evidence of ice damming or frozen pipe damage',
+      'Hurricane shutters', 'Earthquake retrofitting'], 1,
+    'Regionally relevant diligence: furnace age and condition, attic insulation, and prior freeze damage are material to habitability and cost of ownership on the northern plains.');
+
+  nd('ND Disclosures', 'A licensee working a transaction with property in Fargo and a buyer in Moorhead must apply:',
+    ['Minnesota law, since the buyer lives there', 'North Dakota law, since the property is there',
+      'Whichever law the brokerage prefers', 'Federal law only'], 1,
+    'The law of the property\'s location governs the transaction — licensing, disclosure, foreclosure, and transfer tax rules all follow the property, not the parties.');
+
   /* ================================================================== API */
+
+  // Every state-portion question written with q() above is Minnesota law.
+  Q.forEach(function (x) { if (x.portion === 'state' && !x.state) x.state = 'MN'; });
 
   var CATS = [];
   Q.forEach(function (x) { if (CATS.indexOf(x.cat) < 0) CATS.push(x.cat); });
+
+  /* A question is "in scope" for a state when it is national (state:null) or
+     tests that state's own law. Nothing from the other state ever leaks in. */
+  function inState(x, state) {
+    return !state || x.state === null || x.state === state;
+  }
 
   global.QBank = {
     all: Q,
@@ -1175,24 +1498,31 @@
     byCat: function (c) {
       return c === 'All' ? Q.slice() : Q.filter(function (x) { return x.cat === c; });
     },
-    /* filter by category and exam portion together */
-    filter: function (cat, portion) {
+    /* filter by category, exam portion, and state together */
+    filter: function (cat, portion, state) {
       return Q.filter(function (x) {
-        return (cat === 'All' || x.cat === cat) &&
+        return inState(x, state) &&
+          (cat === 'All' || x.cat === cat) &&
           (portion === 'All' || x.portion === portion);
       });
     },
-    /* categories that actually contain questions for a given portion, so the
-       dropdown never offers a filter that yields nothing */
-    catsFor: function (portion) {
+    /* categories that actually contain questions for a given portion and
+       state, so the chips never offer a filter that yields nothing */
+    catsFor: function (portion, state) {
       var seen = [];
       Q.forEach(function (x) {
+        if (!inState(x, state)) return;
         if (portion !== 'All' && x.portion !== portion) return;
         if (seen.indexOf(x.cat) < 0) seen.push(x.cat);
       });
       return seen;
     },
-    byPortion: function (p) { return Q.filter(function (x) { return x.portion === p; }); },
+    byPortion: function (p, state) {
+      return Q.filter(function (x) { return x.portion === p && inState(x, state); });
+    },
+    countFor: function (state) {
+      return Q.filter(function (x) { return inState(x, state); }).length;
+    },
     count: Q.length
   };
 })(window);

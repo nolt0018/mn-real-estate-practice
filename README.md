@@ -1,7 +1,14 @@
-# Minnesota Real Estate Salesperson — Exam Practice
+# MN / ND Real Estate Salesperson — Exam Practice
 
-A practice app built for repeated drilling ahead of the Minnesota real estate
-salesperson licensing exam, with the heaviest emphasis on **math**.
+A practice app built for repeated drilling ahead of the **Minnesota** or **North
+Dakota** real estate salesperson licensing exam, with the heaviest emphasis on
+**math**.
+
+A switch in the header picks the state. The national portion — all the math and
+189 national questions — is identical in both. What follows the switch is the state
+question bank, the exam shape and passing standards, the formula sheet, and the
+Minnesota-only transfer-tax drills (North Dakota constitutionally bans transfer
+taxes, so those must not be practiced there). The choice is remembered.
 
 Everything runs in the browser. No install, no accounts, no network. Progress is
 saved in the browser's local storage on that device only.
@@ -35,15 +42,18 @@ Answers are typed in, not picked from a list — you cannot back-solve from the 
 "Focus on my weak spots" pulls from whichever generators have the worst accuracy.
 
 ### Quiz
-**232 questions** with explanations — **189 national** and 43 Minnesota. Covers agency,
+**292 questions** with explanations — **189 national**, 43 Minnesota, and 60 North
+Dakota. Covers agency,
 contracts, property and title, transfer of title, leases and property management, land use
 and environmental, finance, valuation, fair housing, antitrust and settlement practice, and
-Minnesota statute. Filter by **exam portion** (defaults to national), by topic, or re-drill
-only the ones previously missed.
+state statute. North Dakota adds deeds, title and claims; minerals, surface and water; license
+law; and disclosures — every explanation carries the Century Code cite. Filter by **exam
+portion** (defaults to national), by topic, or re-drill only the ones previously missed.
 
 ### Practice Exam
-Mirrors the real exam's structure: **80 national + 40 Minnesota**, scored as two
-separate sections, each needing **75%** (60/80 and 30/40). Because a failed section is
+Mirrors the real exam's structure. **Minnesota:** 80 national + 40 state, 75% on each
+(60/80 and 30/40). **North Dakota:** 100 national + 40 state, with different standards
+per section — **70%** national (70/100) but 75% state (30/40). Because a failed section is
 retaken on its own, you can run **national only (80)**, **state only (40)**, or the full
 exam. A section you didn't sit is left out of the scoring rather than counted against you.
 Timed, with a question grid for jumping around and changing answers. Results break down by
@@ -53,10 +63,33 @@ All exam math questions come from the national pool, matching the real exam — 
 the national section are the same problem.
 
 ### Formula Sheet
-One-page reference for every formula in the drills, plus the Minnesota numbers worth
-memorizing and a short Minnesota-vs-North-Dakota contrast.
+One-page reference for every formula in the drills, plus the state's own numbers worth
+memorizing and a Minnesota-vs-North-Dakota border-trap table (regulator, exam shape,
+transfer tax, judicial vs non-judicial foreclosure, 6-month vs 60-day redemption, 15 vs
+20-year adverse possession, mechanic's vs construction lien, riparian vs prior
+appropriation, severed minerals).
 
-## Minnesota figures used
+## State figures used
+
+### North Dakota
+
+Verified against the North Dakota Century Code, the ND Real Estate Commission, and the
+ND Constitution:
+
+| Item | Value |
+| --- | --- |
+| Exam (PSI) | 100 national + 40 state; **70%** national (70/100), 75% state (30/40), scored separately |
+| Transfer / mortgage tax | **None** — N.D. Const. art. X, § 27 (Measure 2, 2014) prohibits any transfer or mortgage tax |
+| Regulator | North Dakota Real Estate Commission, N.D.C.C. ch. 43-23 |
+| Trust account | Broker may keep up to $500 of personal funds to cover service charges |
+| Foreclosure (ch. 32-19) | Judicial; 30-day pre-foreclosure notice to cure; 60-day redemption for most residential property |
+| Adverse possession | Generally 20 years |
+| Dormant Mineral Act (ch. 38-18.1) | Severed minerals unused 20 years may lapse to the surface owner; preserved by production, recorded lease/deed, or statement of claim |
+| Surface Damage Compensation Act | ch. 38-11.1 |
+| Pore space | Belongs to the surface owner (ch. 47-31) |
+| Water | Prior appropriation under state permit |
+
+### Minnesota
 
 Verified against the Minnesota Department of Revenue and Minnesota Statutes as of
 August 2026:
@@ -99,9 +132,9 @@ call in `js/questions.js`. Both are picked up automatically.
 
 ```
 index.html                 app shell
-css/style.css              styles (light + dark)
+css/style.css              styles (light + dark, state-scoped formula blocks)
 js/mathgen.js              37 randomized math generators
-js/questions.js            232-question bank (189 national / 43 state)
+js/questions.js            292-question bank (189 national / 43 MN / 60 ND)
 js/app.js                  drill / quiz / exam / progress logic
 build.js                   bundles everything into dist/
 dist/                      single-file build

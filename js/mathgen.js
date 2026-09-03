@@ -147,7 +147,11 @@
     };
   });
 
-  add('seller-proceeds', 'Seller\'s net proceeds at closing', 'Commission', function () {
+  /* Takes the exam state: Minnesota closings subtract the state deed tax;
+     North Dakota has no transfer tax at all, so the line is omitted there
+     and the worked solution says why. */
+  add('seller-proceeds', 'Seller\'s net proceeds at closing', 'Commission', function (state) {
+    var nd = state === 'ND';
     var price = rnd(220000, 520000, 5000);
     var rate = pick([5, 6, 6.5]);
     var payoff = Math.round(price * rnd(45, 75) / 100 / 1000) * 1000;
@@ -155,7 +159,7 @@
     var closeM = rnd(3, 10), closeD = rnd(2, 27);
     var sellerDays = daysElapsed(closeM, closeD, 365);
     var taxShare = taxes / 365 * sellerDays;
-    var deed = price * 0.0033;
+    var deed = nd ? 0 : price * 0.0033;
     var misc = rnd(600, 2400, 50);
     var net = price - price * rate / 100 - payoff - taxShare - deed - misc;
 
@@ -163,21 +167,26 @@
       q: 'Closing is ' + MONTHS[closeM - 1] + ' ' + closeD + '. Sale price ' + money0(price) +
         '. Commission ' + rate + '%. Loan payoff ' + money0(payoff) + '. Annual real estate taxes ' +
         'of ' + money0(taxes) + ' are paid in arrears and the seller is charged through the day of ' +
-        'closing (365-day year). MN state deed tax is 0.0033. Other seller costs ' + money0(misc) +
+        'closing (365-day year). ' +
+        (nd ? 'This is a North Dakota closing. ' : 'MN state deed tax is 0.0033. ') +
+        'Other seller costs ' + money0(misc) +
         '. <b>What are the seller\'s net proceeds?</b>',
       answer: net, unit: 'money', tol: 3,
-      formula: 'Net = price - commission - payoff - prorated taxes - deed tax - other costs',
+      formula: 'Net = price - commission - payoff - prorated taxes' + (nd ? '' : ' - deed tax') + ' - other costs',
       steps: [
         'Commission: ' + money0(price) + ' x ' + rate + '% = ' + money(price * rate / 100),
         'Tax proration: ' + money0(taxes) + ' / 365 = ' + money(taxes / 365) + '/day x ' +
           sellerDays + ' days (Jan 1 - ' + MONTHS[closeM - 1] + ' ' + closeD + ') = ' + money(taxShare),
-        'Deed tax: ' + money0(price) + ' x 0.0033 = ' + money(deed),
+        nd ? 'Transfer tax: none. North Dakota\'s constitution (Art. X, s. 27) prohibits any ' +
+             'transfer or mortgage tax, so nothing is subtracted here.'
+           : 'Deed tax: ' + money0(price) + ' x 0.0033 = ' + money(deed),
         'Net: ' + money0(price) + ' - ' + money(price * rate / 100) + ' - ' + money0(payoff) +
-          ' - ' + money(taxShare) + ' - ' + money(deed) + ' - ' + money0(misc) + ' = ' + money(net)
+          ' - ' + money(taxShare) + (nd ? '' : ' - ' + money(deed)) + ' - ' + money0(misc) +
+          ' = ' + money(net)
       ],
       tip: 'Taxes paid in arrears means the seller OWES the buyer for the time the seller owned ' +
         'the property — it comes out of the seller\'s proceeds.',
-      traps: [net + taxShare, net + deed, price - payoff - price * rate / 100]
+      traps: [net + taxShare, nd ? net - price * 0.0033 : net + deed, price - payoff - price * rate / 100]
     };
   });
 
@@ -1158,8 +1167,22 @@
 
   /* ================================================================== API */
 
-  var CATS = [];
-  GEN.forEach(function (g) { if (CATS.indexOf(g.cat) < 0) CATS.push(g.cat); });
+  /* Minnesota-only generators. North Dakota's constitution (Art. X, s. 27)
+     prohibits any transfer or mortgage tax, so under ND these must not be
+     served — practicing them would teach a tax that does not exist there. */
+  var MN_ONLY = ['mn-deed-tax', 'mn-mortgage-tax', 'mn-both-taxes'];
+  GEN.forEach(function (g) { g.mnOnly = MN_ONLY.indexOf(g.id) >= 0; });
+
+  function forState(state) {
+    return state === 'ND' ? GEN.filter(function (g) { return !g.mnOnly; }) : GEN;
+  }
+  function catsForState(state) {
+    var out = [];
+    forState(state).forEach(function (g) { if (out.indexOf(g.cat) < 0) out.push(g.cat); });
+    return out;
+  }
+
+  var CATS = catsForState(null);
 
   function byId(id) {
     for (var i = 0; i < GEN.length; i++) if (GEN[i].id === id) return GEN[i];
@@ -1209,20 +1232,23 @@
   global.MathGen = {
     generators: GEN,
     cats: CATS,
+    forState: forState,
+    catsForState: catsForState,
     byId: byId,
-    random: function (cat) {
-      var pool = cat && cat !== 'All' ? GEN.filter(function (g) { return g.cat === cat; }) : GEN;
+    random: function (cat, state) {
+      var base = forState(state);
+      var pool = cat && cat !== 'All' ? base.filter(function (g) { return g.cat === cat; }) : base;
       var g = pick(pool);
-      var p = g.gen();
+      var p = g.gen(state);
       p.genId = g.id;
       p.genName = g.name;
       p.cat = g.cat;
       return p;
     },
-    fromId: function (id) {
+    fromId: function (id, state) {
       var g = byId(id);
       if (!g) return null;
-      var p = g.gen();
+      var p = g.gen(state);
       p.genId = g.id; p.genName = g.name; p.cat = g.cat;
       return p;
     },

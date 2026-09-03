@@ -177,7 +177,7 @@ const check = (cond, label, extra) => {
   await page.waitForTimeout(250);
   await page.click('.tab[data-view="exam"]');
   await page.selectOption('#exam-mode', 'full');
-  await page.selectOption('#exam-mins', '240');
+  await page.selectOption('#exam-mins', 'fullpace');
   await page.click('#exam-start');
   await page.waitForTimeout(300);
 
@@ -236,6 +236,101 @@ const check = (cond, label, extra) => {
   check(ref.includes('0.0033') && ref.includes('0.0023'), 'formula sheet has both MN transfer taxes');
   check(ref.includes('43,560') && ref.includes('640'), 'formula sheet has land conversions');
   check(ref.includes('North Dakota'), 'formula sheet includes the MN/ND contrast');
+  const mnTaxVisible = await page.isVisible('[data-state="MN"] >> text=Minnesota transfer taxes');
+  const ndTaxVisibleUnderMN = await page.isVisible('[data-state="ND"] >> text=North Dakota transfer taxes');
+  check(mnTaxVisible && !ndTaxVisibleUnderMN, 'under MN the MN tax block shows and the ND block is hidden');
+
+  /* ============================================================ NORTH DAKOTA */
+  check(/Minnesota/.test(await page.textContent('#state-switch .chip.on')), 'state switch defaults to Minnesota');
+  await page.click('#state-switch .chip[data-v="ND"]');
+  await page.waitForTimeout(200);
+  check(/North Dakota/.test(await page.textContent('#app-title')), 'title switches to North Dakota');
+  check(/100 national \+ 40/.test(await page.textContent('#app-sub')), 'header states the ND 100+40 format');
+  check(/70% on national/.test(await page.textContent('#app-sub')), 'header states the ND 70% national standard');
+
+  // formula sheet flips
+  const ndTaxVisible = await page.isVisible('[data-state="ND"] >> text=North Dakota transfer taxes');
+  const mnTaxVisibleUnderND = await page.isVisible('[data-state="MN"] >> text=Minnesota transfer taxes');
+  check(ndTaxVisible && !mnTaxVisibleUnderND, 'under ND the ND tax block shows and the MN block is hidden');
+
+  // math drill drops the MN tax drills
+  await page.click('.tab[data-view="drill"]');
+  await page.waitForTimeout(150);
+  const ndDrillChips = await page.$$eval('#drill-cats .chip', e => e.map(c => c.dataset.v));
+  check(!ndDrillChips.includes('MN Taxes'), 'ND math drill has no "MN Taxes" topic', ndDrillChips.join(','));
+  const ndTypes = await page.$$eval('#drill-type option', o => o.map(e => e.value));
+  check(!ndTypes.some(v => v.startsWith('mn-')), 'ND problem-type list has no MN tax drills');
+  let mnLeaks = 0;
+  for (let i = 0; i < 40; i++) {
+    if (/deed tax|registry tax/i.test(await page.textContent('#drill-q'))) mnLeaks++;
+    await page.click('#drill-reveal');
+    await page.click('#drill-next');
+  }
+  check(mnLeaks === 0, 'ND drill never serves a MN transfer-tax problem in 40 draws', mnLeaks + ' leaked');
+
+  // quiz shows ND state bank and ND categories only
+  await page.click('.tab[data-view="quiz"]');
+  await page.waitForTimeout(150);
+  const ndPortionChips = await page.$$eval('#quiz-portions .chip', e => e.map(c => c.textContent));
+  check(ndPortionChips.some(t => /ND state\s*60/.test(t)), 'quiz shows "ND state" with 60 questions', ndPortionChips.join(' | '));
+  await page.click('#quiz-portions .chip[data-v="state"]');
+  await page.waitForTimeout(120);
+  const ndCats = await page.$$eval('#quiz-cats .chip', o => o.map(e => e.dataset.v));
+  check(ndCats.some(c => c.startsWith('ND ')) && !ndCats.some(c => c.startsWith('MN ')),
+    'ND state topics are ND-only', ndCats.join(','));
+  let mnQLeaks = 0;
+  for (let i = 0; i < 30; i++) {
+    const tag = await page.textContent('#quiz-tag');
+    if (!/ND state portion/.test(tag) || /^MN /.test(tag)) mnQLeaks++;
+    await page.click('#quiz-choices .choice');
+    await page.click('#quiz-next');
+  }
+  check(mnQLeaks === 0, 'ND state quiz never serves a Minnesota question', mnQLeaks + ' leaked');
+
+  // exam reshapes to 100 + 40
+  for (const [mode, expect] of [['national', 100], ['state', 40], ['full', 140]]) {
+    await page.click('.tab[data-view="exam"]');
+    await page.selectOption('#exam-mode', mode);
+    await page.click('#exam-start');
+    await page.waitForTimeout(300);
+    const n = await page.$$eval('#exam-grid .gridbtn', e => e.length);
+    check(n === expect, `ND exam mode "${mode}" builds ${expect} questions (got ${n})`);
+    // no MN state question in an ND exam
+    let mnExamLeaks = 0;
+    for (let i = 0; i < n; i++) {
+      await page.click(`#exam-grid .gridbtn[data-i="${i}"]`);
+      const tag = await page.textContent('#exam-tag');
+      if (/MN state/.test(tag) || /•\s*MN /.test(tag)) mnExamLeaks++;
+    }
+    check(mnExamLeaks === 0, `ND "${mode}" exam contains zero Minnesota state questions`, mnExamLeaks + ' leaked');
+    await page.click('#exam-submit');
+    await page.waitForTimeout(300);
+    await page.click('#exam-again');
+  }
+  // ND passing thresholds: 70 of 100 national, 30 of 40 state
+  await page.selectOption('#exam-mode', 'full');
+  await page.click('#exam-start');
+  await page.waitForTimeout(300);
+  await page.click('#exam-submit');
+  await page.waitForTimeout(300);
+  const ndBreak = await page.textContent('#exam-breakdown');
+  check(/need 70 of 100 \(70%\)/.test(ndBreak), 'ND results grade national against 70 of 100', ndBreak.slice(0, 120));
+  check(/need 30 of 40 \(75%\)/.test(ndBreak), 'ND results grade state against 30 of 40');
+  check(/North Dakota state portion/.test(ndBreak), 'ND results label the state section North Dakota');
+
+  // choice persists across reload, and switching back restores MN
+  await page.reload();
+  await page.waitForTimeout(300);
+  check(/North Dakota/.test(await page.textContent('#state-switch .chip.on')), 'state choice survives a reload');
+  await page.click('#state-switch .chip[data-v="MN"]');
+  await page.waitForTimeout(200);
+  check(/Minnesota/.test(await page.textContent('#app-title')), 'switching back restores Minnesota');
+  await page.selectOption('#exam-mode', 'national');
+  await page.click('#exam-start');
+  await page.waitForTimeout(300);
+  check(await page.$$eval('#exam-grid .gridbtn', e => e.length) === 80, 'MN exam is back to 80 after switching');
+  const mnDrillChips = await page.$$eval('#drill-cats .chip', e => e.map(c => c.dataset.v));
+  check(mnDrillChips.includes('MN Taxes'), 'MN Taxes topic returns after switching back');
 
   check(errors.length === 0, 'no JS errors across the whole run', errors.join(' | '));
 

@@ -3,14 +3,22 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MN Real Estate Salesperson — Exam Practice</title>
+<title>MN / ND Real Estate Salesperson — Exam Practice</title>
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 
 <header>
-  <h1>Minnesota Real Estate Salesperson — Exam Practice</h1>
-  <p>120 questions on the real exam: 80 national + 40 Minnesota. You need 75% on <b>each</b> section, scored separately.</p>
+  <div class="headrow">
+    <div>
+      <h1 id="app-title">Minnesota Real Estate Salesperson — Exam Practice</h1>
+      <p id="app-sub"></p>
+    </div>
+    <div class="stateswitch">
+      <div class="stateswitch-label">Exam state</div>
+      <div class="chips" id="state-switch" role="group" aria-label="Exam state"></div>
+    </div>
+  </div>
 </header>
 
 <nav class="tabs" role="tablist">
@@ -107,21 +115,19 @@
   <section class="view" id="view-exam">
     <div class="card" id="exam-setup">
       <h2 style="margin-top:0">Practice exam</h2>
-      <p>The real exam is 80 national + 40 Minnesota questions, each section scored on its own and
-        each needing <b>75%</b> — 60 of 80 national, 30 of 40 state. <b>If you already passed one
-        section, you only retake the other</b>, so you can drill just that one here.</p>
+      <p id="exam-intro"></p>
       <div class="controls">
         <label class="check">Sections
           <select id="exam-mode">
-            <option value="national">National only — 80 questions</option>
-            <option value="full">Full exam — 80 national + 40 state</option>
-            <option value="state">MN state only — 40 questions</option>
+            <option value="national">National only</option>
+            <option value="full">Full exam</option>
+            <option value="state">State only</option>
           </select>
         </label>
         <label class="check">Time limit
           <select id="exam-mins">
-            <option value="160">160 minutes (national pace)</option>
-            <option value="240">240 minutes (full exam)</option>
+            <option value="natpace">National-section pace</option>
+            <option value="fullpace">Full-exam pace</option>
             <option value="120">120 minutes</option>
             <option value="600">No real limit</option>
           </select>
@@ -187,6 +193,7 @@
         (1) Are you multiplying or dividing? Going <i>backwards</i> always means divide.
         (2) Is the base the <b>price</b> or the <b>loan</b>? (3) Does the seller own the closing day?</div>
 
+      <div data-state="MN">
       <h3>Minnesota transfer taxes — memorize cold</h3>
       <dl>
         <dt>State deed tax — <span class="eq">price &times; 0.0033</span></dt>
@@ -195,6 +202,18 @@
         <dt>Mortgage registry tax — <span class="eq">loan &times; 0.0023</span></dt>
         <dd>Paid by the <b>buyer</b>, based on the <b>principal debt</b>. Hennepin &amp; Ramsey add 0.0001 &rarr; 0.0024.</dd>
       </dl>
+      </div>
+
+      <div data-state="ND">
+      <h3>North Dakota transfer taxes — there are none</h3>
+      <dl>
+        <dt>Deed tax, transfer tax, mortgage registry tax: <span class="eq">$0</span></dt>
+        <dd>Article X, &sect; 27 of the North Dakota Constitution (Measure 2, 2014) prohibits the state and every
+          political subdivision from imposing any transfer tax on real property or any mortgage tax. If an exam
+          question asks you to compute one for a North Dakota closing, the answer is that it does not exist.
+          Minnesota charges both — the biggest dollar difference between the two states.</dd>
+      </dl>
+      </div>
 
       <h3>Commission</h3>
       <dl>
@@ -211,7 +230,7 @@
         <dt><span class="eq">daily rate = annual amount &divide; 360 or 365</span></dt>
         <dd>Read which year the question wants. 360-day years use 30-day months.</dd>
         <dt>Direction of the entry</dt>
-        <dd><b>Paid in arrears</b> (Minnesota property taxes): seller owes the buyer &rarr; <b>debit seller, credit buyer</b>.<br>
+        <dd><b>Paid in arrears</b> (property taxes, in both Minnesota and North Dakota): seller owes the buyer &rarr; <b>debit seller, credit buyer</b>.<br>
           <b>Prepaid</b> (insurance, HOA dues, rent already collected): &rarr; <b>credit seller, debit buyer</b>
           — except <b>rent</b>, where the seller collected money for days the buyer will own, so the <b>buyer</b> gets the credit.</dd>
         <dt>Who owns the closing day?</dt>
@@ -281,6 +300,7 @@
         <dd>(price + closing costs + prepaids) &minus; (loan + earnest money + credits owed by seller).</dd>
       </dl>
 
+      <div data-state="MN">
       <h3>Minnesota facts that show up as numbers</h3>
       <dl>
         <dt>Contract for deed cancellation (Minn. Stat. 559.21)</dt>
@@ -302,32 +322,75 @@
           <b>10 days</b> of the disclosure certificate &nbsp;•&nbsp; lead-based paint (pre-<b>1978</b>) inspection
           opportunity <b>10 days</b>.</dd>
       </dl>
+      </div>
+
+      <div data-state="ND">
+      <h3>North Dakota facts that show up as numbers</h3>
+      <dl>
+        <dt>Exam (PSI)</dt>
+        <dd><b>100 national + 40 state</b>. Passing is <b>70%</b> on national (70 of 100) but <b>75%</b> on state
+          (30 of 40) — the two sections use <i>different</i> standards. Each is scored on its own.</dd>
+        <dt>Regulator</dt>
+        <dd><b>North Dakota Real Estate Commission</b>, N.D.C.C. ch. <b>43-23</b>. Not the Department of Commerce —
+          that is Minnesota.</dd>
+        <dt>Trust account</dt>
+        <dd>Broker may keep up to <b>$500</b> of personal funds in the trust account to cover bank service charges.
+          Anything more is commingling.</dd>
+        <dt>Foreclosure (N.D.C.C. ch. 32-19)</dt>
+        <dd><b>Judicial</b> — by action in court. Pre-foreclosure notice gives the borrower <b>30 days</b> to cure.
+          Redemption after the sale: <b>60 days</b> for most residential property (agricultural land longer; abandoned
+          property may have none). Minnesota is <b>6 months</b> and non-judicial — the single most-confused number
+          between the two states.</dd>
+        <dt>Adverse possession</dt>
+        <dd>Generally <b>20 years</b> (Minnesota: 15).</dd>
+        <dt>Dormant Mineral Act (ch. 38-18.1)</dt>
+        <dd>A severed mineral interest unused for <b>20 years</b> may lapse to the surface owner. Use = production,
+          a recorded lease/deed, or a recorded <b>statement of claim</b>.</dd>
+        <dt>Surface Damage Compensation Act (ch. 38-11.1)</dt>
+        <dd>Mineral developers must compensate the surface owner for lost use and damage. The severed mineral estate
+          is <b>dominant</b>; pore space belongs to the <b>surface</b> owner (ch. 47-31).</dd>
+        <dt>Water</dt>
+        <dd><b>Prior appropriation</b> under a state permit — not riparian. Domestic and livestock use exempt.</dd>
+        <dt>Homestead</dt>
+        <dd><b>Both spouses</b> must sign to convey or mortgage the homestead, even if only one is on title.</dd>
+        <dt>Liens</dt>
+        <dd>North Dakota calls it a <b>construction lien</b> (ch. 35-27); Minnesota calls the same thing a mechanic's lien.</dd>
+        <dt>Errors &amp; omissions insurance</dt>
+        <dd><b>Required</b> for active North Dakota licensees.</dd>
+      </dl>
+      </div>
 
       <h3>Fair housing classes</h3>
       <dl>
         <dt>Federal — 7 classes</dt>
         <dd>Race, color, religion, sex, national origin, familial status, disability.</dd>
-        <dt>Minnesota Human Rights Act adds</dt>
-        <dd>Creed, marital status, status with regard to public assistance, sexual orientation and gender identity,
+        <dt data-state="MN">Minnesota Human Rights Act adds</dt>
+        <dd data-state="MN">Creed, marital status, status with regard to public assistance, sexual orientation and gender identity,
           and age in some contexts. <b>Minnesota protects more than the federal law does</b> — the state portion tests this.</dd>
+        <dt data-state="ND">North Dakota Human Rights Act adds</dt>
+        <dd data-state="ND">Age, status with respect to marriage, and status with regard to public assistance, among others.
+          <b>Apply the broader state standard</b> — the state portion tests this.</dd>
       </dl>
 
-      <h3>Minnesota vs. North Dakota — quick contrast</h3>
-      <p class="muted">Parker's exam is the Minnesota one. This is only so the two do not blur together later
-        when he sits for the ND license.</p>
-      <dl>
-        <dt>Regulator</dt>
-        <dd>MN: Commissioner of <b>Commerce</b> (Dept. of Commerce), Minn. Stat. Ch. 82.<br>
-          ND: <b>North Dakota Real Estate Commission</b>, N.D.C.C. Ch. 43-23.</dd>
-        <dt>Non-agent status</dt>
-        <dd>MN formally recognizes the <b>facilitator</b>. Do not assume the same label or duties apply in ND.</dd>
-        <dt>Transfer tax</dt>
-        <dd>MN charges deed tax and mortgage registry tax. <b>North Dakota has no real estate transfer tax</b> —
-          a classic mix-up for border agents.</dd>
-        <dt>Practice note</dt>
-        <dd>A license is state-specific. Property in Moorhead is a Minnesota transaction under Minnesota law
-          even if the buyer, the brokerage, and the lender are all in Fargo.</dd>
-      </dl>
+      <h3>Minnesota vs. North Dakota — border traps</h3>
+      <p class="muted">Agents working both sides of the Red River get these mixed up constantly. The law follows the
+        <b>property</b>, not the buyer, the brokerage, or the lender.</p>
+      <div style="overflow-x:auto">
+      <table class="tbl">
+        <tr><th></th><th>Minnesota</th><th>North Dakota</th></tr>
+        <tr><td>Regulator</td><td>Commissioner of Commerce, Minn. Stat. ch. 82</td><td>Real Estate Commission, N.D.C.C. ch. 43-23</td></tr>
+        <tr><td>Exam</td><td>80 national + 40 state; 75% / 75%</td><td>100 national + 40 state; <b>70%</b> / 75%</td></tr>
+        <tr><td>Transfer tax</td><td>Deed tax 0.0033 + mortgage registry 0.0023</td><td><b>None — constitutionally banned</b></td></tr>
+        <tr><td>Foreclosure</td><td>Non-judicial by advertisement</td><td><b>Judicial</b> (by action)</td></tr>
+        <tr><td>Redemption</td><td><b>6 months</b></td><td><b>60 days</b> (residential)</td></tr>
+        <tr><td>Adverse possession</td><td>15 years</td><td>20 years</td></tr>
+        <tr><td>Contractor's lien</td><td>Mechanic's lien</td><td>Construction lien</td></tr>
+        <tr><td>Non-agent status</td><td>Facilitator (statutory)</td><td>No equivalent statutory role</td></tr>
+        <tr><td>Water law</td><td>Riparian</td><td>Prior appropriation (permit)</td></tr>
+        <tr><td>Minerals</td><td>Rarely severed</td><td>Routinely severed; Dormant Mineral Act</td></tr>
+        <tr><td>CE cycle</td><td>30 hrs / 2 years (15 min. each year)</td><td>Annual</td></tr>
+      </table>
+      </div>
 
     </div>
   </section>
@@ -360,7 +423,7 @@
 
 <footer>
   <span class="gcount"></span> randomized math generators &nbsp;•&nbsp; <span class="qcount"></span> quiz questions.<br>
-  Study aid only — always defer to your UND course materials and current Minnesota statutes.
+  Study aid only — always defer to your course materials and the current statutes of the state you are testing in.
 </footer>
 
 <script src="js/mathgen.js"></script>
