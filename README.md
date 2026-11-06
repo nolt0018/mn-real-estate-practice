@@ -69,6 +69,29 @@ transfer tax, judicial vs non-judicial foreclosure, 6-month vs 60-day redemption
 20-year adverse possession, mechanic's vs construction lien, riparian vs prior
 appropriation, severed minerals).
 
+## Links and shortcuts
+
+**Deep links.** The tab lives in the URL fragment and the state in the query, so a link
+can open exactly where you want it — handy for a Notion embed or a link texted to a phone:
+
+```
+https://nolt0018.github.io/mn-real-estate-practice/#drill            math drill
+https://nolt0018.github.io/mn-real-estate-practice/#quiz             quiz
+https://nolt0018.github.io/mn-real-estate-practice/?state=ND#exam    North Dakota exam
+https://nolt0018.github.io/mn-real-estate-practice/?state=MN#quiz    Minnesota quiz
+```
+
+Tabs are `#exam`, `#quiz`, `#drill`, `#formulas`, `#progress`. `?state=` pins the state
+for that link and overrides the remembered choice.
+
+**Keyboard.** In the quiz and the exam, **1–4** or **A–D** picks an answer, **Enter** or
+**→** advances, and **←** goes back in the exam. Shortcuts are ignored while typing in a
+field, so the math drill's answer box is unaffected.
+
+**After an exam.** The results page offers *Drill the N you missed*, which loads exactly
+those questions into the quiz. Missed math problems are randomized, so they are queued
+instead under *Focus on my weak spots* in the Math Drill.
+
 ## State figures used
 
 ### North Dakota

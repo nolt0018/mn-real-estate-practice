@@ -115,9 +115,24 @@
     });
     if (name === 'progress') renderProgress();
     window.scrollTo(0, 0);
+    // The tab is the URL fragment, so #drill opens the math drill directly —
+    // a bookmark, a Notion embed URL, a link texted to a phone. replaceState
+    // keeps the Back button from walking through every tab visit.
+    if (VIEWS.indexOf(name) >= 0 && location.hash !== '#' + name) {
+      try { history.replaceState(null, '', '#' + name); } catch (e) { location.hash = name; }
+    }
+  }
+  var VIEWS = ['exam', 'quiz', 'drill', 'formulas', 'progress'];
+  function viewFromHash() {
+    var h = (location.hash || '').replace(/^#/, '').toLowerCase();
+    return VIEWS.indexOf(h) >= 0 ? h : null;
   }
   $$('.tab').forEach(function (t) {
     t.addEventListener('click', function () { showView(t.dataset.view); });
+  });
+  window.addEventListener('hashchange', function () {
+    var v = viewFromHash();
+    if (v && $('#view-' + v).hidden) showView(v);
   });
 
   /* ======================================================================
@@ -344,8 +359,24 @@
     }
     quiz.list = shuffle(pool);
     quiz.i = 0;
+    quiz.custom = 0;
     quiz.session = { seen: 0, right: 0 };
     renderQuiz();
+  }
+
+  /* Load an explicit set of bank questions into the quiz, bypassing the
+     portion and topic filters — used to drill the ones missed on an exam. */
+  function startQuizFrom(ids) {
+    var byId = {};
+    QBank.all.forEach(function (x) { byId[x.id] = x; });
+    var list = ids.map(function (id) { return byId[id]; }).filter(Boolean);
+    if (!list.length) return;
+    quiz.list = shuffle(list);
+    quiz.i = 0;
+    quiz.custom = list.length;
+    quiz.session = { seen: 0, right: 0 };
+    renderQuiz();
+    showView('quiz');
   }
 
   function renderQuiz() {
@@ -356,7 +387,8 @@
     quiz.order = shuffle(x.choices.map(function (c, i) { return i; }));
 
     $('#quiz-tag').textContent = x.cat + '  •  ' + (x.portion === 'state' ? appState + ' state portion' : 'National portion');
-    $('#quiz-count').textContent = (quiz.i + 1) + ' of ' + quiz.list.length;
+    $('#quiz-count').textContent = (quiz.custom ? 'missed on your exam  •  ' : '') +
+      (quiz.i + 1) + ' of ' + quiz.list.length;
     $('#quiz-q').innerHTML = x.q;
     $('#quiz-choices').innerHTML = quiz.order.map(function (origIdx, pos) {
       return '<button class="choice" data-orig="' + origIdx + '">' +
@@ -588,7 +620,20 @@
 
     var missed = exam.items.map(function (x, i) { return { x: x, i: i }; })
       .filter(function (o) { return exam.answers[o.i] !== o.x.a; });
-    $('#exam-review').innerHTML = '<h3>Review the ' + missed.length + ' you missed</h3>' +
+    // Bank questions can be re-drilled directly. Math items are randomized, so
+    // a miss is already recorded against that generator and surfaces through
+    // "Focus on my weak spots" in the Math Drill.
+    var missedBank = missed.filter(function (o) { return o.x.kind === 'bank'; })
+      .map(function (o) { return o.x.id; });
+    var missedMath = missed.length - missedBank.length;
+    var retry = !missed.length ? '' :
+      '<div class="controls" style="margin-top:4px;margin-bottom:14px">' +
+      (missedBank.length ? '<button class="btn" id="exam-retry">Drill the ' + missedBank.length +
+        ' you missed &rarr;</button>' : '') +
+      (missedMath ? '<span class="muted">' + missedMath + ' missed math problem' +
+        (missedMath > 1 ? 's are' : ' is') + ' queued under "Focus on my weak spots" in the Math Drill.</span>' : '') +
+      '</div>';
+    $('#exam-review').innerHTML = '<h3>Review the ' + missed.length + ' you missed</h3>' + retry +
       (missed.length === 0 ? '<p class="muted">Nothing missed. Clean sheet.</p>' :
         missed.map(function (o) {
           var picked = exam.answers[o.i];
@@ -597,6 +642,8 @@
             '<p class="muted">You answered: ' + (picked === null ? '<i>left blank</i>' : o.x.choices[picked]) + '</p>' +
             '<p><b>Correct: ' + o.x.choices[o.x.a] + '</b></p><div class="why">' + o.x.why + '</div></div></details>';
         }).join(''));
+    var rb = $('#exam-retry');
+    if (rb) rb.addEventListener('click', function () { startQuizFrom(missedBank); });
   }
 
   function scoreRow(label, r, t, need, passFrac) {
@@ -700,7 +747,46 @@
     renderProgress();
   });
 
+  /* ------------------------------------------------------- keyboard */
+  /* 1-4 or A-D picks a choice; Enter or the right arrow advances; the left
+     arrow goes back in the exam. Ignored while typing in a field, so the math
+     drill's answer box is unaffected. */
+  document.addEventListener('keydown', function (e) {
+    var tag = (e.target && e.target.tagName) || '';
+    if (tag === 'INPUT' || tag === 'SELECT' || tag === 'TEXTAREA' || e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key, idx = -1;
+    if (/^[1-4]$/.test(k)) idx = parseInt(k, 10) - 1;
+    else if (/^[a-dA-D]$/.test(k)) idx = 'abcd'.indexOf(k.toLowerCase());
+
+    if (!$('#view-quiz').hidden) {
+      if (idx >= 0) {
+        var qb = $$('#quiz-choices .choice')[idx];
+        if (qb && !qb.disabled) { e.preventDefault(); qb.click(); }
+      } else if ((k === 'Enter' || k === 'ArrowRight') && !$('#quiz-next').hidden) {
+        e.preventDefault(); $('#quiz-next').click();
+      }
+    } else if (!$('#view-exam').hidden && !$('#exam-run').hidden) {
+      if (idx >= 0) {
+        var eb = $$('#exam-choices .choice')[idx];
+        if (eb) { e.preventDefault(); eb.click(); }
+      } else if ((k === 'ArrowRight' || k === 'Enter') && !$('#exam-nextq').disabled) {
+        e.preventDefault(); $('#exam-nextq').click();
+      } else if (k === 'ArrowLeft' && !$('#exam-prev').disabled) {
+        e.preventDefault(); $('#exam-prev').click();
+      }
+    }
+  });
+
   /* ------------------------------------------------------------ boot */
+  // ?state=ND pins the exam state for a shared link and wins over the
+  // remembered choice; #drill (or any tab) opens that tab directly.
+  (function () {
+    var m = /[?&]state=(MN|ND)\b/i.exec(location.search);
+    if (m) {
+      appState = m[1].toUpperCase();
+      try { localStorage.setItem(STATE_KEY, appState); } catch (err) { /* private mode */ }
+    }
+  })();
   applyState();
-  showView('exam');
+  showView(viewFromHash() || 'exam');
 })();

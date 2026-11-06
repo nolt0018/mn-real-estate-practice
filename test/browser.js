@@ -1,6 +1,25 @@
 /* End-to-end test in real Chromium. Run: node test/browser.js */
 const { chromium } = require('playwright-core');
 const path = require('path');
+const fs = require('fs');
+
+// The preinstalled Chromium build number differs between containers, so find
+// it rather than hardcoding one.
+const PW = '/opt/pw-browsers';
+function findChrome() {
+  const stable = path.join(PW, 'chromium');                 // documented stable entry
+  try { if (fs.statSync(stable).isFile()) return stable; } catch (e) { /* fall through */ }
+  try {
+    for (const d of fs.readdirSync(PW).filter(x => /^chromium-\d+$/.test(x)).sort().reverse()) {
+      for (const sub of ['chrome-linux64', 'chrome-linux']) {
+        const c = path.join(PW, d, sub, 'chrome');
+        if (fs.existsSync(c)) return c;
+      }
+    }
+  } catch (e) { /* fall through */ }
+  return undefined;                                          // let playwright try its default
+}
+const executablePath = findChrome();
 
 const URL = 'file://' + path.join(__dirname, '..', 'index.html');
 let fails = 0;
@@ -10,9 +29,7 @@ const check = (cond, label, extra) => {
 };
 
 (async () => {
-  const browser = await chromium.launch({
-    executablePath: '/opt/pw-browsers/chromium-1194/chrome-linux/chrome'
-  });
+  const browser = await chromium.launch({ executablePath });
   const page = await browser.newPage();
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
@@ -49,10 +66,6 @@ const check = (cond, label, extra) => {
   check(stepCount >= 1, 'solution shows numbered steps (' + stepCount + ')');
 
   await page.click('#drill-next');
-  // read the correct answer straight out of the app and submit it
-  let ans = await page.evaluate(() => window.__p ? null : null);
-  // expose the current problem for the test by recomputing through MathGen is not
-  // possible (state is closed over), so instead drive the reveal path:
   await page.click('#drill-reveal');
   check((await page.textContent('#drill-feedback')).includes('Answer:'), 'reveal shows the answer');
 
@@ -331,6 +344,83 @@ const check = (cond, label, extra) => {
   check(await page.$$eval('#exam-grid .gridbtn', e => e.length) === 80, 'MN exam is back to 80 after switching');
   const mnDrillChips = await page.$$eval('#drill-cats .chip', e => e.map(c => c.dataset.v));
   check(mnDrillChips.includes('MN Taxes'), 'MN Taxes topic returns after switching back');
+
+  /* ============================================================ DEEP LINKS */
+  // A fragment opens that tab directly; a query pins the state. Use a cache-
+  // busting query so file:// navigation actually reloads.
+  await page.goto(URL + '?v=a#drill');
+  await page.waitForTimeout(300);
+  check(await page.isVisible('#view-drill') && await page.isHidden('#view-exam'),
+    '#drill in the URL opens the math drill directly');
+  await page.click('.tab[data-view="quiz"]');
+  await page.waitForTimeout(100);
+  check(await page.evaluate(() => location.hash) === '#quiz', 'clicking a tab writes it to the URL fragment');
+  await page.evaluate(() => { location.hash = '#formulas'; });
+  await page.waitForTimeout(150);
+  check(await page.isVisible('#view-formulas'), 'changing the fragment switches the tab');
+  await page.goto(URL + '?state=ND&v=b#quiz');
+  await page.waitForTimeout(300);
+  check(/North Dakota/.test(await page.textContent('#app-title')) && await page.isVisible('#view-quiz'),
+    '?state=ND#quiz pins North Dakota and opens the quiz');
+  await page.goto(URL + '?v=c#nonsense');
+  await page.waitForTimeout(300);
+  check(await page.isVisible('#view-exam'), 'an unknown fragment falls back to the exam');
+  await page.goto(URL + '?state=MN&v=d');
+  await page.waitForTimeout(300);
+  check(/Minnesota/.test(await page.textContent('#app-title')), '?state=MN restores Minnesota');
+
+  /* ============================================================ KEYBOARD */
+  await page.click('.tab[data-view="quiz"]');
+  await page.waitForTimeout(150);
+  await page.keyboard.press('2');
+  await page.waitForTimeout(100);
+  check(await page.isVisible('#quiz-feedback'), 'pressing 2 answers the quiz question');
+  check(await page.$$eval('#quiz-choices .choice.right, #quiz-choices .choice.wrong', e => e.length) >= 1,
+    'keyboard answer is marked like a click');
+  await page.keyboard.press('Enter');
+  await page.waitForTimeout(100);
+  check(await page.isHidden('#quiz-feedback'), 'Enter advances to the next quiz question');
+  await page.keyboard.press('c');
+  await page.waitForTimeout(100);
+  check(await page.isVisible('#quiz-feedback'), 'pressing C answers the quiz question');
+
+  await page.click('.tab[data-view="exam"]');
+  await page.selectOption('#exam-mode', 'state');
+  await page.click('#exam-start');
+  await page.waitForTimeout(300);
+  await page.keyboard.press('b');
+  await page.waitForTimeout(100);
+  check(await page.$$eval('#exam-choices .choice.selected', e => e.length) === 1, 'pressing B selects an exam answer');
+  await page.keyboard.press('ArrowRight');
+  await page.waitForTimeout(100);
+  check(/Question 2 of/.test(await page.textContent('#exam-count')), 'right arrow moves to the next exam question');
+  await page.keyboard.press('ArrowLeft');
+  await page.waitForTimeout(100);
+  check(/Question 1 of/.test(await page.textContent('#exam-count')), 'left arrow moves back');
+  // typing in the drill's answer box must NOT trigger shortcuts
+  await page.click('.tab[data-view="drill"]');
+  await page.waitForTimeout(150);
+  await page.fill('#drill-input', '');
+  await page.focus('#drill-input');
+  await page.keyboard.type('1234');
+  check(await page.inputValue('#drill-input') === '1234', 'digits typed into the answer box are not hijacked');
+
+  /* ============================================================ RETRY MISSED */
+  await page.goto(URL + '?state=MN&v=e#exam');
+  await page.waitForTimeout(300);
+  await page.selectOption('#exam-mode', 'state');
+  await page.click('#exam-start');
+  await page.waitForTimeout(300);
+  await page.click('#exam-submit');                       // all 40 blank -> all missed
+  await page.waitForTimeout(300);
+  const retryTxt = await page.textContent('#exam-retry').catch(() => '');
+  check(/Drill the 40 you missed/.test(retryTxt), 'results offer to drill the missed questions', retryTxt);
+  await page.click('#exam-retry');
+  await page.waitForTimeout(200);
+  check(await page.isVisible('#view-quiz'), 'retry button opens the quiz');
+  check(/missed on your exam/.test(await page.textContent('#quiz-count')) &&
+    /1 of 40/.test(await page.textContent('#quiz-count')), 'quiz is loaded with exactly the 40 missed questions');
+  check(await page.evaluate(() => location.hash) === '#quiz', 'retry updates the URL fragment');
 
   check(errors.length === 0, 'no JS errors across the whole run', errors.join(' | '));
 
